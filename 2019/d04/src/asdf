@@ -1,0 +1,29 @@
+pub fn execute_op_with_fixed_state(input: &mut [i32]) -> i32 {
+    input[1] = 12;
+    input[2] = 2;
+    execute_op(input)
+}
+
+fn execute_op(input: &mut [i32]) -> i32 {
+    let mut cursor = 0;
+
+    loop {
+        match input[cursor] {
+            1 => input[input[cursor + 3] as usize] = input[input[cursor + 1] as usize] + input[input[cursor + 2] as usize],
+            2 => input[input[cursor + 3] as usize] = input[input[cursor + 1] as usize] * input[input[cursor + 2] as usize],
+            99 => return code[0],
+            _ => panic!("Unknown opcode: {}", code[cursor])
+        }
+        cursor += 4;
+    }
+}
+
+pub fn find_noun_and_verb(code: &[i32]) -> i32 {
+    loop {
+        for noun in 0..=99 {
+            for verb in 0..=99 {
+                let mut 
+            }
+        }
+    }
+}
