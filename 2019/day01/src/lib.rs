@@ -1,25 +1,18 @@
 pub fn calculate_weight(input: &[i32]) -> i32 {
-    let mut res = 0;
-
-    for i in input {
-        res += i / 3 - 2;
-    }
-
-    res
+    input.iter().map(|x| x / 3 - 2).filter(|x| *x > 0).sum()
 }
 
 pub fn calculate_fuel_weight(input: &[i32]) -> i32 {
-    let mut res = 0;
-
-    for i in input {
-        let mut n: i32 = i / 3 - 2;
-        while n > 0 {
-            res += n;
-            n = n / 3 - 2;
+    fn calculate_fuel(m: i32) -> i32 {
+        let res = m / 3 - 2;
+        if res > 0 {
+            res + calculate_fuel(res)
+        } else {
+            0
         }
-    }
+    };
 
-    res
+    input.iter().map(|x| calculate_fuel(*x)).sum()
 }
 
 #[cfg(test)]
