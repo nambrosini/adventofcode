@@ -1,6 +1,6 @@
 use std::fs;
 
-use d04;
+use day02;
 
 fn main() {
     let filename = "input.txt";
@@ -13,8 +13,8 @@ fn main() {
     let mut numbers_copy: Vec<i32> = Vec::from(&numbers[..]);
     println!(
         "Day2 part 1: {}",
-        d04::execute_with_fixed_state(12, 2, &mut numbers_copy)
+        day02::execute_with_fixed_state(12, 2, &mut numbers_copy)
     );
 
-    println!("Day2 part2: {}", d04::find_noun_and_verb(&numbers));
+    println!("Day2 part2: {}", day02::find_noun_and_verb(&numbers));
 }
