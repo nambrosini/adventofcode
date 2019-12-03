@@ -6,7 +6,7 @@ The solutions of the [Advent of Code](https://adventofcode.com/) solved in rust.
 
 - [Day 01](https://github.com/nambrosini/adventofcode/tree/master/2019/day01) ⭐️⭐️
 - [Day 02](https://github.com/nambrosini/adventofcode/tree/master/2019/day02) ⭐️⭐️
-- [Day 03](https://github.com/nambrosini/adventofcode/tree/master/2019/day03)
+- [Day 03](https://github.com/nambrosini/adventofcode/tree/master/2019/day03) ⭐️
 - [Day 04](https://github.com/nambrosini/adventofcode/tree/master/2019/day04)
 - [Day 05](https://github.com/nambrosini/adventofcode/tree/master/2019/day05)
 - [Day 06](https://github.com/nambrosini/adventofcode/tree/master/2019/day06)
