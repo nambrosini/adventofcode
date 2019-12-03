@@ -13,6 +13,8 @@ fn main() {
     let wire1 = Wire::new(&lines[0]);
     let wire2 = Wire::new(&lines[1]);
 
-    println!("{}", wire1.manhattan(&wire2));
+    println!("Part1: {}", wire1.manhattan(&wire2));
+    println!("Part2: {}", wire1.steps(&wire2));
+
 }
 

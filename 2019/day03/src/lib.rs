@@ -1,4 +1,4 @@
-use std::collections::HashSet;
+use std::collections::{HashSet, HashMap};
 
 enum Dir {
     Up(i32),
@@ -20,19 +20,10 @@ impl Dir {
             _ => panic!("Direction unknown: {}", dir)
         }
     }
-
-    fn get_value(&self) -> i32 {
-        match self {
-            Self::Up(v) => *v,
-            Self::Down(v) => *v,
-            Self::Right(v) => *v,
-            Self::Left(v) => *v,
-        }
-    }
 }
 
 pub struct Wire {
-    path: HashSet<(i64, i64)>
+    path: Vec<(i64, i64)>
 }
 
 impl Wire {
@@ -42,7 +33,7 @@ impl Wire {
             .collect();
 
 
-        let mut res: Vec<(i64, i64)> = vec![];
+        let mut res: Vec<(i64, i64)> = vec![(0, 0)];
 
         for p in path {
             let (len, (dx, dy)) = match p {
@@ -52,28 +43,46 @@ impl Wire {
                 Dir::Right(v) => (v, (1, 0))
             };
 
-            let (x, y) = if res.len() == 0 {
-                (0, 0)
-            } else {
-                *res.last().unwrap()
-            };
+            let (x, y) = *res.last().unwrap();
 
             res.extend((1..=(len as i64)).map(|d| (x + dx * d, y + dy * d)));
         }
 
         Wire {
-            path: res.into_iter().collect()
+            path: res
         }
     }
 
     pub fn manhattan(&self, other: &Wire) -> i64 {
-        let common_points: Vec<&(i64, i64)> = self.path
+        let path1: HashSet<(i64, i64)> = self.path.clone().into_iter().skip(1).collect();
+        let path2: HashSet<(i64, i64)> = other.path.clone().into_iter().skip(1).collect();
+        let common_points: Vec<&(i64, i64)> = path1
             .iter()
             .skip(1)
-            .filter(|e| other.path.contains(&e))
+            .filter(|e| path2.contains(&e))
             .collect();
 
         common_points.iter().map(|(x, y)| x.abs() + y.abs()).min().unwrap()
+    }
+
+    pub fn steps(&self, other: &Wire) -> i64 {
+        let path1: HashMap<(i64, i64), usize> = self.path
+            .iter()
+            .enumerate()
+            .map(|(i, (x, y))| ((*x, *y), i))
+            .rev()
+            .collect();
+
+        let common_points = other.path
+            .iter()
+            .enumerate()
+            .skip(1)
+            .filter_map(|(d2, (x, y))| {
+                let d1 = path1.get(&(*x, *y))?;
+                Some(d1 + d2)
+            });
+
+        common_points.min().unwrap() as i64
     }
 }
 
@@ -92,6 +101,7 @@ mod test {
         let wire2 = Wire::new(&lines[1]);
 
         assert_eq!(wire1.manhattan(&wire2), 6);
+        assert_eq!(wire1.steps(&wire2), 30);
     }
 
     #[test]
@@ -104,6 +114,7 @@ mod test {
         let wire2 = Wire::new(&lines[1]);
 
         assert_eq!(wire1.manhattan(&wire2), 159);
+        assert_eq!(wire1.steps(&wire2), 610);
     }
 
     #[test]
@@ -116,5 +127,6 @@ mod test {
         let wire2 = Wire::new(&lines[1]);
 
         assert_eq!(wire1.manhattan(&wire2), 135);
+        assert_eq!(wire1.steps(&wire2), 410);
     }
 }
