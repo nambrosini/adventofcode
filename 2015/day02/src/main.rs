@@ -7,5 +7,6 @@ fn main() {
     let lines: Vec<&str> = content.lines().collect();
 
     println!("Part 1: {}", day02::solve_part_1(&lines));
+    println!("Part 2: {}", day02::solve_part_2(&lines));
 }
 
