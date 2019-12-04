@@ -3,11 +3,7 @@ pub fn solve_part_1(start: u32, end: u32) -> u32 {
     vec.extend(start..=end);
 
     vec.iter()
-        .filter(|x| {
-            let x = convert_to_vec(**x);
-
-            check_double_digit(&x) && check_increasing(&x)
-        })
+        .filter(|x| check_valid_1(&convert_to_vec(**x)))
         .count() as u32
 }
 
@@ -16,11 +12,7 @@ pub fn solve_part_2(start: u32, end: u32) -> u32 {
     vec.extend(start..=end);
 
     vec.iter()
-        .filter(|x| {
-            let x = convert_to_vec(**x);
-
-            check_double_digit_not_grouped(&x) && check_increasing(&x)
-        })
+        .filter(|x| check_valid_2(&convert_to_vec(**x)))
         .count() as u32
 }
 
@@ -32,43 +24,42 @@ fn convert_to_vec(password: u32) -> Vec<u32> {
         .collect()
 }
 
-fn check_double_digit(password: &[u32]) -> bool {
+fn check_valid_1(password: &[u32]) -> bool {
+    let mut double = false;
+
     for i in 0..password.len() - 1 {
-        if password[i] == password[i + 1] {
-            return true;
-        }
-    }
-
-    false
-}
-
-fn check_double_digit_not_grouped(password: &[u32]) -> bool {
-    let mut count = 0;
-    let mut last = 10;
-
-    for i in password {
-        if *i == last {
-            count += 1;
-        } else {
-            if count == 2 {
-                return true;
+        if password[i] <= password[i + 1] {
+            if !double {
+                double = password[i] == password[i + 1];
             }
-            last = *i;
-            count = 1;
-        }
-    }
-
-    count == 2
-}
-
-fn check_increasing(password: &[u32]) -> bool {
-    for i in 0..password.len() - 1 {
-        if password[i] > password[i + 1] {
+        } else {
             return false;
         }
     }
 
-    true
+    double
+}
+
+fn check_valid_2(password: &[u32]) -> bool {
+    let mut count = 0;
+    let mut last = 10;
+
+    for i in 0..password.len() {
+        if i == password.len() - 1 || password[i] <= password[i + 1] {
+            if password[i] == last {
+                count += 1;
+            } else if count == 2 {
+                last = 10;
+            } else {
+                count = 1;
+                last = password[i];
+            }
+        } else {
+            return false;
+        }
+    }
+
+    count == 2
 }
 
 #[cfg(test)]
@@ -87,6 +78,5 @@ mod tests {
         assert_eq!(solve_part_2(123444, 123444), 0);
         assert_eq!(solve_part_2(111122, 111122), 1);
         assert_eq!(solve_part_2(111112, 111112), 0);
-        assert!(check_double_digit_not_grouped(&vec![1, 1, 2, 2, 3, 3]));
     }
 }
