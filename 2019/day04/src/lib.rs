@@ -16,15 +16,18 @@ pub fn solve_part_2(start: u32, end: u32) -> u32 {
         .count() as u32
 }
 
-fn convert_to_vec(password: u32) -> Vec<u32> {
-    password
-        .to_string()
-        .chars()
-        .map(|c| c.to_string().parse().unwrap())
-        .collect()
+fn convert_to_vec(mut password: u32) -> [u8; 6] {
+    let mut res: [u8; 6] = [0; 6];
+
+    for i in res.iter_mut().rev() {
+        *i = (password % 10) as u8;
+        password /= 10;
+    }
+
+    res
 }
 
-fn check_valid_1(password: &[u32]) -> bool {
+fn check_valid_1(password: &[u8; 6]) -> bool {
     let mut double = false;
 
     for i in 0..password.len() - 1 {
@@ -40,7 +43,7 @@ fn check_valid_1(password: &[u32]) -> bool {
     double
 }
 
-fn check_valid_2(password: &[u32]) -> bool {
+fn check_valid_2(password: &[u8; 6]) -> bool {
     let mut count = 0;
     let mut last = 10;
 
