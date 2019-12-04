@@ -1,10 +1,10 @@
-use std::collections::{HashSet, HashMap};
+use std::collections::{HashMap, HashSet};
 
 enum Dir {
     Up(i32),
     Down(i32),
     Left(i32),
-    Right(i32)
+    Right(i32),
 }
 
 impl Dir {
@@ -17,21 +17,18 @@ impl Dir {
             "D" => Dir::Down(len),
             "L" => Dir::Left(len),
             "R" => Dir::Right(len),
-            _ => panic!("Direction unknown: {}", dir)
+            _ => panic!("Direction unknown: {}", dir),
         }
     }
 }
 
 pub struct Wire {
-    path: Vec<(i64, i64)>
+    path: Vec<(i64, i64)>,
 }
 
 impl Wire {
     pub fn new(input: &[&str]) -> Wire {
-        let path: Vec<Dir> = input.iter()
-            .map(|x| Dir::new(x))
-            .collect();
-
+        let path: Vec<Dir> = input.iter().map(|x| Dir::new(x)).collect();
 
         let mut res: Vec<(i64, i64)> = vec![(0, 0)];
 
@@ -40,7 +37,7 @@ impl Wire {
                 Dir::Up(v) => (v, (0, 1)),
                 Dir::Down(v) => (v, (0, -1)),
                 Dir::Left(v) => (v, (-1, 0)),
-                Dir::Right(v) => (v, (1, 0))
+                Dir::Right(v) => (v, (1, 0)),
             };
 
             let (x, y) = *res.last().unwrap();
@@ -48,9 +45,7 @@ impl Wire {
             res.extend((1..=(len as i64)).map(|d| (x + dx * d, y + dy * d)));
         }
 
-        Wire {
-            path: res
-        }
+        Wire { path: res }
     }
 
     pub fn manhattan(&self, other: &Wire) -> i64 {
@@ -62,18 +57,24 @@ impl Wire {
             .filter(|e| path2.contains(&e))
             .collect();
 
-        common_points.iter().map(|(x, y)| x.abs() + y.abs()).min().unwrap()
+        common_points
+            .iter()
+            .map(|(x, y)| x.abs() + y.abs())
+            .min()
+            .unwrap()
     }
 
     pub fn steps(&self, other: &Wire) -> i64 {
-        let path1: HashMap<(i64, i64), usize> = self.path
+        let path1: HashMap<(i64, i64), usize> = self
+            .path
             .iter()
             .enumerate()
             .map(|(i, (x, y))| ((*x, *y), i))
             .rev()
             .collect();
 
-        let common_points = other.path
+        let common_points = other
+            .path
             .iter()
             .enumerate()
             .skip(1)
