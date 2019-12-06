@@ -1,9 +1,11 @@
-pub fn solve_part_1(memory: &mut [i32], input: i32) -> i32 {
+use std::convert::TryFrom;
+
+pub fn solve_part_1(memory: &mut [i32], input: i32) -> Result<i32, String> {
     let mut address = 0;
     let mut res = 0;
 
     loop {
-        let op_code = OpCode::new(memory[address]);
+        let op_code = OpCode::try_from(memory[address])?;
 
         match op_code {
             OpCode::Add(m1, m2, m3) => {
@@ -64,7 +66,7 @@ pub fn solve_part_1(memory: &mut [i32], input: i32) -> i32 {
                 address += 4;
             }
             OpCode::Quit => {
-                return res;
+                return Ok(res);
             }
         }
     }
@@ -89,12 +91,14 @@ enum Mode {
     Imm,
 }
 
-impl Mode {
-    fn new(mode: i32) -> Self {
-        match mode {
-            0 => Mode::Pos,
-            1 => Mode::Imm,
-            _ => panic!("Mode not recognised: {}", mode),
+impl TryFrom<i32> for Mode {
+    type Error = String;
+
+    fn try_from(value: i32) -> Result<Self, Self::Error> {
+        match value {
+            0 => Ok(Mode::Pos),
+            1 => Ok(Mode::Imm),
+            _ => Err(format!("Unknown mode: {}", value)),
         }
     }
 }
@@ -111,24 +115,42 @@ enum OpCode {
     Eq(Mode, Mode, Mode),
 }
 
-impl OpCode {
-    fn new(input: i32) -> Self {
-        let de = input % 100;
-        let c = input / 100 % 10;
-        let b = input / 1000 % 10;
-        let a = input / 10000 % 10;
+impl TryFrom<i32> for OpCode {
+    type Error = String;
+
+    fn try_from(value: i32) -> Result<Self, Self::Error> {
+        let de = value % 100;
+        let c = value / 100 % 10;
+        let b = value / 1000 % 10;
+        let a = value / 10000 % 10;
 
         match de {
-            1 => OpCode::Add(Mode::new(c), Mode::new(b), Mode::new(a)),
-            2 => OpCode::Mult(Mode::new(c), Mode::new(b), Mode::new(a)),
-            3 => OpCode::Save(Mode::new(c)),
-            4 => OpCode::Out(Mode::new(c)),
-            5 => OpCode::Jit(Mode::new(c), Mode::new(b)),
-            6 => OpCode::Jif(Mode::new(c), Mode::new(b)),
-            7 => OpCode::Lt(Mode::new(c), Mode::new(b), Mode::new(a)),
-            8 => OpCode::Eq(Mode::new(c), Mode::new(b), Mode::new(a)),
-            99 => OpCode::Quit,
-            _ => panic!("OpCode not recognized: {}", de),
+            1 => Ok(OpCode::Add(
+                Mode::try_from(c)?,
+                Mode::try_from(b)?,
+                Mode::try_from(a)?,
+            )),
+            2 => Ok(OpCode::Mult(
+                Mode::try_from(c)?,
+                Mode::try_from(b)?,
+                Mode::try_from(a)?,
+            )),
+            3 => Ok(OpCode::Save(Mode::try_from(c)?)),
+            4 => Ok(OpCode::Out(Mode::try_from(c)?)),
+            5 => Ok(OpCode::Jit(Mode::try_from(c)?, Mode::try_from(b)?)),
+            6 => Ok(OpCode::Jif(Mode::try_from(c)?, Mode::try_from(b)?)),
+            7 => Ok(OpCode::Lt(
+                Mode::try_from(c)?,
+                Mode::try_from(b)?,
+                Mode::try_from(a)?,
+            )),
+            8 => Ok(OpCode::Eq(
+                Mode::try_from(c)?,
+                Mode::try_from(b)?,
+                Mode::try_from(a)?,
+            )),
+            99 => Ok(OpCode::Quit),
+            _ => Err(format!("OpCode not recognized: {}", de)),
         }
     }
 }
@@ -145,7 +167,7 @@ mod tests {
             .map(|x| x.parse().unwrap())
             .collect();
 
-        assert_eq!(solve_part_1(&mut memory, 8), 1)
+        assert_eq!(solve_part_1(&mut memory, 8).unwrap(), 1)
     }
 
     #[test]
@@ -155,7 +177,7 @@ mod tests {
             .map(|x| x.parse().unwrap())
             .collect();
 
-        assert_eq!(solve_part_1(&mut memory, 4), 1)
+        assert_eq!(solve_part_1(&mut memory, 4).unwrap(), 1)
     }
 
     #[test]
@@ -165,7 +187,7 @@ mod tests {
             .map(|x| x.parse().unwrap())
             .collect();
 
-        assert_eq!(solve_part_1(&mut memory, 8), 1)
+        assert_eq!(solve_part_1(&mut memory, 8).unwrap(), 1)
     }
 
     #[test]
@@ -175,7 +197,7 @@ mod tests {
             .map(|x| x.parse().unwrap())
             .collect();
 
-        assert_eq!(solve_part_1(&mut memory, 7), 1);
+        assert_eq!(solve_part_1(&mut memory, 7).unwrap(), 1);
     }
 
     #[test]
@@ -185,7 +207,7 @@ mod tests {
             .map(|x| x.parse().unwrap())
             .collect();
 
-        assert_eq!(solve_part_1(&mut memory, 0), 0);
+        assert_eq!(solve_part_1(&mut memory, 0).unwrap(), 0);
     }
 
     #[test]
@@ -195,7 +217,7 @@ mod tests {
             .map(|x| x.parse().unwrap())
             .collect();
 
-        assert_eq!(solve_part_1(&mut memory, 0), 0);
+        assert_eq!(solve_part_1(&mut memory, 0).unwrap(), 0);
     }
 
     #[test]
@@ -206,6 +228,6 @@ mod tests {
             .map(|x| x.parse().unwrap())
             .collect();
 
-        assert_eq!(solve_part_1(&mut memory, 7), 999);
+        assert_eq!(solve_part_1(&mut memory, 7).unwrap(), 999);
     }
 }

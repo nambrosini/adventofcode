@@ -11,7 +11,10 @@ fn main() {
 
     let mut mem_clone = memory.clone();
 
-    println!("Part 1: {}", day05::solve_part_1(&mut mem_clone, 1));
+    println!(
+        "Part 1: {}",
+        day05::solve_part_1(&mut mem_clone, 1).unwrap()
+    );
 
-    println!("Part 2: {}", day05::solve_part_1(&mut memory, 5));
+    println!("Part 2: {}", day05::solve_part_1(&mut memory, 5).unwrap());
 }
