@@ -4,7 +4,8 @@ use day02;
 
 fn main() {
     let filename = "input.txt";
-    let numbers: Vec<i32> = fs::read_to_string(filename).unwrap()
+    let numbers: Vec<i32> = fs::read_to_string(filename)
+        .unwrap()
         .split(',')
         .map(|x| x.parse::<i32>().unwrap())
         .collect();
@@ -13,7 +14,7 @@ fn main() {
 
     println!(
         "Day2 part 1: {}",
-        day02::execute_with_fixed_state(12, 2, &mut numbers_copy)
+        day02::execute_with_fixed_state(12, 2, &mut numbers_copy).unwrap()
     );
 
     println!("Day2 part2: {}", day02::find_noun_and_verb(&numbers));
