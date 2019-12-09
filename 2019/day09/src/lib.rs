@@ -18,15 +18,15 @@ impl IntCode {
     pub fn run(&mut self, input: i64) -> Result<i64, String> {
         let mut res = 0;
         loop {
-            let op_code = OpCode::try_from(self.memory[self.address])?;
+            let op_code: OpCode = self.memory[self.address].try_into()?;
             let mut v = 0;
 
-            if self.address > self.memory.len() {
+            if self.address >= self.memory.len() {
                 v = self.address;
-            } else if (self.memory[self.address] as usize) > self.memory.len() {
+            } else if (self.memory[self.address] as usize) >= self.memory.len() {
                 v = self.memory[self.address] as usize;
             } else if ((self.memory[self.address] + self.relative_base) as usize)
-                > self.memory.len()
+                >= self.memory.len()
             {
                 v = (self.memory[self.address] + self.relative_base) as usize;
             }

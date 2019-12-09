@@ -3,7 +3,7 @@ use std::fs;
 use day09::IntCode;
 
 fn main() {
-    let input = fs::read_to_string("input").unwrap();
+    let input = fs::read_to_string("input-jonas").unwrap();
     let memory: Vec<i64> = input
         .split(',')
         .map(|x| x.parse::<i64>().unwrap())
