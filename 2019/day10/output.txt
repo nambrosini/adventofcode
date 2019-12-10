@@ -1,0 +1,415 @@
+
+running 1 test
+center: Point { x: 8, y: 3, point_type: Asteroid, angle: None, distance: None }
+[
+    Point {
+        x: 0,
+        y: 2,
+        point_type: Asteroid,
+        angle: Some(
+            -1446441,
+        ),
+        distance: Some(
+            8062257,
+        ),
+    },
+    Point {
+        x: 1,
+        y: 2,
+        point_type: Asteroid,
+        angle: Some(
+            -1428899,
+        ),
+        distance: Some(
+            7071067,
+        ),
+    },
+    Point {
+        x: 0,
+        y: 1,
+        point_type: Asteroid,
+        angle: Some(
+            -1325817,
+        ),
+        distance: Some(
+            8246211,
+        ),
+    },
+    Point {
+        x: 1,
+        y: 1,
+        point_type: Asteroid,
+        angle: Some(
+            -1292496,
+        ),
+        distance: Some(
+            7280109,
+        ),
+    },
+    Point {
+        x: 5,
+        y: 2,
+        point_type: Asteroid,
+        angle: Some(
+            -1249045,
+        ),
+        distance: Some(
+            3162277,
+        ),
+    },
+    Point {
+        x: 1,
+        y: 0,
+        point_type: Asteroid,
+        angle: Some(
+            -1165904,
+        ),
+        distance: Some(
+            7615773,
+        ),
+    },
+    Point {
+        x: 5,
+        y: 1,
+        point_type: Asteroid,
+        angle: Some(
+            -982793,
+        ),
+        distance: Some(
+            3605551,
+        ),
+    },
+    Point {
+        x: 6,
+        y: 1,
+        point_type: Asteroid,
+        angle: Some(
+            -785398,
+        ),
+        distance: Some(
+            2828427,
+        ),
+    },
+    Point {
+        x: 6,
+        y: 0,
+        point_type: Asteroid,
+        angle: Some(
+            -588002,
+        ),
+        distance: Some(
+            3605551,
+        ),
+    },
+    Point {
+        x: 7,
+        y: 0,
+        point_type: Asteroid,
+        angle: Some(
+            -321750,
+        ),
+        distance: Some(
+            3162277,
+        ),
+    },
+    Point {
+        x: 8,
+        y: 1,
+        point_type: Asteroid,
+        angle: Some(
+            1570796,
+        ),
+        distance: Some(
+            2000000,
+        ),
+    },
+    Point {
+        x: 9,
+        y: 0,
+        point_type: Asteroid,
+        angle: Some(
+            1892546,
+        ),
+        distance: Some(
+            3162277,
+        ),
+    },
+    Point {
+        x: 9,
+        y: 1,
+        point_type: Asteroid,
+        angle: Some(
+            2034443,
+        ),
+        distance: Some(
+            2236067,
+        ),
+    },
+    Point {
+        x: 10,
+        y: 0,
+        point_type: Asteroid,
+        angle: Some(
+            2158798,
+        ),
+        distance: Some(
+            3605551,
+        ),
+    },
+    Point {
+        x: 9,
+        y: 2,
+        point_type: Asteroid,
+        angle: Some(
+            2356194,
+        ),
+        distance: Some(
+            1414213,
+        ),
+    },
+    Point {
+        x: 11,
+        y: 1,
+        point_type: Asteroid,
+        angle: Some(
+            2553590,
+        ),
+        distance: Some(
+            3605551,
+        ),
+    },
+    Point {
+        x: 12,
+        y: 1,
+        point_type: Asteroid,
+        angle: Some(
+            2677945,
+        ),
+        distance: Some(
+            4472135,
+        ),
+    },
+    Point {
+        x: 11,
+        y: 2,
+        point_type: Asteroid,
+        angle: Some(
+            2819842,
+        ),
+        distance: Some(
+            3162277,
+        ),
+    },
+    Point {
+        x: 15,
+        y: 1,
+        point_type: Asteroid,
+        angle: Some(
+            2863292,
+        ),
+        distance: Some(
+            7280109,
+        ),
+    },
+    Point {
+        x: 12,
+        y: 2,
+        point_type: Asteroid,
+        angle: Some(
+            2896613,
+        ),
+        distance: Some(
+            4123105,
+        ),
+    },
+    Point {
+        x: 13,
+        y: 2,
+        point_type: Asteroid,
+        angle: Some(
+            2944197,
+        ),
+        distance: Some(
+            5099019,
+        ),
+    },
+    Point {
+        x: 14,
+        y: 2,
+        point_type: Asteroid,
+        angle: Some(
+            2976443,
+        ),
+        distance: Some(
+            6082762,
+        ),
+    },
+    Point {
+        x: 15,
+        y: 2,
+        point_type: Asteroid,
+        angle: Some(
+            2999695,
+        ),
+        distance: Some(
+            7071067,
+        ),
+    },
+    Point {
+        x: 2,
+        y: 3,
+        point_type: Asteroid,
+        angle: Some(
+            3141592,
+        ),
+        distance: Some(
+            6000000,
+        ),
+    },
+    Point {
+        x: 12,
+        y: 3,
+        point_type: Asteroid,
+        angle: Some(
+            4712388,
+        ),
+        distance: Some(
+            4000000,
+        ),
+    },
+    Point {
+        x: 16,
+        y: 4,
+        point_type: Asteroid,
+        angle: Some(
+            4836743,
+        ),
+        distance: Some(
+            8062257,
+        ),
+    },
+    Point {
+        x: 15,
+        y: 4,
+        point_type: Asteroid,
+        angle: Some(
+            4854286,
+        ),
+        distance: Some(
+            7071067,
+        ),
+    },
+    Point {
+        x: 10,
+        y: 4,
+        point_type: Asteroid,
+        angle: Some(
+            5176036,
+        ),
+        distance: Some(
+            2236067,
+        ),
+    },
+    Point {
+        x: 8,
+        y: 0,
+        point_type: Asteroid,
+        angle: Some(
+            1570796,
+        ),
+        distance: Some(
+            3000000,
+        ),
+    },
+    Point {
+        x: 10,
+        y: 1,
+        point_type: Asteroid,
+        angle: Some(
+            2356194,
+        ),
+        distance: Some(
+            2828427,
+        ),
+    },
+    Point {
+        x: 14,
+        y: 0,
+        point_type: Asteroid,
+        angle: Some(
+            2677945,
+        ),
+        distance: Some(
+            6708203,
+        ),
+    },
+    Point {
+        x: 4,
+        y: 4,
+        point_type: Asteroid,
+        angle: Some(
+            2896613,
+        ),
+        distance: Some(
+            4123105,
+        ),
+    },
+    Point {
+        x: 2,
+        y: 4,
+        point_type: Asteroid,
+        angle: Some(
+            2976443,
+        ),
+        distance: Some(
+            6082762,
+        ),
+    },
+    Point {
+        x: 13,
+        y: 3,
+        point_type: Asteroid,
+        angle: Some(
+            4712388,
+        ),
+        distance: Some(
+            5000000,
+        ),
+    },
+    Point {
+        x: 16,
+        y: 1,
+        point_type: Asteroid,
+        angle: Some(
+            2896613,
+        ),
+        distance: Some(
+            8246211,
+        ),
+    },
+    Point {
+        x: 14,
+        y: 3,
+        point_type: Asteroid,
+        angle: Some(
+            4712388,
+        ),
+        distance: Some(
+            6000000,
+        ),
+    },
+]
+test tests::test_asdf ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 6 filtered out
+
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out
+
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out
+
