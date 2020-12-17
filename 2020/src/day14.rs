@@ -1,4 +1,4 @@
-use std::collections::{HashMap, HashSet};
+use std::collections::HashMap;
 
 #[aoc_generator(day14)]
 fn generator(input: &str) -> Vec<String> {

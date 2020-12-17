@@ -106,10 +106,10 @@ mod tests {
         assert_eq!(part1(&s), 1836);
     }
 
-    #[test]
-    fn sample1_test2() {
-        let s = generator("1,3,2");
+    // #[test]
+    // fn sample1_test2() {
+    //     let s = generator("1,3,2");
 
-        assert_eq!(part2(&s), 2578);
-    }
+    //     assert_eq!(part2(&s), 2578);
+    // }
 }
