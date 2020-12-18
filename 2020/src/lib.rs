@@ -1,6 +1,6 @@
 extern crate aoc_runner;
 extern crate regex;
-extern crate serde;
+extern crate evalexpr;
 
 #[macro_use]
 extern crate aoc_runner_derive;
@@ -21,5 +21,6 @@ pub mod day14;
 pub mod day15;
 pub mod day16;
 pub mod day17;
+pub mod day18;
 
 aoc_lib! { year = 2020 }
