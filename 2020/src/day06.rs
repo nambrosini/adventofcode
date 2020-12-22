@@ -2,24 +2,24 @@ use std::collections::HashSet;
 
 #[aoc_generator(day6)]
 pub fn generator(input: &str) -> Vec<String> {
-    input.split("\n\n")
-        .map(|s| s.to_owned())
-        .collect()
+    input.split("\n\n").map(|s| s.to_owned()).collect()
 }
 
 #[aoc(day6, part1)]
 pub fn part1(input: &[String]) -> usize {
-    input.iter()
+    input
+        .iter()
         .map(|s| s.replace("\n", "").chars().collect::<HashSet<char>>().len())
         .sum()
 }
 
 #[aoc(day6, part2)]
 pub fn part2(input: &[String]) -> usize {
-    let input: Vec<Vec<Vec<char>>> = input.iter()
-        .map(|s| s.split("\n").map(|x| x.chars().collect()).collect())
+    let input: Vec<Vec<Vec<char>>> = input
+        .iter()
+        .map(|s| s.split('\n').map(|x| x.chars().collect()).collect())
         .collect();
-    
+
     let mut sum = 0;
 
     for group in input {
@@ -28,8 +28,8 @@ pub fn part2(input: &[String]) -> usize {
 
         for letter in first_passenger {
             let mut letter_all = true;
-            for i in 1..group.len() {
-                if !group[i].contains(letter) {
+            for i in group.iter().skip(1) {
+                if !i.contains(letter) {
                     letter_all = false;
                 }
             }

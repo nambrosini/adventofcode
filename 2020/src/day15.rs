@@ -2,17 +2,16 @@ use std::collections::HashMap;
 
 #[aoc_generator(day15)]
 pub fn generator(input: &str) -> Vec<usize> {
-    input.split(",")
-        .map(|x| x.parse().unwrap())
-        .collect()
+    input.split(',').map(|x| x.parse().unwrap()).collect()
 }
 
 #[aoc(day15, part1)]
 pub fn part1(input: &[usize]) -> usize {
-    let mut map: Vec<usize> = input.clone().to_vec();
+    let mut map: Vec<usize> = input.to_vec();
 
     while map.len() < 2020 {
-        let filter: Vec<_> = map.iter()
+        let filter: Vec<_> = map
+            .iter()
             .enumerate()
             .filter(|(_, &x)| x == *map.last().unwrap())
             .map(|(i, _)| i)
@@ -33,8 +32,8 @@ pub fn part1(input: &[usize]) -> usize {
 pub fn part2(input: &[usize]) -> usize {
     let mut map: HashMap<usize, (Option<usize>, usize)> = HashMap::new();
 
-    for i in 0..input.len() {
-        map.insert(input[i], (None, i));
+    for (i, &e) in input.iter().enumerate() {
+        map.insert(e, (None, i));
     }
 
     let mut last_number = *input.last().unwrap();
@@ -58,7 +57,6 @@ pub fn part2(input: &[usize]) -> usize {
 
     last_number
 }
-
 
 #[cfg(test)]
 mod tests {

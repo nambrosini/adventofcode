@@ -1,7 +1,7 @@
-use std::convert::{TryFrom, TryInto};
 use lazy_static::lazy_static;
 use regex::Regex;
 use std::collections::HashMap;
+use std::convert::{TryFrom, TryInto};
 
 #[derive(Debug, PartialEq, Default, Clone)]
 pub struct Passport {
@@ -18,7 +18,7 @@ pub struct Passport {
 impl TryFrom<&str> for Passport {
     type Error = String;
 
-    fn try_from(val: &str) -> Result<Self, Self::Error>{
+    fn try_from(val: &str) -> Result<Self, Self::Error> {
         let re = Regex::new(r"(\w+):([^\s]+)\s*").unwrap();
 
         let mut map = HashMap::new();
@@ -40,7 +40,7 @@ impl TryFrom<&str> for Passport {
                 "cid" => passport.cid = Some(String::from(entry.1)),
                 other => return Err(format!("Unknown key: {}", other)),
             };
-        };
+        }
 
         Ok(passport)
     }
@@ -48,9 +48,13 @@ impl TryFrom<&str> for Passport {
 
 impl Passport {
     fn check_part1(&self) -> bool {
-        self.byr.is_some() && self.iyr.is_some() && self.eyr.is_some() &&
-            self.hgt.is_some() && self.hcl.is_some() && self.ecl.is_some() &&
-            self.pid.is_some()
+        self.byr.is_some()
+            && self.iyr.is_some()
+            && self.eyr.is_some()
+            && self.hgt.is_some()
+            && self.hcl.is_some()
+            && self.ecl.is_some()
+            && self.pid.is_some()
     }
 
     fn check_part2(&self) -> bool {
@@ -84,8 +88,7 @@ impl Passport {
             return false;
         }
 
-        if unit == "in" && (val < 59 || val > 76) ||
-            unit == "cm" && (val < 150 || val > 193) {
+        if unit == "in" && (val < 59 || val > 76) || unit == "cm" && (val < 150 || val > 193) {
             return false;
         }
 
@@ -117,23 +120,17 @@ impl Passport {
 
 #[aoc_generator(day4)]
 pub fn generator(input: &str) -> Vec<Passport> {
-    input.split("\n\n")
-        .map(|s| s.try_into().unwrap())
-        .collect()
+    input.split("\n\n").map(|s| s.try_into().unwrap()).collect()
 }
 
 #[aoc(day4, part1)]
 pub fn part1(input: &[Passport]) -> usize {
-    input.iter()
-        .filter(|&x| x.clone().check_part1())
-        .count()
+    input.iter().filter(|&x| x.clone().check_part1()).count()
 }
 
 #[aoc(day4, part2)]
 pub fn part2(input: &[Passport]) -> usize {
-    input.iter()
-        .filter(|&x| x.clone().check_part2())
-        .count()
+    input.iter().filter(|&x| x.clone().check_part2()).count()
 }
 
 #[cfg(test)]

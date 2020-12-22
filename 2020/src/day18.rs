@@ -4,9 +4,7 @@ use regex::Regex;
 
 #[aoc_generator(day18)]
 pub fn generator(input: &str) -> Vec<String> {
-    input.lines()
-        .map(|l| l.to_owned())
-        .collect()
+    input.lines().map(|l| l.to_owned()).collect()
 }
 
 #[aoc(day18, part1)]
@@ -29,7 +27,6 @@ pub fn part1(input: &[String]) -> i64 {
             } else {
                 break;
             }
-            
         }
 
         sum += eval(s);
@@ -66,9 +63,9 @@ pub fn part2(input: &[String]) -> i64 {
     sum
 }
 
-pub fn eval(expr: String) -> i64{
+pub fn eval(expr: String) -> i64 {
     let expr = expr.replace("(", "").replace(")", "");
-    let mut split: Vec<String> = expr.split(" ").map(|s| s.to_owned()).collect();
+    let mut split: Vec<String> = expr.split(' ').map(|s| s.to_owned()).collect();
 
     while split.len() != 1 {
         let mut new: Vec<String> = vec![];
@@ -79,13 +76,13 @@ pub fn eval(expr: String) -> i64{
         new.append(&mut split[3..].to_vec());
         split = new;
     }
-    
+
     split[0].parse().unwrap()
 }
 
-pub fn eval_part2(expr: String) -> i64{
+pub fn eval_part2(expr: String) -> i64 {
     let expr = expr.replace("(", "").replace(")", "");
-    let mut split: Vec<String> = expr.split(" ").map(|s| s.to_owned()).collect();
+    let mut split: Vec<String> = expr.split(' ').map(|s| s.to_owned()).collect();
 
     while split.len() != 1 {
         let mut new: Vec<String> = vec![];
@@ -93,7 +90,8 @@ pub fn eval_part2(expr: String) -> i64{
         if split.contains(&"*".to_owned()) && split.contains(&"+".to_owned()) {
             for i in (1..split.len() - 1).step_by(2) {
                 if split[i] == "+" {
-                    let res = eval_int(&format!("{} {} {}", split[i - 1], split[i], split[i + 1])).unwrap();
+                    let res = eval_int(&format!("{} {} {}", split[i - 1], split[i], split[i + 1]))
+                        .unwrap();
                     if i != 1 {
                         new = split[..i - 1].to_vec();
                     }
@@ -109,7 +107,7 @@ pub fn eval_part2(expr: String) -> i64{
         }
         split = new;
     }
-    
+
     split[0].parse().unwrap()
 }
 
@@ -172,7 +170,7 @@ mod tests {
 
         assert_eq!(part2(&s), 669060);
     }
-    
+
     #[test]
     fn sample9_test2() {
         let s = generator("((2 + 4 * 9) * (6 + 9 * 8 + 6) + 6) + 2 + 4 * 2");

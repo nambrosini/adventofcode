@@ -9,7 +9,7 @@ pub enum Action {
     W(i32),
     L(i32),
     R(i32),
-    F(i32)
+    F(i32),
 }
 
 #[derive(Debug, Clone)]
@@ -17,19 +17,19 @@ pub enum Orientation {
     North,
     East,
     South,
-    West
+    West,
 }
 
 #[derive(Debug)]
 pub struct Ship {
     position: (i32, i32),
-    orientation: Orientation
+    orientation: Orientation,
 }
 
 #[derive(Debug)]
 pub struct WayPoint {
     position: (i32, i32),
-    orientation: Orientation
+    orientation: Orientation,
 }
 
 impl Add<i32> for Orientation {
@@ -37,26 +37,26 @@ impl Add<i32> for Orientation {
 
     fn add(self, rhs: i32) -> Self::Output {
         match rhs {
-            0 => self.clone(),
+            0 => self,
             90 => match self {
                 Orientation::North => Orientation::East,
                 Orientation::East => Orientation::South,
                 Orientation::South => Orientation::West,
-                Orientation::West => Orientation::North
+                Orientation::West => Orientation::North,
             },
             180 => match self {
                 Orientation::North => Orientation::South,
                 Orientation::East => Orientation::West,
                 Orientation::South => Orientation::North,
-                Orientation::West => Orientation::East
+                Orientation::West => Orientation::East,
             },
             270 => match self {
                 Orientation::North => Orientation::West,
                 Orientation::East => Orientation::North,
                 Orientation::South => Orientation::East,
-                Orientation::West => Orientation::South
+                Orientation::West => Orientation::South,
             },
-            _ => unimplemented!()
+            _ => unimplemented!(),
         }
     }
 }
@@ -71,18 +71,18 @@ impl Sub for Orientation {
     type Output = Self;
 
     fn sub(self, rhs: Self) -> Self::Output {
-        let val1: i8 = match self{
+        let val1: i8 = match self {
             Self::North => 0,
             Self::East => 1,
             Self::South => 2,
-            Self::West => 3
+            Self::West => 3,
         };
 
         let val2: i8 = match rhs {
             Self::North => 0,
             Self::East => 1,
             Self::South => 2,
-            Self::West => 3
+            Self::West => 3,
         };
 
         match (val2 - val1).abs() {
@@ -90,7 +90,7 @@ impl Sub for Orientation {
             1 => Self::East,
             2 => Self::South,
             3 => Self::West,
-            _ => unimplemented!()
+            _ => unimplemented!(),
         }
     }
 }
@@ -110,7 +110,7 @@ impl TryFrom<&str> for Action {
             "L" => Action::L(val),
             "R" => Action::R(val),
             "F" => Action::F(val),
-            _ => unreachable!()
+            _ => unreachable!(),
         })
     }
 }
@@ -119,7 +119,7 @@ impl Ship {
     fn new() -> Self {
         Self {
             position: (0, 0),
-            orientation: Orientation::East
+            orientation: Orientation::East,
         }
     }
 
@@ -132,7 +132,7 @@ impl Ship {
                 Action::W(v) => self.position.0 -= v,
                 Action::L(v) => self.orientation += 360 - *v,
                 Action::R(v) => self.orientation += *v,
-                Action::F(v) => self.advance(v)
+                Action::F(v) => self.advance(v),
             }
         }
 
@@ -150,7 +150,7 @@ impl Ship {
                 Action::W(v) => waypoint.position.0 -= v,
                 Action::L(v) => waypoint.rotate(waypoint.orientation.clone() + (360 - *v)),
                 Action::R(v) => waypoint.rotate(waypoint.orientation.clone() + *v),
-                Action::F(v) => self.move_to_waypoint(v, &waypoint)
+                Action::F(v) => self.move_to_waypoint(v, &waypoint),
             }
         }
 
@@ -162,7 +162,7 @@ impl Ship {
             Orientation::North => self.position.1 += v,
             Orientation::East => self.position.0 += v,
             Orientation::South => self.position.1 -= v,
-            Orientation::West => self.position.0 -= v
+            Orientation::West => self.position.0 -= v,
         }
     }
 
@@ -177,47 +177,39 @@ impl Ship {
 }
 
 impl WayPoint {
-    fn new() -> Self{
+    fn new() -> Self {
         Self {
             position: (10, 1),
-            orientation: Orientation::East
+            orientation: Orientation::East,
         }
     }
 
     fn rotate(&mut self, new_orientation: Orientation) {
         match self.orientation {
-            Orientation::North => {
-                match new_orientation {
-                    Orientation::North => {},
-                    Orientation::South => self.rotate_n(2),
-                    Orientation::East => self.rotate_n(1),
-                    Orientation::West => self.rotate_n(3)
-                }
+            Orientation::North => match new_orientation {
+                Orientation::North => {}
+                Orientation::South => self.rotate_n(2),
+                Orientation::East => self.rotate_n(1),
+                Orientation::West => self.rotate_n(3),
             },
-            Orientation::South => {
-                match new_orientation {
-                    Orientation::North => self.rotate_n(2),
-                    Orientation::South => {},
-                    Orientation::East => self.rotate_n(3),
-                    Orientation::West => self.rotate_n(1)
-                }
+            Orientation::South => match new_orientation {
+                Orientation::North => self.rotate_n(2),
+                Orientation::South => {}
+                Orientation::East => self.rotate_n(3),
+                Orientation::West => self.rotate_n(1),
             },
-            Orientation::East => {
-                match new_orientation {
-                    Orientation::North => self.rotate_n(3),
-                    Orientation::South => self.rotate_n(1),
-                    Orientation::East => {},
-                    Orientation::West => self.rotate_n(2)
-                }
+            Orientation::East => match new_orientation {
+                Orientation::North => self.rotate_n(3),
+                Orientation::South => self.rotate_n(1),
+                Orientation::East => {}
+                Orientation::West => self.rotate_n(2),
             },
-            Orientation::West => {
-                match new_orientation {
-                    Orientation::North => self.rotate_n(1),
-                    Orientation::South => self.rotate_n(3),
-                    Orientation::East => self.rotate_n(2),
-                    Orientation::West => {}
-                }
-            }
+            Orientation::West => match new_orientation {
+                Orientation::North => self.rotate_n(1),
+                Orientation::South => self.rotate_n(3),
+                Orientation::East => self.rotate_n(2),
+                Orientation::West => {}
+            },
         }
 
         self.orientation = new_orientation;
@@ -232,9 +224,7 @@ impl WayPoint {
 
 #[aoc_generator(day12)]
 pub fn generator(input: &str) -> Vec<Action> {
-    input.lines()
-        .map(|l| l.try_into().unwrap())
-        .collect()
+    input.lines().map(|l| l.try_into().unwrap()).collect()
 }
 
 #[aoc(day12, part1)]

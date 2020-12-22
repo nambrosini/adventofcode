@@ -1,15 +1,12 @@
 #[derive(Debug, Clone)]
 struct Slope {
     down: usize,
-    right: usize
+    right: usize,
 }
 
 impl Slope {
     pub fn new(right: usize, down: usize) -> Self {
-        Self {
-            down,
-            right
-        }
+        Self { down, right }
     }
 
     pub fn count_trees(self, input: &[Vec<char>]) -> usize {
@@ -31,15 +28,12 @@ impl Slope {
 
 #[aoc_generator(day3)]
 pub fn generator(input: &str) -> Vec<Vec<char>> {
-    input.lines()
-        .map(|l| l.chars().collect())
-        .collect()
+    input.lines().map(|l| l.chars().collect()).collect()
 }
 
 #[aoc(day3, part1)]
 pub fn part1(input: &[Vec<char>]) -> usize {
-    Slope::new(3, 1)
-        .count_trees(&input)
+    Slope::new(3, 1).count_trees(&input)
 }
 
 #[aoc(day3, part2)]
@@ -49,13 +43,13 @@ pub fn part2(input: &[Vec<char>]) -> usize {
         Slope::new(1, 1),
         Slope::new(5, 1),
         Slope::new(7, 1),
-        Slope::new(1, 2)
+        Slope::new(1, 2),
     ];
 
-    slopes.iter()
+    slopes
+        .iter()
         .fold(1, |res, x| res * x.clone().count_trees(&input))
 }
-
 
 #[cfg(test)]
 mod tests {

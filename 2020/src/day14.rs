@@ -2,20 +2,18 @@ use std::collections::HashMap;
 
 #[aoc_generator(day14)]
 fn generator(input: &str) -> Vec<String> {
-    input.lines()
-        .map(|l| l.to_owned())
-        .collect()
+    input.lines().map(|l| l.to_owned()).collect()
 }
 
 fn get_masked_value(mask: &str, value: i64) -> i64 {
     let mut bits: Vec<i64> = vec![0; mask.len()];
-    let mut v = value.clone();
+    let mut v = value;
     let mut counter = bits.len() - 1;
 
     while v > 0 {
         let bit = v & 1;
         bits[counter] = bit;
-        v = v >> 1;
+        v >>= 1;
         counter -= 1;
     }
 
@@ -30,44 +28,37 @@ fn get_masked_value(mask: &str, value: i64) -> i64 {
     }
 
     let mut res: i64 = 0;
-    let min = bits.iter()
-        .enumerate()
-        .filter(|(_, &x)| x == 1)
-        .next()
-        .unwrap().0;
+    let min = bits.iter().enumerate().find(|(_, &x)| x == 1).unwrap().0;
 
-    for i in min..bits.len() {
-        res = res << 1;
-        res += bits[i];
+    for b in bits.iter().skip(min) {
+        res <<= 1;
+        res += b;
     }
     res
 }
 
 fn get_addresses(mask: &str, value: i64) -> Vec<i64> {
     let mut bits: Vec<char> = vec!['0'; mask.len()];
-    let mut v = value.clone();
+    let mut v = value;
     let mut counter = bits.len() - 1;
 
     while v > 0 {
         let bit = v & 1;
-        bits[counter] = if bit == 0 {
-            '0'
-        } else {
-            '1'
-        };
-        v = v >> 1;
+        bits[counter] = if bit == 0 { '0' } else { '1' };
+        v >>= 1;
         counter -= 1;
     }
 
     let mask: Vec<char> = mask.chars().collect();
 
     for i in 0..mask.len() {
-        if mask[i] != '0'{
+        if mask[i] != '0' {
             bits[i] = mask[i];
         }
     }
 
-    let bits_x_pos: Vec<usize> = bits.iter()
+    let bits_x_pos: Vec<usize> = bits
+        .iter()
         .enumerate()
         .filter(|(_, &x)| x == 'X')
         .map(|(i, _)| i)
@@ -80,11 +71,7 @@ fn get_addresses(mask: &str, value: i64) -> Vec<i64> {
 
         for j in 0..bits_x_pos.len() {
             let v = (i >> j) & 1;
-            let v = if v == 0 {
-                '0'
-            } else {
-                '1'
-            };
+            let v = if v == 0 { '0' } else { '1' };
 
             b[bits_x_pos[j as usize] as usize] = v;
         }
@@ -96,19 +83,10 @@ fn get_addresses(mask: &str, value: i64) -> Vec<i64> {
 
     for b in bits_results {
         let mut res = 0;
-        let min = b.iter()
-            .enumerate()
-            .filter(|(_, &x)| x == '1')
-            .next()
-            .unwrap()
-            .0;
-        for i in min..bits.len() {
-            res = res << 1;
-            res += if b[i] == '1' {
-                1
-            } else {
-                0
-            };
+        let min = b.iter().enumerate().find(|(_, &x)| x == '1').unwrap().0;
+        for &i in b.iter().skip(min) {
+            res <<= 1;
+            res += if i == '1' { 1 } else { 0 };
         }
 
         results.push(res);
@@ -151,7 +129,7 @@ fn part2(input: &[String]) -> u64 {
             mask = split[1];
         } else {
             let address: i64 = split[0][4..split[0].len() - 1].parse().unwrap();
-            let value: u64 = split[1].parse().unwrap(); 
+            let value: u64 = split[1].parse().unwrap();
             let address = get_addresses(mask, address);
             for x in address {
                 mem.insert(x as usize, value);
@@ -168,7 +146,9 @@ mod tests {
 
     #[test]
     fn sample1() {
-        let s = generator("mask = XXXXXXXXXXXXXXXXXXXXXXXXXXXXX1XXXX0X\nmem[8] = 11\nmem[7] = 101\nmem[8] = 0");
+        let s = generator(
+            "mask = XXXXXXXXXXXXXXXXXXXXXXXXXXXXX1XXXX0X\nmem[8] = 11\nmem[7] = 101\nmem[8] = 0",
+        );
 
         assert_eq!(part1(&s), 165);
     }

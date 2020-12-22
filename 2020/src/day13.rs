@@ -26,7 +26,7 @@ fn generator_part1(input: &str) -> Lines {
 
     let mut times: Vec<usize> = vec![];
 
-    for s in split[1].split(",") {
+    for s in split[1].split(',') {
         let time = s.parse();
 
         if let Ok(v) = time {
@@ -50,17 +50,19 @@ fn generator_part2(input: &str) -> Vec<(i128, i128)> {
         .filter(|(_, x)| *x != "x")
         .map(|(i, x)| {
             let num = x.parse::<i128>().unwrap();
-            return ((num - (i as i128 % num)) % num, num);
+            ((num - (i as i128 % num)) % num, num)
         })
         .collect()
 }
 
 #[aoc(day13, part1)]
 pub fn part1(input: &Lines) -> usize {
-    let next_departing = input.1.iter()
+    let next_departing = input
+        .1
+        .iter()
         .enumerate()
         .map(|(i, x)| (i, input.0 + x - (input.0 % x)))
-        .min_by_key(|(_, x)| x.clone())
+        .min_by_key(|(_, x)| *x)
         .unwrap();
 
     (next_departing.1 - input.0) * input.1[next_departing.0]
@@ -68,20 +70,17 @@ pub fn part1(input: &Lines) -> usize {
 
 #[aoc(day13, part2)]
 pub fn part2(input: &[(i128, i128)]) -> i128 {
-    let n: i128 = input
-        .iter()
-        .map(|(_, n_i)| n_i)
-        .product();
-    
+    let n: i128 = input.iter().map(|(_, n_i)| n_i).product();
+
     let x: i128 = input
         .iter()
         .map(|(a_i, n_i)| {
-            let tmp = n / n_i;   
-            return a_i * mod_inv(tmp, *n_i) * tmp;
+            let tmp = n / n_i;
+            a_i * mod_inv(tmp, *n_i) * tmp
         })
         .sum();
 
-    return x % n;
+    x % n
 }
 
 #[cfg(test)]

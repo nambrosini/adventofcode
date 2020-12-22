@@ -3,14 +3,14 @@ use std::fmt;
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct WaitingHall {
-    seats: Vec<Vec<Status>>
+    seats: Vec<Vec<Status>>,
 }
 
 #[derive(Debug, Clone, PartialEq)]
 pub enum Status {
     Empty,
     Occupied,
-    Floor
+    Floor,
 }
 
 impl fmt::Display for Status {
@@ -18,7 +18,7 @@ impl fmt::Display for Status {
         let res = match self {
             Status::Empty => 'L',
             Status::Occupied => '#',
-            Status::Floor => '.'
+            Status::Floor => '.',
         };
 
         write!(f, "{}", res)
@@ -33,16 +33,14 @@ impl TryFrom<char> for Status {
             '#' => Status::Occupied,
             '.' => Status::Floor,
             'L' => Status::Empty,
-            _ => unreachable!()
+            _ => unreachable!(),
         })
     }
 }
 
 impl WaitingHall {
     pub fn new(seats: Vec<Vec<Status>>) -> Self {
-        Self {
-            seats
-        }
+        Self { seats }
     }
 
     pub fn run_part1(&mut self) {
@@ -50,16 +48,14 @@ impl WaitingHall {
             let save = self.seats.clone();
             let occupied = self.compute_occupied_count_part1();
 
-            for i in 0..self.seats.len() {
-                for j in 0..self.seats[i].len() {
+            for (i, row) in occupied.iter().enumerate() {
+                for (j, &seat) in row.iter().enumerate() {
                     if self.seats[i][j] == Status::Occupied {
-                        if occupied[i][j] >= 4 {
+                        if seat >= 4 {
                             self.seats[i][j] = Status::Empty;
                         }
-                    } else if self.seats[i][j] == Status::Empty {
-                        if occupied[i][j] == 0 {
-                            self.seats[i][j] = Status::Occupied;
-                        }
+                    } else if self.seats[i][j] == Status::Empty && seat == 0 {
+                        self.seats[i][j] = Status::Occupied;
                     }
                 }
             }
@@ -78,22 +74,14 @@ impl WaitingHall {
             }
         }
 
-        return occupied;
+        occupied
     }
 
     pub fn count_occupied_part1(&self, x: usize, y: usize) -> usize {
         let mut occupied = 0;
 
-        let start_x = if x.checked_sub(1) == None {
-            0
-        } else {
-            x - 1
-        };
-        let start_y = if y.checked_sub(1) == None {
-            0
-        } else {
-            y - 1
-        };
+        let start_x = if x.checked_sub(1) == None { 0 } else { x - 1 };
+        let start_y = if y.checked_sub(1) == None { 0 } else { y - 1 };
         let end_x = if x + 1 >= self.seats.len() {
             self.seats.len() - 1
         } else {
@@ -120,7 +108,6 @@ impl WaitingHall {
     }
 
     pub fn count_occupied_part2(&self, x: usize, y: usize) -> usize {
-
         let dirs: Vec<(i32, i32)> = vec![
             (-1, 0),
             (-1, 1),
@@ -129,7 +116,7 @@ impl WaitingHall {
             (1, 0),
             (1, -1),
             (0, -1),
-            (-1, -1)
+            (-1, -1),
         ];
 
         let mut occupied = 0;
@@ -154,9 +141,9 @@ impl WaitingHall {
                     Status::Occupied => {
                         occupied += 1;
                         break;
-                    },
+                    }
                     Status::Empty => break,
-                    _ => continue
+                    _ => continue,
                 }
             }
         }
@@ -172,7 +159,7 @@ impl WaitingHall {
             }
         }
 
-        return occupied;
+        occupied
     }
 
     pub fn run_part2(&mut self) {
@@ -180,16 +167,14 @@ impl WaitingHall {
             let save = self.seats.clone();
             let occupied = self.compute_occupied_count_part2();
 
-            for i in 0..self.seats.len() {
-                for j in 0..self.seats[i].len() {
+            for (i, row) in occupied.iter().enumerate() {
+                for (j, &seat) in row.iter().enumerate() {
                     if self.seats[i][j] == Status::Occupied {
-                        if occupied[i][j] >= 5 {
+                        if seat >= 5 {
                             self.seats[i][j] = Status::Empty;
                         }
-                    } else if self.seats[i][j] == Status::Empty {
-                        if occupied[i][j] == 0 {
-                            self.seats[i][j] = Status::Occupied;
-                        }
+                    } else if self.seats[i][j] == Status::Empty && seat == 0 {
+                        self.seats[i][j] = Status::Occupied;
                     }
                 }
             }
@@ -207,27 +192,30 @@ impl fmt::Display for WaitingHall {
             for seat in line {
                 write!(f, "{}", seat)?;
             }
-            write!(f, "\n")?;
+            writeln!(f)?;
         }
 
-        write!(f, "\n")
+        writeln!(f)
     }
 }
 
 #[aoc_generator(day11)]
 pub fn generator(input: &str) -> WaitingHall {
-    WaitingHall::new(input.lines()
-        .map(|l| l.chars().map(|c| c.try_into().unwrap()).collect())
-        .collect())
+    WaitingHall::new(
+        input
+            .lines()
+            .map(|l| l.chars().map(|c| c.try_into().unwrap()).collect())
+            .collect(),
+    )
 }
 
 #[aoc(day11, part1)]
 pub fn part1(input: &WaitingHall) -> usize {
-
     let mut input = input.clone();
     input.run_part1();
 
-    input.seats
+    input
+        .seats
         .iter()
         .flatten()
         .filter(|&s| s.clone() == Status::Occupied)
@@ -239,7 +227,8 @@ pub fn part2(input: &WaitingHall) -> usize {
     let mut input = input.clone();
     input.run_part2();
 
-    input.seats
+    input
+        .seats
         .iter()
         .flatten()
         .filter(|&s| s.clone() == Status::Occupied)

@@ -3,9 +3,7 @@ use std::iter::FromIterator;
 
 #[aoc_generator(day7)]
 pub fn generator(input: &str) -> Vec<String> {
-    input.lines()
-        .map(|s| s.to_owned())
-        .collect()
+    input.lines().map(|s| s.to_owned()).collect()
 }
 
 #[aoc(day7, part1)]
@@ -16,26 +14,22 @@ pub fn part1(input: &[String]) -> usize {
         let s = s.to_owned().replace("bags", "");
         let s = s.replace("bag", "");
         let s = s.replace(".", "");
-        let s: Vec<String> = s.trim().split("contain ")
-            .map(|s| s.to_owned())
-            .collect();
+        let s: Vec<String> = s.trim().split("contain ").map(|s| s.to_owned()).collect();
 
-        let bag_color = s[0].trim().clone();
+        let bag_color = s[0].trim();
 
-        let s: Vec<String> = s[1].split(",")
-            .map(|s| s.trim().to_owned())
-            .collect();
+        let s: Vec<String> = s[1].split(',').map(|s| s.trim().to_owned()).collect();
 
-        for i in 0..s.len() {
-            let n: usize = if s[i] == "no other" {
+        for i in &s {
+            let n: usize = if i == "no other" {
                 continue;
             } else {
-                s[i][..1].to_owned().parse().unwrap()
+                i[..1].to_owned().parse().unwrap()
             };
 
-            let key = s[i][2..].trim().to_owned();
+            let key = i[2..].trim().to_owned();
 
-            let bag = bags.entry(key.to_owned()).or_insert(HashMap::new());
+            let bag = bags.entry(key.to_owned()).or_default();
             bag.insert(bag_color.to_owned(), n);
         }
     }
@@ -46,7 +40,7 @@ pub fn part1(input: &[String]) -> usize {
 
     while counter < bags_containing_gold.len() {
         if let Some(v) = bags.get(&bags_containing_gold[counter]) {
-            bags_containing_gold.append(& mut v.keys().map(|s| s.to_owned()).collect());
+            bags_containing_gold.append(&mut v.keys().map(|s| s.to_owned()).collect());
         }
         counter += 1;
     }
@@ -62,26 +56,22 @@ pub fn part2(input: &[String]) -> usize {
         let s = s.to_owned().replace("bags", "");
         let s = s.replace("bag", "");
         let s = s.replace(".", "");
-        let s: Vec<String> = s.trim().split("contain ")
-            .map(|s| s.to_owned())
-            .collect();
+        let s: Vec<String> = s.trim().split("contain ").map(|s| s.to_owned()).collect();
 
-        let bag_color = s[0].trim().clone();
+        let bag_color = s[0].trim();
 
-        let s: Vec<String> = s[1].split(",")
-            .map(|s| s.trim().to_owned())
-            .collect();
+        let s: Vec<String> = s[1].split(',').map(|s| s.trim().to_owned()).collect();
 
-        for i in 0..s.len() {
-            let n: usize = if s[i] == "no other" {
+        for i in s {
+            let n: usize = if i == "no other" {
                 continue;
             } else {
-                s[i][..1].to_owned().parse().unwrap()
+                i[..1].to_owned().parse().unwrap()
             };
 
-            let key = s[i][2..].trim().to_owned();
+            let key = i[2..].trim().to_owned();
 
-            let bag = bags.entry(bag_color.to_owned()).or_insert(HashMap::new());
+            let bag = bags.entry(bag_color.to_owned()).or_default();
             bag.insert(key.to_owned(), n);
         }
     }
@@ -127,4 +117,3 @@ mod tests {
         assert_eq!(part2(&s), 126);
     }
 }
-

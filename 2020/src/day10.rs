@@ -1,28 +1,23 @@
 #[aoc_generator(day10)]
 pub fn input_generator(input: &str) -> Vec<u32> {
-    let mut input: Vec<u32> = input.lines()
-        .map(|x| x.parse().unwrap())
-        .collect();
+    let mut input: Vec<u32> = input.lines().map(|x| x.parse().unwrap()).collect();
 
-    input.sort();
+    input.sort_unstable();
 
     input
 }
 
 #[aoc(day10, part1)]
 pub fn part1(input: &[u32]) -> u32 {
-    let differences: Vec<u32> = input
-        .windows(2)
-        .map(|slice| slice[1] - slice[0])
-        .collect();
+    let differences: Vec<u32> = input.windows(2).map(|slice| slice[1] - slice[0]).collect();
 
     let diff1: u32 = differences.iter().filter(|&&x| x == 1u32).count() as u32;
     let diff3: u32 = differences.iter().filter(|&&x| x == 3u32).count() as u32;
 
-    match input[0] - 0 {
+    match input[0] {
         1 => ((diff1 + 1) * (diff3 + 1)),
         3 => (diff1 * (diff3 + 2)),
-        _ => panic!()
+        _ => panic!(),
     }
 }
 

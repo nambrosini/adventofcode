@@ -1,10 +1,11 @@
-use std::collections::{HashSet, HashMap};
+use std::collections::{HashMap, HashSet};
 
 type Coordinates = (i8, i8, i8, i8);
 
 #[aoc_generator(day17)]
 pub fn generator(input: &str) -> HashSet<Coordinates> {
-    input.lines()
+    input
+        .lines()
         .into_iter()
         .enumerate()
         .flat_map(|(x, line)| {

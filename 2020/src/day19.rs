@@ -1,5 +1,5 @@
-use std::collections::HashMap;
 use regex::Regex;
+use std::collections::HashMap;
 
 #[aoc_generator(day19)]
 pub fn generator_part1(input: &str) -> (HashMap<usize, String>, Vec<String>) {
@@ -61,10 +61,7 @@ pub fn part1((raw_rules, samples): &(HashMap<usize, String>, Vec<String>)) -> us
 
     let expr = Regex::new(&expr).unwrap();
 
-    samples
-        .into_iter()
-        .filter(|p| expr.is_match(p))
-        .count()
+    samples.iter().filter(|p| expr.is_match(p)).count()
 }
 
 #[aoc(day19, part2)]
@@ -89,7 +86,7 @@ pub fn part2((raw_rules, samples): &(HashMap<usize, String>, Vec<String>)) -> us
     let r31 = Regex::new(r31).unwrap();
 
     samples
-        .into_iter()
+        .iter()
         .filter(|p| {
             if let Some(cap) = r0.captures(&p) {
                 let n = r42.find_iter(&cap[1]).count();

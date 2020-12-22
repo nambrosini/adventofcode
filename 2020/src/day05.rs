@@ -9,31 +9,27 @@ pub fn generator(input: &str) -> Vec<usize> {
 
 pub fn calc_id(id: &[char]) -> usize {
     let (mut start_row, mut end_row) = (0, 127);
-    for i in 0..7 {
-        let c = id[i];
+    for i in id.iter().take(7) {
+        let c = i;
 
         match c {
             'F' => end_row -= (end_row - start_row + 1) / 2,
             'B' => start_row += (end_row - start_row + 1) / 2,
-            _ => unreachable!()
+            _ => unreachable!(),
         }
     }
 
-    let row = if id[6] == 'F' {
-        end_row
-    } else {
-        start_row
-    };
+    let row = if id[6] == 'F' { end_row } else { start_row };
 
     let (mut start_col, mut end_col) = (0, 7);
 
-    for i in 7..id.len() {
-        let c = id[i];
+    for i in id.iter().skip(7) {
+        let c = i;
 
         match c {
             'L' => end_col -= (end_col - start_col + 1) / 2,
             'R' => start_col += (end_col - start_col + 1) / 2,
-            _ => unreachable!()
+            _ => unreachable!(),
         }
     }
 
@@ -48,21 +44,15 @@ pub fn calc_id(id: &[char]) -> usize {
 
 #[aoc(day05, part1)]
 pub fn part1(input: &[usize]) -> usize {
-    *input.iter()
-        .max()
-        .unwrap()
+    *input.iter().max().unwrap()
 }
 
 #[aoc(day5, part2)]
 pub fn part2(input: &[usize]) -> usize {
-    let min = input.iter().min().unwrap().clone();
-    let max = input.iter().max().unwrap().clone();
+    let min = input.iter().min().unwrap();
+    let max = input.iter().max().unwrap();
 
-    (min..=max)
-        .filter(|x| !input.contains(x))
-        .next()
-        .unwrap()
-        .clone()
+    (*min..=*max).find(|x| !input.contains(x)).unwrap()
 }
 
 #[cfg(test)]
