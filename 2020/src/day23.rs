@@ -22,7 +22,7 @@ fn to_linked_vec(cups: &[usize]) -> Vec<usize> {
 #[derive(Clone)]
 pub struct Game {
     cups: Vec<usize>,
-    current_cup: usize
+    current_cup: usize,
 }
 
 impl Game {
@@ -34,7 +34,7 @@ impl Game {
 
         Self {
             cups: to_linked_vec(&cups),
-            current_cup: cups[0]
+            current_cup: cups[0],
         }
     }
 
