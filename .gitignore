@@ -11,3 +11,9 @@
 
 # Mac ds store
 **/*/.DS_Store
+
+# Idea files
+**/*/.idea
+
+# Vscode
+**/*/.vscode

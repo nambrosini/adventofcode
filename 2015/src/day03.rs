@@ -45,10 +45,10 @@ pub fn part2(input: &[char]) -> usize {
 
             if i % 2 == 1 {
                 santa_pos = (santa_pos.0 + m.0, santa_pos.1 + m.1);
-                return santa_pos;
+                santa_pos
             } else {
                 robo_pos = (robo_pos.0 + m.0, robo_pos.1 + m.1);
-                return robo_pos;
+                robo_pos
             }
         })
         .collect();

@@ -39,42 +39,30 @@ pub fn part1(input: &[String]) -> usize {
         .count()
 }
 
-#[cfg(test)]
-mod tests {
-    use super::*;
+#[aoc(day5, part2)]
+pub fn part2(input: &[String]) -> usize {
+    let check_rule_1 = |s: &str| -> bool {
+        for i in 0..s.len() - 2 {
+            let pair = &s[i..=i + 1];
+            if s[..=i + 2].contains(pair) && s[i + 2..].contains(pair) {
+                return true;
+            }
+        }
 
-    #[test]
-    fn sample1_test1() {
-        let s = generator("ugknbfddgicrmopn");
+        false
+    };
 
-        assert_eq!(part1(&s), 1);
-    }
+    let check_rule_2 = |s: &str| -> bool {
+        for i in 0..s.len() - 2 {
+            if s[i..=i] == s[i+2..=i+2] {
+                return true;
+            }
+        }
 
-    #[test]
-    fn sample2_test1() {
-        let s = generator("aaa");
+        false
+    };
 
-        assert_eq!(part1(&s), 1);
-    }
-
-    #[test]
-    fn sample3_test1() {
-        let s = generator("jchzalrnumimnmhp");
-
-        assert_eq!(part1(&s), 0);
-    }
-
-    #[test]
-    fn sample4_test1() {
-        let s = generator("haegwjzuvuyypxyu");
-
-        assert_eq!(part1(&s), 0);
-    }
-
-    #[test]
-    fn sample5_test1() {
-        let s = generator("dvszwmarrgswjxmb");
-
-        assert_eq!(part1(&s), 0);
-    }
+    input.iter()
+        .filter(|x| check_rule_1(x.trim()) && check_rule_2(x.trim()))
+        .count()
 }

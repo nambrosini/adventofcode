@@ -2,10 +2,10 @@
 pub fn generator(input: &str) -> Vec<Vec<usize>> {
     input
         .lines()
-        .map(|x| x.split("x").map(|x| x.parse().unwrap()).collect::<Vec<usize>>())
+        .map(|x| x.split('x').map(|x| x.parse().unwrap()).collect::<Vec<usize>>())
         .map(|x| {
-            let mut x = x.clone();
-            x.sort();
+            let mut x = x;
+            x.sort_unstable();
             x
         })
         .collect()
