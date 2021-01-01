@@ -55,7 +55,6 @@ pub fn part1(input: &[u8]) -> String {
 }
 
 fn increment(s: &[u8]) -> Vec<u8> {
-
     let mut s_bytes = s.to_vec();
     let len = s_bytes.len();
 

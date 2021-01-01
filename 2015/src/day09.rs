@@ -1,17 +1,17 @@
 use itertools::Itertools as _;
-use std::collections::{HashSet, HashMap};
+use std::collections::{HashMap, HashSet};
 
 #[derive(Debug, PartialEq, Eq, Hash)]
 pub struct Edge {
     vertex: String,
-    distance: usize
+    distance: usize,
 }
 
 impl Edge {
     fn new(vertex: &str, distance: usize) -> Self {
         Self {
             vertex: vertex.to_owned(),
-            distance
+            distance,
         }
     }
 }

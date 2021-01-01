@@ -1,17 +1,13 @@
 #[aoc_generator(day5)]
 pub fn generator(input: &str) -> Vec<String> {
-    input.lines()
-        .map(|l| l.to_owned())
-        .collect()
+    input.lines().map(|l| l.to_owned()).collect()
 }
 
 #[aoc(day5, part1)]
 pub fn part1(input: &[String]) -> usize {
     let check_rule_1 = |s: &str| -> bool {
         let vowels = vec!['a', 'e', 'i', 'o', 'u'];
-        s.chars()
-            .filter(|x| vowels.contains(x))
-            .count() >= 3
+        s.chars().filter(|x| vowels.contains(x)).count() >= 3
     };
 
     let check_rule_2 = |s: &str| -> bool {
@@ -29,12 +25,11 @@ pub fn part1(input: &[String]) -> usize {
     let check_rule_3 = |s: &str| -> bool {
         let not = vec!["ab", "cd", "pq", "xy"];
 
-        not.iter()
-            .filter(|x| s.contains(x.to_owned()))
-            .count() == 0
+        not.iter().filter(|x| s.contains(x.to_owned())).count() == 0
     };
 
-    input.iter()
+    input
+        .iter()
         .filter(|x| check_rule_1(x) && check_rule_2(x) && check_rule_3(x))
         .count()
 }
@@ -54,7 +49,7 @@ pub fn part2(input: &[String]) -> usize {
 
     let check_rule_2 = |s: &str| -> bool {
         for i in 0..s.len() - 2 {
-            if s[i..=i] == s[i+2..=i+2] {
+            if s[i..=i] == s[i + 2..=i + 2] {
                 return true;
             }
         }
@@ -62,7 +57,8 @@ pub fn part2(input: &[String]) -> usize {
         false
     };
 
-    input.iter()
+    input
+        .iter()
         .filter(|x| check_rule_1(x.trim()) && check_rule_2(x.trim()))
         .count()
 }

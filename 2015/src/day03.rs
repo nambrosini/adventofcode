@@ -9,20 +9,21 @@ pub fn generator(input: &str) -> Vec<char> {
 pub fn part1(input: &[char]) -> usize {
     let mut pos = (0usize, 0usize);
 
-    let mut visited: HashSet<(usize, usize)> = input.iter()
+    let mut visited: HashSet<(usize, usize)> = input
+        .iter()
         .map(|next| {
             pos = match next {
                 '>' => (pos.0 + 1, pos.1),
                 '<' => (pos.0 - 1, pos.1),
                 '^' => (pos.0, pos.1 + 1),
                 'v' => (pos.0, pos.1 - 1),
-                _ => unreachable!()
+                _ => unreachable!(),
             };
 
             pos
         })
         .collect();
-    
+
     visited.insert((0, 0));
     visited.len()
 }
@@ -32,7 +33,8 @@ pub fn part2(input: &[char]) -> usize {
     let mut santa_pos = (0i32, 0i32);
     let mut robo_pos = (0i32, 0i32);
 
-    let mut visited: HashSet<(i32, i32)> = input.iter()
+    let mut visited: HashSet<(i32, i32)> = input
+        .iter()
         .enumerate()
         .map(|(i, next)| {
             let m = match next {
@@ -40,7 +42,7 @@ pub fn part2(input: &[char]) -> usize {
                 '<' => (-1, 0),
                 '^' => (0, 1),
                 'v' => (0, -1),
-                _ => unreachable!()
+                _ => unreachable!(),
             };
 
             if i % 2 == 1 {

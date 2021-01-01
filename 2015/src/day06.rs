@@ -3,9 +3,8 @@ use std::convert::{TryFrom, TryInto};
 pub enum Action {
     TurnOn,
     TurnOff,
-    Toggle
+    Toggle,
 }
-
 
 impl TryFrom<&str> for Action {
     type Error = String;
@@ -15,14 +14,14 @@ impl TryFrom<&str> for Action {
             "turn on" => Self::TurnOn,
             "toggle" => Self::Toggle,
             "turn off" => Self::TurnOff,
-            _ => unreachable!()
+            _ => unreachable!(),
         })
     }
 }
 pub struct Instruction {
     from: (usize, usize),
     to: (usize, usize),
-    action: Action
+    action: Action,
 }
 
 impl TryFrom<&str> for Instruction {
@@ -49,7 +48,9 @@ impl TryFrom<&str> for Instruction {
             Ok(Self {
                 from,
                 to,
-                action: (&format!("{} {}", split[0], split[1])[..]).try_into().unwrap()
+                action: (&format!("{} {}", split[0], split[1])[..])
+                    .try_into()
+                    .unwrap(),
             })
         }
     }
@@ -57,9 +58,7 @@ impl TryFrom<&str> for Instruction {
 
 #[aoc_generator(day6)]
 pub fn generator(input: &str) -> Vec<Instruction> {
-    input.lines()
-        .map(|x| x.try_into().unwrap())
-        .collect()
+    input.lines().map(|x| x.try_into().unwrap()).collect()
 }
 
 #[aoc(day6, part1)]
@@ -74,17 +73,14 @@ pub fn part1(input: &[Instruction]) -> usize {
                     Action::Toggle => match y {
                         1 => 0,
                         0 => 1,
-                        _ => unreachable!()
-                    }
+                        _ => unreachable!(),
+                    },
                 }
             }
         }
     }
 
-    map.iter()
-        .flatten()
-        .filter(|x| x == &&1)
-        .count()
+    map.iter().flatten().filter(|x| x == &&1).count()
 }
 
 #[aoc(day6, part2)]
@@ -94,19 +90,19 @@ pub fn part2(input: &[Instruction]) -> i32 {
         for x in map.iter_mut().take(i.to.0 + 1).skip(i.from.0) {
             for y in x.iter_mut().take(i.to.1 + 1).skip(i.from.1) {
                 *y += match i.action {
-                    Action::TurnOff => if *y == 0 {
-                        0
-                    } else {
-                        -1
-                    } ,
+                    Action::TurnOff => {
+                        if *y == 0 {
+                            0
+                        } else {
+                            -1
+                        }
+                    }
                     Action::TurnOn => 1,
-                    Action::Toggle => 2
+                    Action::Toggle => 2,
                 }
             }
         }
     }
 
-    map.iter()
-        .flatten()
-        .sum()
+    map.iter().flatten().sum()
 }

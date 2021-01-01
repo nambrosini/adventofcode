@@ -66,7 +66,7 @@ mod tests {
         let input2 = r#"[1,{"c":"red","b":2},3]"#;
         let input3 = r#"{"d":"red","e":[1,2,3,4],"f":5}"#;
         let input4 = r#"[1,"red",5]"#;
-        
+
         assert_eq!(part2(&input1), 6);
         assert_eq!(part2(&input2), 4);
         assert_eq!(part2(&input3), 0);

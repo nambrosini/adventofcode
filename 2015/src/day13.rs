@@ -14,7 +14,7 @@ pub fn generator(input: &str) -> MapType {
         let points: i32 = match split[2] {
             "gain" => 1,
             "lose" => -1,
-            _ => unreachable!()
+            _ => unreachable!(),
         } * split[3].parse::<i32>().unwrap();
         let neighbour = split.iter().last().unwrap().replace(".", "");
 
@@ -41,7 +41,7 @@ pub fn part2(map: &MapType) -> i32 {
         my.insert(p.to_owned(), 0);
     }
 
-    for (k, v) in map.iter_mut() {
+    for (_k, v) in map.iter_mut() {
         v.insert("Me".to_owned(), 0);
     }
 
@@ -63,12 +63,10 @@ fn calc_happiness(map: &MapType) -> HashSet<i32> {
         for i in 0..p.len() {
             sum += map[p[i]][p[(i + 1) % p.len()]];
             let rev = p.len() - 1 - i;
-            sum += map[p[rev]][p[
-                match rev.checked_sub(1) {
-                    Some(v) => v,
-                    None => p.len() - 1
-                }
-                ]];
+            sum += map[p[rev]][p[match rev.checked_sub(1) {
+                Some(v) => v,
+                None => p.len() - 1,
+            }]];
         }
 
         set.insert(sum);

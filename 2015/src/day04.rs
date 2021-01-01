@@ -1,8 +1,7 @@
-use md5::{Md5, Digest};
+use md5::{Digest, Md5};
 
 #[aoc(day4, part1)]
 pub fn part1(input: &str) -> usize {
-
     let key = input.as_bytes();
     for i in 0..std::usize::MAX {
         let mut hasher = Md5::new();
@@ -22,7 +21,6 @@ pub fn part1(input: &str) -> usize {
 
 #[aoc(day4, part2)]
 pub fn part2(input: &str) -> usize {
-
     let key = input.as_bytes();
     for i in 0..std::usize::MAX {
         let mut hasher = Md5::new();

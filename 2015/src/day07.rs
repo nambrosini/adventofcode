@@ -3,7 +3,8 @@ use std::collections::HashMap;
 
 #[aoc_generator(day7)]
 pub fn generator(input: &str) -> Vec<(String, String)> {
-    input.lines()
+    input
+        .lines()
         .map(|x| x.split(" -> ").collect::<Vec<&str>>())
         .map(|l| (l[0].to_owned(), l[1].to_owned()))
         .collect()
@@ -33,7 +34,7 @@ pub fn part1(input: &[(String, String)]) -> usize {
                             new_input.push(next.clone());
                         }
                     }
-                },
+                }
                 2 => {
                     let a = map.get(value[1]).cloned();
                     if let Some(a) = a {
@@ -41,7 +42,7 @@ pub fn part1(input: &[(String, String)]) -> usize {
                     } else {
                         new_input.push(next.clone());
                     }
-                },
+                }
                 3 => {
                     let a = value[0].parse::<usize>();
                     let b = map.get(value[2]).cloned();
@@ -57,8 +58,8 @@ pub fn part1(input: &[(String, String)]) -> usize {
                     } else {
                         new_input.push(next.clone());
                     }
-                },
-                _ => unreachable!()
+                }
+                _ => unreachable!(),
             }
         }
 
@@ -84,7 +85,7 @@ pub fn part2(input: &[(String, String)]) -> usize {
             } else {
                 next.0.split_whitespace().collect_vec()
             };
-            
+
             match value.len() {
                 1 => {
                     if let Ok(v) = value[0].parse() {
@@ -97,7 +98,7 @@ pub fn part2(input: &[(String, String)]) -> usize {
                             new_input.push(next.clone());
                         }
                     }
-                },
+                }
                 2 => {
                     let a = map.get(value[1]).cloned();
                     if let Some(a) = a {
@@ -105,7 +106,7 @@ pub fn part2(input: &[(String, String)]) -> usize {
                     } else {
                         new_input.push(next.clone());
                     }
-                },
+                }
                 3 => {
                     let a = value[0].parse::<usize>();
                     let b = map.get(value[2]).cloned();
@@ -121,8 +122,8 @@ pub fn part2(input: &[(String, String)]) -> usize {
                     } else {
                         new_input.push(next.clone());
                     }
-                },
-                _ => unreachable!()
+                }
+                _ => unreachable!(),
             }
         }
 
@@ -132,13 +133,12 @@ pub fn part2(input: &[(String, String)]) -> usize {
     *map.get("a").unwrap()
 }
 
-
-fn calc_val(a: usize, b: usize, ops: &str)  -> usize {
+fn calc_val(a: usize, b: usize, ops: &str) -> usize {
     match ops {
         "AND" => a & b,
         "OR" => a | b,
         "LSHIFT" => a << b,
         "RSHIFT" => a >> b,
-        _ => unreachable!()
+        _ => unreachable!(),
     }
 }

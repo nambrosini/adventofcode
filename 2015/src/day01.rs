@@ -1,9 +1,11 @@
 #[aoc(day1, part1)]
-pub fn part1(input: &str) -> i32{
-    input.chars().fold(0, |sum, c| sum + match c {
-        '(' => 1,
-        ')' => -1,
-        _ => unreachable!()
+pub fn part1(input: &str) -> i32 {
+    input.chars().fold(0, |sum, c| {
+        sum + match c {
+            '(' => 1,
+            ')' => -1,
+            _ => unreachable!(),
+        }
     })
 }
 
@@ -15,7 +17,7 @@ pub fn part2(input: &str) -> i32 {
         sum += match c {
             '(' => 1,
             ')' => -1,
-            _ => unreachable!()
+            _ => unreachable!(),
         };
 
         if sum == -1 {
@@ -25,7 +27,6 @@ pub fn part2(input: &str) -> i32 {
 
     unreachable!();
 }
-
 
 #[cfg(test)]
 mod tests {

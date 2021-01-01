@@ -86,5 +86,4 @@ mod tests {
 
         assert_eq!(part1(&input), 312211);
     }
-
 }
