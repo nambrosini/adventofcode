@@ -1,5 +1,4 @@
 use itertools::Itertools;
-use std::cmp::max;
 use std::convert::{TryFrom, TryInto};
 use std::ops::{Add, Mul};
 
@@ -9,7 +8,7 @@ pub struct Ingredient {
     durability: i64,
     flavor: i64,
     texture: i64,
-    calories: i64
+    calories: i64,
 }
 
 impl Ingredient {
@@ -19,7 +18,7 @@ impl Ingredient {
             durability,
             flavor,
             texture,
-            calories
+            calories,
         }
     }
 
@@ -40,7 +39,7 @@ impl Mul<i64> for Ingredient {
             durability: self.durability * rhs,
             flavor: self.flavor * rhs,
             texture: self.texture * rhs,
-            calories: self.calories * rhs
+            calories: self.calories * rhs,
         }
     }
 }
@@ -54,7 +53,7 @@ impl Add for Ingredient {
             flavor: self.flavor + rhs.flavor,
             durability: self.durability + rhs.durability,
             texture: self.texture + rhs.texture,
-            calories: self.calories + rhs.calories
+            calories: self.calories + rhs.calories,
         }
     }
 }
@@ -71,13 +70,12 @@ impl TryFrom<&str> for Ingredient {
         let texture = split[8].replace(",", "").parse().unwrap();
         let calories = split[10].parse().unwrap();
 
-
         Ok(Self {
             capacity,
             durability,
             flavor,
             texture,
-            calories
+            calories,
         })
     }
 }
@@ -88,16 +86,13 @@ pub fn generator(input: &str) -> Vec<Ingredient> {
 }
 
 #[aoc(day15, part1)]
-pub fn part1(ingredients: &Vec<Ingredient>) -> i64 {
+pub fn part1(ingredients: &[Ingredient]) -> i64 {
     let cookies = calc_ingredients(ingredients);
 
-    cookies.iter()
-        .map(|c| c.calc())
-        .max()
-        .unwrap()
+    cookies.iter().map(|c| c.calc()).max().unwrap()
 }
 
-fn calc_ingredients(ingredients: &Vec<Ingredient>) -> Vec<Ingredient> {
+fn calc_ingredients(ingredients: &[Ingredient]) -> Vec<Ingredient> {
     let mut v = vec![];
 
     let perm: Vec<Vec<i64>> = (1..=100)
@@ -118,12 +113,12 @@ fn calc_ingredients(ingredients: &Vec<Ingredient>) -> Vec<Ingredient> {
     v
 }
 
-
 #[aoc(day15, part2)]
-pub fn part2(ingredients: &Vec<Ingredient>) -> i64 {
+pub fn part2(ingredients: &[Ingredient]) -> i64 {
     let cookies = calc_ingredients(ingredients);
 
-    cookies.iter()
+    cookies
+        .iter()
         .filter(|c| c.calories == 500)
         .map(|c| c.calc())
         .max()

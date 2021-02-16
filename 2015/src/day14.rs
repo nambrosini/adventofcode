@@ -73,13 +73,13 @@ pub fn generator(input: &str) -> Vec<Race> {
 }
 
 #[aoc(day14, part1)]
-pub fn part1(map: &Vec<Race>) -> usize {
+pub fn part1(map: &[Race]) -> usize {
     let mut map = map.to_vec();
     map.iter_mut().map(|r| r.complete_race()).max().unwrap()
 }
 
 #[aoc(day14, part2)]
-pub fn part2(map: &Vec<Race>) -> usize {
+pub fn part2(map: &[Race]) -> usize {
     let mut map = map.to_vec();
     let mut grid: HashMap<String, usize> = HashMap::new();
 

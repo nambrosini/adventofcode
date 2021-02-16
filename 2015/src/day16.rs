@@ -1,6 +1,5 @@
-use std::cmp::max;
-use std::collections::HashMap;
 use itertools::Itertools;
+use std::collections::HashMap;
 
 // #[derive(Debug, Clone)]
 // pub struct Aunt {
@@ -116,7 +115,7 @@ pub fn part2(aunts: &MapType) -> usize {
             let check = match k.as_str() {
                 "cats" | "trees" => aunt[k] < *v,
                 "pomeranians" | "goldfish" => aunt[k] > *v,
-                _ => aunt[k] == *v
+                _ => aunt[k] == *v,
             };
 
             if check {
