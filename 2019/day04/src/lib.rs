@@ -7,6 +7,7 @@ pub fn solve_part_1(start: u32, end: u32) -> u32 {
         .count() as u32
 }
 
+
 pub fn solve_part_2(start: u32, end: u32) -> u32 {
     let mut vec = vec![];
     vec.extend(start..=end);

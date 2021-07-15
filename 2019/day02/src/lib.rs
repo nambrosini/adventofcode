@@ -7,6 +7,7 @@ pub fn execute_with_fixed_state(x: i32, y: i32, input: &mut [i32]) -> Result<i32
     execute_op(input)
 }
 
+
 fn execute_op(memory: &mut [i32]) -> Result<i32, &'static str> {
     let mut address = 0;
 

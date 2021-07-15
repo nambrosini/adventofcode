@@ -1,5 +1,6 @@
 use std::convert::TryFrom;
 
+
 pub fn solve_part_1(memory: &mut [i32], input: i32) -> Result<i32, String> {
     let mut address = 0;
     let mut res = 0;

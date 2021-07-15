@@ -7,6 +7,7 @@ enum Dir {
     Right(i32),
 }
 
+
 impl Dir {
     fn new(input: &str) -> Self {
         let dir = &input[..1];
