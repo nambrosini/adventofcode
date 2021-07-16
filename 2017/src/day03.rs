@@ -6,7 +6,7 @@ pub fn generator(input: &str) -> i32 {
 #[aoc(day3, part1)]
 pub fn part1(input: &i32) -> i32 {
     let input = *input;
-    let mut root = (input as f32).sqrt();
+    let root = (input as f32).sqrt();
 
     let mut near_root = root as i32;
 
@@ -16,10 +16,8 @@ pub fn part1(input: &i32) -> i32 {
         } else {
             near_root += 2;
         }
-    } else if root == root.floor() {
-        if root.floor() as i32 % 2 == 0 {
-            near_root += 1;
-        }
+    } else if (root - root.floor()).abs() < 0.0001 && root.floor() as i32 % 2 == 0  {
+        near_root += 1;
     }
 
     let near_square = near_root.pow(2);
@@ -54,10 +52,8 @@ pub fn part1(input: &i32) -> i32 {
 
     if diff < near_root - 1 {
         position.1 -= diff;
-        diff = 0;
     } else {
         position.1 -= near_root - 1;
-        diff -= near_root - 1;
     }
 
     manhattan(position)
