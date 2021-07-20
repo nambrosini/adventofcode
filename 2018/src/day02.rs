@@ -2,18 +2,12 @@ use itertools::Itertools;
 
 #[aoc_generator(day2)]
 pub fn generator(input: &str) -> Vec<String> {
-    input
-        .lines()
-        .map(|l| l.to_owned())
-        .collect_vec()
+    input.lines().map(|l| l.to_owned()).collect_vec()
 }
 
 #[aoc(day2, part1)]
 pub fn part1(input: &[String]) -> usize {
-    let checked = input
-        .iter()
-        .map(|x| check_letters(x))
-        .collect_vec();
+    let checked = input.iter().map(|x| check_letters(x)).collect_vec();
 
     let two = checked.iter().fold(0, |sum, x| sum + x.0);
     let three = checked.iter().fold(0, |sum, x| sum + x.1);
@@ -28,13 +22,10 @@ fn check_letters(id: &str) -> (usize, usize) {
     let mut three = 0;
 
     let v = id.chars().collect_vec();
-    
+
     for c in v.iter() {
         if !vec.contains(c) {
-            let count = v
-                .iter()
-                .filter(|&x| x == c)
-                .count();
+            let count = v.iter().filter(|&x| x == c).count();
 
             if count == 2 && two == 0 {
                 two += 1;
@@ -56,7 +47,7 @@ pub fn part2(id: &[String]) -> String {
     let mut vec = vec![];
 
     let id1 = id[i1].chars();
-    let mut id2 = id[i1].chars();
+    let mut id2 = id[i2].chars();
 
     for c in id1 {
         if c == id2.next().unwrap() {
@@ -81,7 +72,7 @@ fn find_similar(id: &[String]) -> (usize, usize) {
                         diff = 1;
                     } else {
                         diff = 2;
-                        break'inner;
+                        break 'inner;
                     }
                 }
             }

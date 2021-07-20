@@ -10,9 +10,7 @@ pub fn generator(input: &str) -> Vec<i32> {
 
 #[aoc(day1, part1)]
 pub fn part1(input: &[i32]) -> i32 {
-    input
-        .iter()
-        .fold(0, |sum, x| sum + x)
+    input.iter().fold(0, |sum, x| sum + x)
 }
 
 #[aoc(day1, part2)]
