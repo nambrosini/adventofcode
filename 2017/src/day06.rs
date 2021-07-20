@@ -36,13 +36,13 @@ pub fn part2(input: &[usize]) -> usize {
 }
 
 struct Debugger {
-    memory: Vec<usize>
+    memory: Vec<usize>,
 }
 
 impl Debugger {
     fn new(memory: &[usize]) -> Self {
         Self {
-            memory: memory.to_vec()
+            memory: memory.to_vec(),
         }
     }
 
@@ -61,20 +61,17 @@ impl Debugger {
 
     fn run(&mut self) -> Vec<String> {
         let mut v = vec![self.memory.iter().map(|x| x.to_string()).join(" ")];
-        let mut steps = 0;
 
         loop {
-            steps += 1;
             self.step();
 
             let joined = self.memory.iter().map(|x| x.to_string()).join(" ");
 
             if v.contains(&joined) {
-                v.push(joined);
                 break;
-            } else {
-                v.push(joined);
             }
+
+            v.push(joined);
         }
 
         v
@@ -85,29 +82,12 @@ fn get_max_index(memory: &[usize]) -> (usize, usize) {
     let mut max = memory[0];
     let mut index = 0;
 
-    for i in 1..memory.len() {
-        if memory[i] > max {
-            max = memory[i];
+    for (i, e) in memory.iter().enumerate().skip(1) {
+        if *e > max {
+            max = *e;
             index = i;
         }
     }
 
-    return (index, max);
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn sample1() {
-        let s = generator("0\t2\t7\t0");
-        assert_eq!(part1(&s), 5);
-    }
-
-    #[test]
-    fn sample2() {
-        let s = generator("0\t2\t7\t0");
-        assert_eq!(part2(&s), 4);
-    }
+    (index, max)
 }

@@ -16,7 +16,7 @@ pub fn part1(input: &i32) -> i32 {
         } else {
             near_root += 2;
         }
-    } else if (root - root.floor()).abs() < 0.0001 && root.floor() as i32 % 2 == 0  {
+    } else if (root - root.floor()).abs() < 0.0001 && root.floor() as i32 % 2 == 0 {
         near_root += 1;
     }
 
@@ -66,7 +66,7 @@ pub fn part2(input: &i32) -> i32 {
     loop {
         let value = get_next_stress_value(&memory);
         if value > *input {
-            return value
+            return value;
         }
 
         memory.push(value);
@@ -78,8 +78,9 @@ fn get_index((x, y): (i32, i32)) -> i32 {
         return 1;
     }
     let root = x.abs().max(y.abs()) * 2;
-    (root - 1) * (root - 1) + root / 2 +
-        if x == root / 2 && y != -root / 2 {
+    (root - 1) * (root - 1)
+        + root / 2
+        + if x == root / 2 && y != -root / 2 {
             y
         } else if y == root / 2 {
             root - x
@@ -138,7 +139,11 @@ fn get_position(n: i32) -> (i32, i32) {
 
 fn get_closest_even_root(n: i32) -> i32 {
     let sr = ((n - 1) as f32).sqrt() as i32;
-    if sr % 2 == 0 { sr } else { sr + 1 }
+    if sr % 2 == 0 {
+        sr
+    } else {
+        sr + 1
+    }
 }
 
 #[cfg(test)]

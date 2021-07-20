@@ -1,14 +1,11 @@
 use itertools::Itertools;
-use std::convert::{From, Into};
-use std::collections::HashMap;
 use regex::Regex;
+use std::collections::HashMap;
+use std::convert::Into;
 
 #[aoc_generator(day7)]
 pub fn generator(input: &str) -> Vec<String> {
-    input
-        .lines()
-        .map(|l| l.into())
-        .collect_vec()
+    input.lines().map(|l| l.into()).collect_vec()
 }
 
 #[aoc(day7, part1)]
@@ -22,8 +19,7 @@ pub fn part1(input: &[String]) -> String {
     let re2 = Regex::new(r"^(.+?) \((\d+)\)$").unwrap();
     for line in input.iter() {
         let cap = re1.captures(line);
-        if cap.is_some() {
-            let cap = cap.unwrap();
+        if let Some(cap) = cap {
             let parent = cap.get(1).unwrap().as_str();
             let weight: u64 = cap.get(2).unwrap().as_str().parse().unwrap();
             let children = cap.get(3).unwrap().as_str();
@@ -34,8 +30,7 @@ pub fn part1(input: &[String]) -> String {
             continue;
         }
         let cap = re2.captures(line);
-        if cap.is_some() {
-            let cap = cap.unwrap();
+        if let Some(cap) = cap {
             let parent = cap.get(1).unwrap().as_str();
             let weight = cap.get(2).unwrap().as_str().parse().unwrap();
             weights.insert(parent, weight);
@@ -49,7 +44,7 @@ pub fn part1(input: &[String]) -> String {
     while tree.contains_key(s) {
         s = tree.get(s).unwrap();
     }
-    return s.to_owned();
+    s.to_owned()
 }
 
 #[aoc(day7, part2)]
@@ -64,8 +59,7 @@ pub fn part2(input: &[String]) -> i64 {
     let re2 = Regex::new(r"^(.+?) \((\d+)\)$").unwrap();
     for line in input.iter() {
         let cap = re1.captures(line);
-        if cap.is_some() {
-            let cap = cap.unwrap();
+        if let Some(cap) = cap {
             let parent = cap.get(1).unwrap().as_str();
             let weight: i64 = cap.get(2).unwrap().as_str().parse().unwrap();
             let children = cap.get(3).unwrap().as_str();
@@ -74,8 +68,7 @@ pub fn part2(input: &[String]) -> i64 {
             continue;
         }
         let cap = re2.captures(line);
-        if cap.is_some() {
-            let cap = cap.unwrap();
+        if let Some(cap) = cap {
             let parent = cap.get(1).unwrap().as_str();
             let weight = cap.get(2).unwrap().as_str().parse().unwrap();
             weights.insert(parent, weight);
@@ -88,7 +81,7 @@ pub fn part2(input: &[String]) -> i64 {
 
     // starting from the root node, recursively check each child.
     match check(&tree, &weights, &root) {
-        Either::Solution(s) => return s,
+        Either::Solution(s) => s,
         _ => panic!("failed to find a solution."),
     }
 }

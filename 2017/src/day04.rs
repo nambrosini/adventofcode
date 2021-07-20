@@ -17,7 +17,8 @@ pub fn part1(input: &[Vec<String>]) -> i32 {
         .map(|l| l.len() - l.iter().cloned().collect::<HashSet<String>>().len())
         .collect_vec();
 
-    count.iter()
+    count
+        .iter()
         .fold(0, |sum, c| sum + if *c == 0usize { 1 } else { 0 })
 }
 
@@ -25,16 +26,20 @@ pub fn part1(input: &[Vec<String>]) -> i32 {
 pub fn part2(input: &[Vec<String>]) -> i32 {
     let count: Vec<usize> = input
         .iter()
-        .map(|l| l.iter().map(|l| {
-            let slice = &l[..];
-            let mut chars: Vec<char> = slice.to_owned().chars().collect();
-            chars.sort_by(|a, b| b.cmp(&a));
-            String::from_iter(chars)
-        }).collect_vec())
+        .map(|l| {
+            l.iter()
+                .map(|l| {
+                    let slice = &l[..];
+                    let mut chars: Vec<char> = slice.to_owned().chars().collect();
+                    chars.sort_by(|a, b| b.cmp(&a));
+                    String::from_iter(chars)
+                })
+                .collect_vec()
+        })
         .map(|l| l.len() - l.iter().cloned().collect::<HashSet<String>>().len())
         .collect_vec();
 
-    count.iter()
+    count
+        .iter()
         .fold(0, |sum, c| sum + if *c == 0usize { 1 } else { 0 })
 }
-

@@ -1,13 +1,10 @@
 use itertools::Itertools;
-use std::convert::{From, Into, TryFrom, TryInto};
 use std::collections::HashMap;
+use std::convert::{From, Into, TryFrom, TryInto};
 
 #[aoc_generator(day8)]
 pub fn generator(input: &str) -> Vec<Instruction> {
-    input
-        .lines()
-        .map(|l| l.into())
-        .collect_vec()
+    input.lines().map(|l| l.into()).collect_vec()
 }
 
 #[aoc(day8, part1)]
@@ -15,9 +12,9 @@ pub fn part1(input: &[Instruction]) -> i32 {
     let mut map: HashMap<&str, i32> = HashMap::new();
 
     for instruction in input {
-        let r1 = map.entry(&instruction.r1).or_insert(0).clone();
+        let r1 = *map.entry(&instruction.r1).or_insert(0);
 
-        if (instruction.operator.compare(r1, instruction.r2)) {
+        if instruction.operator.compare(r1, instruction.r2) {
             let register = map.entry(&instruction.register).or_insert(0);
             instruction.operation.calc(register)
         }
@@ -32,9 +29,9 @@ pub fn part2(input: &[Instruction]) -> i32 {
     let mut max = 0;
 
     for instruction in input {
-        let r1 = map.entry(&instruction.r1).or_insert(0).clone();
+        let r1 = *map.entry(&instruction.r1).or_insert(0);
 
-        if (instruction.operator.compare(r1, instruction.r2)) {
+        if instruction.operator.compare(r1, instruction.r2) {
             let register = map.entry(&instruction.register).or_insert(0);
             instruction.operation.calc(register)
         }
@@ -54,7 +51,7 @@ pub struct Instruction {
     operation: Operation,
     r1: String,
     operator: Operator,
-    r2: i32
+    r2: i32,
 }
 
 impl From<&str> for Instruction {
@@ -72,14 +69,14 @@ impl From<&str> for Instruction {
             operation,
             r1,
             operator,
-            r2
+            r2,
         }
     }
 }
 
 enum Operation {
     Inc(i32),
-    Dec(i32)
+    Dec(i32),
 }
 
 impl Operation {
@@ -108,7 +105,7 @@ enum Operator {
     Geq,
     Eq,
     Leq,
-    Neq
+    Neq,
 }
 
 impl Operator {
@@ -119,7 +116,7 @@ impl Operator {
             Operator::Geq => a >= b,
             Operator::Eq => a == b,
             Operator::Leq => a <= b,
-            Operator::Neq => a != b
+            Operator::Neq => a != b,
         }
     }
 }
@@ -135,7 +132,7 @@ impl TryFrom<&str> for Operator {
             "==" => Ok(Operator::Eq),
             "<=" => Ok(Operator::Leq),
             "!=" => Ok(Operator::Neq),
-            _ => unreachable!()
+            _ => unreachable!(),
         }
     }
 }

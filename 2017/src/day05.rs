@@ -23,13 +23,13 @@ pub fn part2(input: &[i32]) -> usize {
 }
 
 struct Cpu {
-    memory: Vec<i32>
+    memory: Vec<i32>,
 }
 
 impl Cpu {
     fn new(memory: &[i32]) -> Self {
-        Self { 
-            memory: memory.to_vec()
+        Self {
+            memory: memory.to_vec(),
         }
     }
 
@@ -67,4 +67,3 @@ impl Cpu {
         steps
     }
 }
-
