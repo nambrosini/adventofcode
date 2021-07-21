@@ -1,20 +1,17 @@
 use itertools::Itertools;
 use regex::Regex;
-use std::convert::{From, Into};
 use std::collections::{HashMap, HashSet};
+use std::convert::{From, Into};
 
 #[aoc_generator(day3)]
 pub fn generator(input: &str) -> Vec<Square> {
-    input
-        .lines()
-        .map(|l| l.into())
-        .collect_vec()
+    input.lines().map(|l| l.into()).collect_vec()
 }
 
 #[aoc(day3, part1)]
 pub fn part1(input: &[Square]) -> usize {
     let mut map: HashMap<(usize, usize), usize> = HashMap::new();
-    
+
     for s in input {
         for i in 0..s.width {
             for j in 0..s.height {
@@ -50,7 +47,11 @@ pub fn part2(input: &[Square]) -> usize {
         }
     }
 
-    input.iter().map(|s| s.id).find(|s| !destroyed.contains(s)).unwrap()
+    input
+        .iter()
+        .map(|s| s.id)
+        .find(|s| !destroyed.contains(s))
+        .unwrap()
 }
 
 #[derive(Debug)]
@@ -68,7 +69,7 @@ impl From<&str> for Square {
 
         let cap = re.captures_iter(s).next().unwrap();
 
-        Self { 
+        Self {
             id: cap[1].parse().unwrap(),
             x: cap[2].parse().unwrap(),
             y: cap[3].parse().unwrap(),
