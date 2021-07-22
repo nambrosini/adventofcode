@@ -47,10 +47,8 @@
             "name": "Debug unit tests in executable 'aoc_2015'",
             "cargo": {
                 "args": [
-                    "test",
-                    "--no-run",
-                    "--bin=aoc_2015",
-                    "--package=aoc_2015"
+                    "aoc",
+                    "-d 22"
                 ],
                 "filter": {
                     "name": "aoc_2015",

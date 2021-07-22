@@ -131,15 +131,3 @@ pub fn part2(aunts: &MapType) -> usize {
 
     aunt_id
 }
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn sample1() {
-        let s = std::fs::read_to_string("tests/day16/sample1.txt").unwrap();
-        let generated = generator(&s);
-        assert_eq!(part1(&generated), 62842880);
-    }
-}

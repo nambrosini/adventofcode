@@ -51,39 +51,3 @@ fn part2(input: &str) -> usize {
 
     s.len()
 }
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn sample1() {
-        let input = "1";
-
-        assert_eq!(part1(&input), 11);
-    }
-    #[test]
-    fn sample2() {
-        let input = "11";
-
-        assert_eq!(part1(&input), 21);
-    }
-    #[test]
-    fn sample3() {
-        let input = "21";
-
-        assert_eq!(part1(&input), 1211);
-    }
-    #[test]
-    fn sample4() {
-        let input = "1211";
-
-        assert_eq!(part1(&input), 111221);
-    }
-    #[test]
-    fn sample5() {
-        let input = "111221";
-
-        assert_eq!(part1(&input), 312211);
-    }
-}

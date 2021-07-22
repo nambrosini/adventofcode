@@ -56,15 +56,3 @@ pub fn part2(input: &usize) -> usize {
         .map(|x| x.0)
         .unwrap()
 }
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn sample1() {
-        let s = 130;
-
-        assert_eq!(part1(&130), 9);
-    }
-}
