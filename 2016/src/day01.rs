@@ -1,19 +1,16 @@
 use itertools::Itertools;
-use std::convert::{TryFrom, TryInto, From, Into};
+use std::convert::{From, Into, TryFrom, TryInto};
 use std::ops::{Add, Mul};
 
-#[derive(Debug, Clone, Copy, Hash, Eq)]
+#[derive(Debug, Clone, Copy)]
 pub struct Position {
     x: i32,
-    y: i32
+    y: i32,
 }
 
 impl Position {
     pub fn new(x: i32, y: i32) -> Self {
-        Self {
-            x,
-            y
-        }
+        Self { x, y }
     }
 
     pub fn distance(&self) -> i32 {
@@ -32,7 +29,7 @@ pub enum Direction {
     N,
     E,
     S,
-    W
+    W,
 }
 
 impl Direction {
@@ -40,20 +37,20 @@ impl Direction {
         match self {
             Direction::N => match step {
                 Step::R(_) => Direction::E,
-                Step::L(_) => Direction::W
+                Step::L(_) => Direction::W,
             },
             Direction::E => match step {
                 Step::R(_) => Direction::S,
-                Step::L(_) => Direction::N
+                Step::L(_) => Direction::N,
             },
             Direction::S => match step {
                 Step::R(_) => Direction::W,
-                Step::L(_) => Direction::E
+                Step::L(_) => Direction::E,
             },
             Direction::W => match step {
                 Step::R(_) => Direction::N,
-                Step::L(_) => Direction::S
-            }
+                Step::L(_) => Direction::S,
+            },
         }
     }
 }
@@ -64,7 +61,7 @@ impl From<Direction> for Position {
             Direction::N => Position::new(0, 1),
             Direction::S => Position::new(0, -1),
             Direction::E => Position::new(1, 0),
-            Direction::W => Position::new(-1, 0)
+            Direction::W => Position::new(-1, 0),
         }
     }
 }
@@ -75,7 +72,7 @@ impl Add for Position {
     fn add(self, other: Self) -> Self {
         Self {
             x: self.x + other.x,
-            y: self.y + other.y
+            y: self.y + other.y,
         }
     }
 }
@@ -91,7 +88,7 @@ impl Mul<u32> for Position {
 #[derive(Debug)]
 pub enum Step {
     R(u32),
-    L(u32)
+    L(u32),
 }
 
 impl TryFrom<&str> for Step {
@@ -104,7 +101,7 @@ impl TryFrom<&str> for Step {
         match dir {
             "R" => Ok(Step::R(*val)),
             "L" => Ok(Step::L(*val)),
-            _ => unreachable!()
+            _ => unreachable!(),
         }
     }
 }
@@ -112,14 +109,14 @@ impl TryFrom<&str> for Step {
 #[derive(Debug)]
 pub struct State {
     position: Position,
-    direction: Direction
+    direction: Direction,
 }
 
 impl State {
     pub fn new() -> Self {
         Self {
             position: Position::new(0, 0),
-            direction: Direction::N
+            direction: Direction::N,
         }
     }
 
@@ -130,7 +127,7 @@ impl State {
     }
 
     pub fn exec_part2(&mut self, steps: &[Step]) -> Position {
-        let mut v = vec![self.position.clone()];
+        let mut v = vec![self.position];
         for s in steps {
             for p in self.step(s) {
                 if v.contains(&p) {
@@ -148,14 +145,14 @@ impl State {
         let dir_pos: Position = new_dir.into();
         let val = match step {
             Step::R(val) => *val,
-            Step::L(val) => *val
+            Step::L(val) => *val,
         };
 
         let mut positions = vec![];
 
         for _ in 0..val {
             self.position = self.position + dir_pos;
-            positions.push(self.position.clone());
+            positions.push(self.position);
         }
 
         self.direction = new_dir;
@@ -164,9 +161,16 @@ impl State {
     }
 }
 
+impl Default for State {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 #[aoc_generator(day1)]
 pub fn input_generator(input: &str) -> Vec<Step> {
-    input.split(", ")
+    input
+        .split(", ")
         .map(|step| step.try_into().unwrap())
         .collect_vec()
 }
@@ -188,7 +192,7 @@ pub fn part2(input: &[Step]) -> i32 {
 #[cfg(test)]
 mod tests {
     use super::*;
-    
+
     #[test]
     fn sample1() {
         let s = input_generator("R2, L3");
