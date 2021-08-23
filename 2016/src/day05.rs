@@ -31,7 +31,7 @@ pub fn part2(input: &str) -> String {
         let digest = md5::compute(format!("{}{}", input, i));
         let digest = format!("{:x}", digest);
         if &digest[..5] == "00000" {
-            let index: usize = if let Ok(v) = digest[5..6].parse::<usize>(){
+            let index: usize = if let Ok(v) = digest[5..6].parse::<usize>() {
                 if v < s.len() {
                     v
                 } else {

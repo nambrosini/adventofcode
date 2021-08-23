@@ -4,43 +4,22 @@ use std::convert::{From, Into};
 
 #[aoc_generator(day04)]
 pub fn generator(input: &str) -> Vec<Room> {
-    input
-        .lines()
-        .map(|line| line.into())
-        .collect_vec()
+    input.lines().map(|line| line.into()).collect_vec()
 }
 
 #[aoc(day04, part1)]
 pub fn part1(input: &[Room]) -> usize {
-    input
-        .iter()
-        .filter(|x| x.is_real())
-        .map(|x| x.id)
-        .sum()
+    input.iter().filter(|x| x.is_real()).map(|x| x.id).sum()
 }
 
 #[aoc(day04, part2)]
 pub fn part2(input: &[Room]) -> usize {
-    let real = input
+    input
         .iter()
-        .filter(|x| x.is_real())
-        .collect_vec();
-
-    let real = real.iter().map(|x| x.decrypt()).collect_vec();
-
-    // let name = real
-    //     .iter()
-    //     .filter(|x| x.contains("north pole"))
-    //     .cloned()
-    //     .next()
-    //     .unwrap();
-
-    // input.iter().filter(|r| r.decrypt() == name).map(|r| r.id).next().unwrap()
-
-    println!("{:?}", real);
-    // real[0].clone()
-    0
-
+        .filter(|x| x.decrypt().contains("north"))
+        .map(|x| x.id)
+        .next()
+        .unwrap()
 }
 
 #[derive(Debug)]
@@ -48,12 +27,13 @@ pub struct Room {
     id: usize,
     name: String,
     map: HashMap<char, usize>,
-    hash: String
+    hash: String,
 }
 
 impl Room {
     fn is_real(&self) -> bool {
-        let mut letters = self.map
+        let mut letters = self
+            .map
             .iter()
             .map(|(key, value)| (key, value))
             .collect_vec();
@@ -63,7 +43,8 @@ impl Room {
         let mut map: HashMap<String, usize> = HashMap::new();
 
         for i in self.map.values() {
-            let x = letters.iter()
+            let x = letters
+                .iter()
                 .filter(|(_, &v)| v == *i)
                 .sorted_by(|x, y| x.0.cmp(y.0))
                 .map(|(k, _)| k)
@@ -89,14 +70,13 @@ impl Room {
     fn decrypt(&self) -> String {
         let mut s = String::new();
 
-        println!("{}", self.id);
-
         for c in self.name.chars() {
             if c == '-' {
                 s.push(' ');
             } else {
-                let new_c = (self.id as u8 % 26 + c as u8 - 97) % 26 + 97;
-                s.push(new_c as char);
+                let shift: i32 = self.id as i32 % 26;
+                let res = ((c as u8) as i32 - 97 + shift) % 26 + 97;
+                s.push(res as u8 as char);
             }
         }
 
@@ -136,14 +116,13 @@ impl From<&str> for Room {
             }
         }
 
-        Self { 
+        Self {
             id: id.parse().unwrap(),
             map,
             hash,
-            name
+            name,
         }
     }
-
 }
 
 // #[test]
@@ -157,16 +136,16 @@ impl From<&str> for Room {
 //     assert_eq!(part1(&s), 1514);
 // }
 
-// #[test]
-// fn test2() {
-//     let s = "north-pole-0[oehln]
-// a-b-c-d-e-f-g-h-1[abcde]
-// qzmt-zixmtkozy-ivhz-343[zimth]
-// totally-real-room-200[decoy]
-// aaaaa-bbb-z-y-x-123[abxyz]
-// a-b-c-d-e-f-g-h-983[abcde]
-// not-a-real-room-404[oarel]";
-//     let s = generator(s);
+#[test]
+fn test2() {
+    let s = "north-pole-0[oehln]
+a-b-c-d-e-f-g-h-1[abcde]
+qzmt-zixmtkozy-ivhz-343[zimth]
+totally-real-room-200[decoy]
+aaaaa-bbb-z-y-x-123[abxyz]
+a-b-c-d-e-f-g-h-983[abcde]
+not-a-real-room-404[oarel]";
+    let s = generator(s);
 
-//     assert_eq!(part2(&s), 1);
-// }
+    assert_eq!(part2(&s), 1);
+}

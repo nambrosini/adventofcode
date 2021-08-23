@@ -7,11 +7,11 @@ pub fn generator(input: &str) -> Vec<String> {
 
 #[aoc(day06, part1)]
 pub fn part1(input: &[String]) -> String {
-
     let mut s = String::new();
 
     for i in 0..input[0].len() {
-        let groups = input.iter()
+        let groups = input
+            .iter()
             .flat_map(|l| l.chars().nth(i))
             .sorted()
             .group_by(|&x| x);
@@ -31,11 +31,11 @@ pub fn part1(input: &[String]) -> String {
 
 #[aoc(day06, part2)]
 pub fn part2(input: &[String]) -> String {
-
     let mut s = String::new();
 
     for i in 0..input[0].len() {
-        let groups = input.iter()
+        let groups = input
+            .iter()
             .flat_map(|l| l.chars().nth(i))
             .sorted()
             .group_by(|&x| x);

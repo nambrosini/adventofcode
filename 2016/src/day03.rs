@@ -15,9 +15,8 @@ pub fn part1(input: &[Vec<usize>]) -> usize {
 
 #[aoc(day03, part2)]
 pub fn part2(input: &[Vec<usize>]) -> usize {
-    
     let mut sum = 0;
-    
+
     for i in 0..3 {
         let vec: Vec<usize> = input
             .iter()

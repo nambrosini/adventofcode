@@ -1,6 +1,6 @@
-use std::convert::{From, Into};
 use itertools::Itertools;
 use regex::Regex;
+use std::convert::{From, Into};
 use std::fmt;
 
 #[aoc_generator(day08)]
@@ -31,20 +31,20 @@ fn calc(instructions: &[Instruction]) -> Screen {
         match i.operation {
             Operation::Rect => screen.rect(i.a, i.b),
             Operation::RotateRow => screen.rotate_row(i.a, i.b),
-            Operation::RotateColumn => screen.rotate_column(i.a, i.b)
+            Operation::RotateColumn => screen.rotate_column(i.a, i.b),
         }
     }
 
     screen
 }
 struct Screen {
-    map: [[bool; 50]; 6]
+    map: [[bool; 50]; 6],
 }
 
 impl Screen {
     fn new() -> Screen {
         Self {
-            map: [[false; 50]; 6]
+            map: [[false; 50]; 6],
         }
     }
 
@@ -101,9 +101,9 @@ impl fmt::Display for Screen {
             for j in 0..self.map[i].len() {
                 write!(f, "{}", if self.map[i][j] { "#" } else { " " })?;
             }
-            writeln!(f, )?;
+            writeln!(f,)?;
         }
-        writeln!(f, )
+        writeln!(f,)
     }
 }
 
@@ -121,25 +121,18 @@ pub struct Instruction {
 
 impl From<&str> for Instruction {
     fn from(s: &str) -> Self {
-        let re = Regex::new(r"(rotate column|rotate row|rect) ((\d+)x(\d+)|(x|y)=(\d+) by (\d+))").unwrap();
+        let re = Regex::new(r"(rotate column|rotate row|rect) ((\d+)x(\d+)|(x|y)=(\d+) by (\d+))")
+            .unwrap();
         let cap = re.captures_iter(s).next().unwrap();
 
         let operation = cap[1].into();
 
         let (a, b) = match operation {
-            Operation::Rect => {
-                (cap[3].parse().unwrap(), cap[4].parse().unwrap())
-            },
-            _ => {
-                (cap[6].parse().unwrap(), cap[7].parse().unwrap())
-            }
+            Operation::Rect => (cap[3].parse().unwrap(), cap[4].parse().unwrap()),
+            _ => (cap[6].parse().unwrap(), cap[7].parse().unwrap()),
         };
 
-        Self {
-            operation,
-            a,
-            b
-        }
+        Self { operation, a, b }
     }
 }
 
@@ -153,4 +146,3 @@ impl From<&str> for Operation {
         }
     }
 }
-

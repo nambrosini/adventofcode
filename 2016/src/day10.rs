@@ -1,13 +1,10 @@
-use std::{cmp, collections::HashMap, vec};
 use itertools::Itertools;
 use regex::Regex;
+use std::{cmp, collections::HashMap, vec};
 
 #[aoc_generator(day10)]
 pub fn generator(input: &str) -> Vec<Operation> {
-    input
-        .lines()
-        .map(|l| l.into())
-        .collect_vec()
+    input.lines().map(|l| l.into()).collect_vec()
 }
 
 #[aoc(day10, part1)]
@@ -35,7 +32,7 @@ pub fn part1(input: &[Operation]) -> usize {
                     if b.has_values(v1, v2) {
                         return *id;
                     }
-                },
+                }
                 Operation::Gives(id, rec1, rec2) => {
                     let mut b: Bot = if let Some(b) = robots.get(id) {
                         if b.has_values(v1, v2) {
@@ -58,14 +55,14 @@ pub fn part1(input: &[Operation]) -> usize {
                                 new_input.push(*op);
                                 continue;
                             }
-                        },
+                        }
                         Receiver::Output(idr) => {
                             if let Some(low) = b.take(Value::Low) {
                                 output.insert(*idr, low);
                             } else {
                                 new_input.push(*op)
                             }
-                        },
+                        }
                     }
 
                     match rec2 {
@@ -75,25 +72,30 @@ pub fn part1(input: &[Operation]) -> usize {
                                 new_input.push(*op);
                                 continue;
                             }
-                        },
+                        }
                         Receiver::Output(idr) => {
                             if let Some(high) = b.take(Value::High) {
                                 output.insert(*idr, high);
                             } else {
                                 new_input.push(*op)
                             }
-                        },
+                        }
                     }
 
                     robots.insert(*id, b);
-                },
+                }
             }
         }
 
         count += 1;
 
         if new_input.len() == input.len() {
-            panic!("input has not changed: {} == {}, count = {}", input.len(), new_input.len(), count)
+            panic!(
+                "input has not changed: {} == {}, count = {}",
+                input.len(),
+                new_input.len(),
+                count
+            )
         }
 
         input = new_input.clone();
@@ -114,7 +116,6 @@ pub fn part2(input: &[Operation]) -> usize {
         let mut new_input: Vec<Operation> = vec![];
 
         for op in input.iter() {
-
             if output.contains_key(&0) && output.contains_key(&1) && output.contains_key(&2) {
                 return output[&0] * output[&1] * output[&2];
             }
@@ -125,7 +126,7 @@ pub fn part2(input: &[Operation]) -> usize {
                         new_input.push(*op);
                         continue;
                     }
-                },
+                }
                 Operation::Gives(id, rec1, rec2) => {
                     let mut b: Bot = if let Some(b) = robots.get(id) {
                         if !b.has_values_assigned() {
@@ -145,14 +146,14 @@ pub fn part2(input: &[Operation]) -> usize {
                                 new_input.push(*op);
                                 continue;
                             }
-                        },
+                        }
                         Receiver::Output(idr) => {
                             if let Some(low) = b.take(Value::Low) {
                                 output.insert(*idr, low);
                             } else {
                                 new_input.push(*op)
                             }
-                        },
+                        }
                     }
 
                     match rec2 {
@@ -162,25 +163,30 @@ pub fn part2(input: &[Operation]) -> usize {
                                 new_input.push(*op);
                                 continue;
                             }
-                        },
+                        }
                         Receiver::Output(idr) => {
                             if let Some(high) = b.take(Value::High) {
                                 output.insert(*idr, high);
                             } else {
                                 new_input.push(*op)
                             }
-                        },
+                        }
                     }
 
                     robots.insert(*id, b);
-                },
+                }
             }
         }
 
         count += 1;
 
         if new_input.len() == input.len() {
-            panic!("input has not changed: {} == {}, count = {}", input.len(), new_input.len(), count)
+            panic!(
+                "input has not changed: {} == {}, count = {}",
+                input.len(),
+                new_input.len(),
+                count
+            )
         }
 
         input = new_input.clone();
@@ -194,13 +200,13 @@ pub enum Operation {
     // Gets(id, val)
     Gets(usize, usize),
     // Gives(id, low_id, high_id)
-    Gives(usize, Receiver, Receiver)
+    Gives(usize, Receiver, Receiver),
 }
 
 #[derive(Debug, Clone, Copy)]
 pub enum Receiver {
     Bot(usize),
-    Output(usize)
+    Output(usize),
 }
 
 impl From<(&str, &str)> for Receiver {
@@ -208,7 +214,7 @@ impl From<(&str, &str)> for Receiver {
         match s.0 {
             "bot" => Self::Bot(s.1.parse().unwrap()),
             "output" => Self::Output(s.1.parse().unwrap()),
-            _ => unreachable!()
+            _ => unreachable!(),
         }
     }
 }
@@ -223,7 +229,10 @@ impl From<&str> for Operation {
             Self::Gets(cap[2].parse().unwrap(), cap[1].parse().unwrap())
         } else {
             // Gives
-            let re = Regex::new(r"bot (\d+) gives low to (bot|output) (\d+) and high to (bot|output) (\d+)").unwrap();
+            let re = Regex::new(
+                r"bot (\d+) gives low to (bot|output) (\d+) and high to (bot|output) (\d+)",
+            )
+            .unwrap();
 
             let cap = re.captures_iter(s).next().unwrap();
 
@@ -236,9 +245,9 @@ impl From<&str> for Operation {
     }
 }
 
-pub enum Value{
+pub enum Value {
     Low,
-    High
+    High,
 }
 
 #[derive(Debug, Clone, Copy)]
@@ -249,10 +258,7 @@ struct Bot {
 
 impl Bot {
     fn new() -> Self {
-        Bot {
-            a: None,
-            b: None
-        }
+        Bot { a: None, b: None }
     }
 
     fn gets(&mut self, value: usize) -> bool {
@@ -280,39 +286,35 @@ impl Bot {
         }
 
         match value {
-            Value::Low => {
-                match self.a.unwrap().cmp(&self.b.unwrap()) {
-                    cmp::Ordering::Less => {
-                        let a = self.a.take().unwrap();
-                        if other.gets(a) {
-                            return true;
-                        }
-                    },
-                    cmp::Ordering::Greater => {
-                        let b = self.b.take().unwrap();
-                        if other.gets(b) {
-                            return true;
-                        }
-                    },
-                    _ => unreachable!()
+            Value::Low => match self.a.unwrap().cmp(&self.b.unwrap()) {
+                cmp::Ordering::Less => {
+                    let a = self.a.take().unwrap();
+                    if other.gets(a) {
+                        return true;
+                    }
                 }
+                cmp::Ordering::Greater => {
+                    let b = self.b.take().unwrap();
+                    if other.gets(b) {
+                        return true;
+                    }
+                }
+                _ => unreachable!(),
             },
-            Value::High => {
-                match self.a.unwrap().cmp(&self.b.unwrap()) {
-                    cmp::Ordering::Less => {
-                        let b = self.b.take().unwrap();
-                        if other.gets(b) {
-                            return true;
-                        }
-                    },
-                    cmp::Ordering::Greater => {
-                        let a = self.a.take().unwrap();
-                        if other.gets(a) {
-                            return true;
-                        }
-                    },
-                    _ => unreachable!()
+            Value::High => match self.a.unwrap().cmp(&self.b.unwrap()) {
+                cmp::Ordering::Less => {
+                    let b = self.b.take().unwrap();
+                    if other.gets(b) {
+                        return true;
+                    }
                 }
+                cmp::Ordering::Greater => {
+                    let a = self.a.take().unwrap();
+                    if other.gets(a) {
+                        return true;
+                    }
+                }
+                _ => unreachable!(),
             },
         }
 
@@ -324,16 +326,20 @@ impl Bot {
             return None;
         }
         match value {
-            Value::Low => if self.a.unwrap() < self.b.unwrap() {
-                self.a.take()
-            } else {
-                self.b.take()
-            },
-            Value::High => if self.b.unwrap() < self.a.unwrap() {
-                self.b.take()
-            } else {
-                self.a.take()
-            },
+            Value::Low => {
+                if self.a.unwrap() < self.b.unwrap() {
+                    self.a.take()
+                } else {
+                    self.b.take()
+                }
+            }
+            Value::High => {
+                if self.b.unwrap() < self.a.unwrap() {
+                    self.b.take()
+                } else {
+                    self.a.take()
+                }
+            }
         }
     }
 
@@ -347,7 +353,7 @@ impl Bot {
         }
         false
     }
-    
+
     fn has_values_assigned(&self) -> bool {
         self.a.is_some() && self.b.is_some()
     }
