@@ -39,13 +39,13 @@ pub fn part2(input: &[Vec<String>]) -> usize {
             )
         })
         .filter(|(x, y)| {
-            (x.chars()
+            x.chars()
                 .zip(x.chars().skip(1))
                 .zip(x.chars().skip(2))
                 .map(|((c0, c1), c2)| (c0, c1, c2))
                 .any(|(c0, c1, c2)| {
                     c0 == c2 && c0 != c1 && y.contains(&format!("{}{}{}", c1, c0, c1))
-                }))
+                })
         })
         .count()
 }
