@@ -1,9 +1,9 @@
-use std::collections::HashMap;
 use regex::Regex;
 
 #[aoc_generator(day15)]
 fn generator(input: &str) -> Statue {
-    let re = Regex::new(r"Disc #\d has (\d+) positions; at time=0, it is at position (\d+)\.").unwrap();
+    let re =
+        Regex::new(r"Disc #\d has (\d+) positions; at time=0, it is at position (\d+)\.").unwrap();
 
     let mut discs = Vec::new();
 
@@ -34,15 +34,12 @@ pub fn part2(statue: &Statue) -> usize {
 #[derive(Debug, Copy, Clone)]
 struct Disc {
     positions: usize,
-    at_zero: usize
+    at_zero: usize,
 }
 
 impl Disc {
     fn new(positions: usize, at_zero: usize) -> Self {
-        Self {
-            positions,
-            at_zero
-        }
+        Self { positions, at_zero }
     }
 
     fn calc_position_at(&self, time: usize) -> usize {
@@ -52,14 +49,12 @@ impl Disc {
 
 #[derive(Debug, Clone)]
 pub struct Statue {
-    discs: Vec<Disc>
+    discs: Vec<Disc>,
 }
 
 impl Statue {
     fn new(discs: Vec<Disc>) -> Self {
-        Self {
-            discs
-        }
+        Self { discs }
     }
 
     fn get_passthrough_time(&self) -> usize {
@@ -82,12 +77,7 @@ impl Statue {
 
 #[test]
 fn test() {
-    let s = Statue::new(
-        vec![
-            Disc::new(5, 4),
-            Disc::new(2, 1)
-        ]
-    );
+    let s = Statue::new(vec![Disc::new(5, 4), Disc::new(2, 1)]);
 
     assert_eq!(part1(&s), 5);
 }

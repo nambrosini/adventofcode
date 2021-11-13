@@ -16,7 +16,7 @@ pub fn part2(input: &str) -> String {
 
 fn generate_initial_state(s: &str, len: usize) -> Vec<char> {
     let mut a: Vec<char> = s.chars().collect();
-    
+
     while a.len() < len {
         let mut b = invert_bits(&a);
         a.push('0');

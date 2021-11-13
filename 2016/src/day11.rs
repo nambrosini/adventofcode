@@ -1,9 +1,20 @@
-use std::{ops::Add, vec, fmt};
-    
+use std::{fmt, ops::Add, vec};
+
 #[aoc_generator(day11)]
 pub fn generator(_input: &str) -> State {
-    let floor0 = vec![Type::Generator('S'), Type::Microchip('S'), Type::Generator('P'), Type::Microchip('P')];
-    let floor1 = vec![Type::Generator('T'), Type::Generator('R'), Type::Microchip('R'), Type::Generator('C'), Type::Microchip('C')];
+    let floor0 = vec![
+        Type::Generator('S'),
+        Type::Microchip('S'),
+        Type::Generator('P'),
+        Type::Microchip('P'),
+    ];
+    let floor1 = vec![
+        Type::Generator('T'),
+        Type::Generator('R'),
+        Type::Microchip('R'),
+        Type::Generator('C'),
+        Type::Microchip('C'),
+    ];
     let floor2 = vec![Type::Microchip('T')];
     let floor3 = vec![];
     let floors = vec![floor0, floor1, floor2, floor3];
@@ -44,29 +55,43 @@ fn search(input: &State) -> State {
 
         for i in 0..current_floor.len() {
             let mut new_state = current_state.clone();
-            if new_state.move_elevator(Direction::Up, &current_floor[i], None) {
-                if !visited_states.contains(&new_state) && is_state_safe(&new_state) && !queue.contains(&new_state) {
-                    queue.push(new_state);
-                }
+            if new_state.move_elevator(Direction::Up, &current_floor[i], None)
+                && (!visited_states.contains(&new_state)
+                    && is_state_safe(&new_state)
+                    && !queue.contains(&new_state))
+            {
+                queue.push(new_state);
             }
             let mut new_state = current_state.clone();
-            if new_state.move_elevator(Direction::Down, &current_floor[i], None) {
-                if !visited_states.contains(&new_state) && is_state_safe(&new_state) && !queue.contains(&new_state) {
-                    queue.push(new_state);
-                }
+            if new_state.move_elevator(Direction::Down, &current_floor[i], None)
+                && !visited_states.contains(&new_state)
+                && is_state_safe(&new_state)
+                && !queue.contains(&new_state)
+            {
+                queue.push(new_state);
             }
             for j in i..current_floor.len() {
                 let mut new_state = current_state.clone();
-                if new_state.move_elevator(Direction::Up, &current_floor[i], Some(&current_floor[j])) {
-                    if !visited_states.contains(&new_state) && is_state_safe(&new_state) && !queue.contains(&new_state) {
-                        queue.push(new_state);
-                    }
+                if new_state.move_elevator(
+                    Direction::Up,
+                    &current_floor[i],
+                    Some(&current_floor[j]),
+                ) && !visited_states.contains(&new_state)
+                    && is_state_safe(&new_state)
+                    && !queue.contains(&new_state)
+                {
+                    queue.push(new_state);
                 }
                 let mut new_state = current_state.clone();
-                if new_state.move_elevator(Direction::Down, &current_floor[i], Some(&current_floor[j])) {
-                    if !visited_states.contains(&new_state) && is_state_safe(&new_state) && !queue.contains(&new_state) {
-                        queue.push(new_state);
-                    }
+                if new_state.move_elevator(
+                    Direction::Down,
+                    &current_floor[i],
+                    Some(&current_floor[j]),
+                ) && !visited_states.contains(&new_state)
+                    && is_state_safe(&new_state)
+                    && !queue.contains(&new_state)
+                {
+                    queue.push(new_state);
                 }
             }
         }
@@ -80,7 +105,10 @@ fn is_state_safe(state: &State) -> bool {
         if floor.iter().any(|x| !x.is_microchip()) {
             for microchip in floor.iter().filter(|x| x.is_microchip()) {
                 let value = microchip.value();
-                if !floor.iter().any(|x| !x.is_microchip() && x.value() == value) {
+                if !floor
+                    .iter()
+                    .any(|x| !x.is_microchip() && x.value() == value)
+                {
                     return false;
                 }
             }
@@ -91,36 +119,33 @@ fn is_state_safe(state: &State) -> bool {
 }
 
 fn is_state_final(state: &State) -> bool {
-    return state.floors[0].len() + state.floors[1].len() + state.floors[2].len() == 0;
+    state.floors[0].len() + state.floors[1].len() + state.floors[2].len() == 0
 }
 
 #[derive(Debug, Copy, Clone, Eq, PartialEq)]
 enum Type {
     Generator(char),
-    Microchip(char)
+    Microchip(char),
 }
 
 impl Type {
     fn is_microchip(&self) -> bool {
-        match self {
-            Self::Microchip(_) => true,
-            _ => false
-        }
+        matches!(self, Self::Microchip(_))
     }
 
     fn value(&self) -> char {
         match self {
             Self::Microchip(v) => *v,
-            Self::Generator(v) => *v
+            Self::Generator(v) => *v,
         }
     }
 }
 
 #[derive(Debug, Clone, Eq, PartialEq)]
 pub struct State {
-    floors: Vec<Vec<Type>>, 
+    floors: Vec<Vec<Type>>,
     elevator_floor: usize,
-    steps: usize
+    steps: usize,
 }
 
 impl State {
@@ -128,21 +153,33 @@ impl State {
         Self {
             floors,
             elevator_floor: 0,
-            steps: 0
+            steps: 0,
         }
     }
 
-    fn move_elevator(&mut self, direction: Direction, component1: &Type, component2: Option<&Type>) -> bool {
-        if (self.elevator_floor == 3 && direction == Direction::Up) ||
-            (self.elevator_floor == 0 && direction == Direction::Down) {
+    fn move_elevator(
+        &mut self,
+        direction: Direction,
+        component1: &Type,
+        component2: Option<&Type>,
+    ) -> bool {
+        if (self.elevator_floor == 3 && direction == Direction::Up)
+            || (self.elevator_floor == 0 && direction == Direction::Down)
+        {
             return false;
         }
 
-        if let Some(index1) = self.floors[self.elevator_floor].iter().position(|x| x == component1) {
+        if let Some(index1) = self.floors[self.elevator_floor]
+            .iter()
+            .position(|x| x == component1)
+        {
             self.floors[self.elevator_floor].remove(index1);
             self.floors[self.elevator_floor + direction].push(*component1);
             if let Some(component2) = component2 {
-                if let Some(index2) = self.floors[self.elevator_floor].iter().position(|x| x == component2) {
+                if let Some(index2) = self.floors[self.elevator_floor]
+                    .iter()
+                    .position(|x| x == component2)
+                {
                     self.floors[self.elevator_floor].remove(index2);
                     self.floors[self.elevator_floor + direction].push(*component2);
                 }
@@ -167,7 +204,7 @@ impl Add<Direction> for usize {
     fn add(self, dir: Direction) -> usize {
         match dir {
             Direction::Up => self + 1,
-            Direction::Down => self - 1
+            Direction::Down => self - 1,
         }
     }
 }
@@ -175,7 +212,7 @@ impl Add<Direction> for usize {
 #[derive(Debug, Clone, Copy, Eq, PartialEq)]
 enum Direction {
     Up,
-    Down
+    Down,
 }
 
 impl fmt::Display for State {
@@ -191,11 +228,11 @@ impl fmt::Display for State {
             for t in floor {
                 match t {
                     Type::Microchip(v) => write!(f, "{}M ", v)?,
-                    Type::Generator(v) => write!(f, "{}G ", v)?
+                    Type::Generator(v) => write!(f, "{}G ", v)?,
                 }
             }
 
-            writeln!(f, "")?;
+            writeln!(f)?;
         }
 
         write!(f, "")
@@ -205,13 +242,10 @@ impl fmt::Display for State {
 #[test]
 fn test() {
     let floors = vec![
-        vec![
-            Type::Microchip('H'), 
-            Type::Microchip('L')
-        ],
+        vec![Type::Microchip('H'), Type::Microchip('L')],
         vec![Type::Generator('H')],
         vec![Type::Generator('L')],
-        vec![]
+        vec![],
     ];
 
     let state = State::new(floors);

@@ -1,11 +1,10 @@
-use itertools::Itertools;
 use std::ops::Add;
 
 #[aoc(day17, part1)]
 pub fn part1(input: &str) -> String {
     let mut paths: Vec<State> = vec![State::new()];
 
-    while paths.len() > 0 {
+    while !paths.is_empty() {
         let mut current_index = 0;
         let mut current_node = paths[0].clone();
 
@@ -71,14 +70,14 @@ fn search(input: &str, state: &State) -> usize {
 #[derive(Debug, Clone)]
 struct State {
     position: Point,
-    path: String
+    path: String,
 }
 
 impl State {
     fn new() -> State {
         State {
             position: Point::new(0, 0),
-            path: String::new()
+            path: String::new(),
         }
     }
 
@@ -90,9 +89,13 @@ impl State {
         let mut new_state = self.clone();
         new_state.position = new_state.position + direction.value();
 
-        if new_state.position.x >= 0 && new_state.position.x <= 3 && new_state.position.y >= 0 && new_state.position.y <= 3 {
+        if new_state.position.x >= 0
+            && new_state.position.x <= 3
+            && new_state.position.y >= 0
+            && new_state.position.y <= 3
+        {
             new_state.path.push(direction.into());
-            return Some(new_state.clone());
+            return Some(new_state);
         }
 
         None
@@ -107,10 +110,7 @@ struct Point {
 
 impl Point {
     fn new(x: i32, y: i32) -> Point {
-        Point { 
-            x,
-            y
-        }
+        Point { x, y }
     }
 }
 
@@ -118,7 +118,7 @@ enum Direction {
     Up,
     Down,
     Left,
-    Right
+    Right,
 }
 
 impl Direction {
@@ -127,7 +127,7 @@ impl Direction {
             Direction::Up => Point::new(0, -1),
             Direction::Down => Point::new(0, 1),
             Direction::Left => Point::new(-1, 0),
-            Direction::Right => Point::new(1, 0)
+            Direction::Right => Point::new(1, 0),
         }
     }
 }
@@ -138,7 +138,7 @@ impl From<Direction> for char {
             Direction::Up => 'U',
             Direction::Down => 'D',
             Direction::Left => 'L',
-            Direction::Right => 'R'
+            Direction::Right => 'R',
         }
     }
 }
@@ -157,14 +157,14 @@ fn get_open_doors(input: &str, path: &str) -> Vec<Direction> {
 
     let mut directions = Vec::new();
 
-    for i in 0..digest.len() {
-        if open_chars.contains(&digest[i]) {
+    for (i, item) in digest.iter().enumerate() {
+        if open_chars.contains(item) {
             let dir = match i {
                 0 => Direction::Up,
                 1 => Direction::Down,
                 2 => Direction::Left,
                 3 => Direction::Right,
-                _ => unreachable!()
+                _ => unreachable!(),
             };
 
             directions.push(dir);

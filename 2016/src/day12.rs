@@ -25,7 +25,7 @@ pub fn part2(input: &[Instruction]) -> i32 {
 
     let mut computer = Computer {
         position: 0,
-        memory: memory,
+        memory,
     };
 
     computer.run(input)

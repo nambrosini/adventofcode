@@ -1,5 +1,5 @@
-use std::collections::HashMap;
 use md5;
+use std::collections::HashMap;
 
 #[aoc(day14, part1)]
 pub fn part1(input: &str) -> usize {
@@ -21,7 +21,11 @@ fn solve_2(input: &str, f: &dyn Fn(&str, usize) -> String) -> usize {
         let digest = f(input, index);
 
         if index > 1000 {
-            let index_to_remove: Vec<usize> = map.iter().filter(|(&k, _)| k < index - 1000).map(|(k, _)| *k).collect();
+            let index_to_remove: Vec<usize> = map
+                .iter()
+                .filter(|(&k, _)| k < index - 1000)
+                .map(|(k, _)| *k)
+                .collect();
 
             for i in index_to_remove {
                 map.remove(&i);
@@ -29,8 +33,12 @@ fn solve_2(input: &str, f: &dyn Fn(&str, usize) -> String) -> usize {
         }
 
         if let Some(c) = has_consecutive(&digest, 5) {
-            let mut found_keys: Vec<usize> = map.iter().filter(|(_, &v)| v == c).map(|(k, _)| *k).collect();
-            found_keys.sort();
+            let mut found_keys: Vec<usize> = map
+                .iter()
+                .filter(|(_, &v)| v == c)
+                .map(|(k, _)| *k)
+                .collect();
+            found_keys.sort_unstable();
 
             for k in found_keys {
                 keys_count += 1;

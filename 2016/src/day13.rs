@@ -17,7 +17,7 @@ pub fn part2(input: &i32) -> usize {
     check_nodes(input)
 }
 
-fn check_nodes(favorite: &i32) -> usize{
+fn check_nodes(favorite: &i32) -> usize {
     let mut open_list: Vec<(Point, usize)> = Vec::new();
     let mut closed_list: Vec<(Point, usize)> = Vec::new();
 
@@ -28,10 +28,10 @@ fn check_nodes(favorite: &i32) -> usize{
     while !open_list.is_empty() {
         let mut current_node = open_list[0];
         let mut current_index = 0;
-    
+
         for (index, &item) in open_list.iter().enumerate() {
             if item.1 < current_node.1 {
-                current_node = item.clone();
+                current_node = item;
                 current_index = index;
             }
         }
@@ -70,18 +70,18 @@ pub fn astar(start: &Point, end: &Point, favorite: &i32) -> Vec<Point> {
     let mut open_list: Vec<Node> = Vec::new();
     let mut closed_list: Vec<Node> = Vec::new();
 
-    let start = Node::new(start.clone(), None);
-    let end = Node::new(end.clone(), None);
+    let start = Node::new(*start, None);
+    let end = Node::new(*end, None);
 
     open_list.push(start);
 
-    while open_list.len() > 0 {
+    while !open_list.is_empty() {
         let mut current_node = open_list[0];
         let mut current_index = 0;
 
         for (index, &item) in open_list.iter().enumerate() {
             if item.f < current_node.f {
-                current_node = item.clone();
+                current_node = item;
                 current_index = index;
             }
         }
@@ -89,7 +89,7 @@ pub fn astar(start: &Point, end: &Point, favorite: &i32) -> Vec<Point> {
         open_list.remove(current_index);
         closed_list.push(current_node);
 
-        if current_node.clone() == end {
+        if current_node == end {
             let mut path = vec![];
             let mut current = Some(&current_node);
             while let Some(c) = current {
@@ -123,7 +123,7 @@ pub fn astar(start: &Point, end: &Point, favorite: &i32) -> Vec<Point> {
     return vec![];
 }
 
-#[derive(Debug, Clone, Copy, Eq, Hash)]
+#[derive(Debug, Clone, Copy, Eq)]
 struct Node {
     parent: Option<Point>,
     position: Point,
@@ -153,10 +153,9 @@ impl PartialEq for Node {
 fn get_point_neighbours(current: &Point, favorite: &i32) -> Vec<Point> {
     let neighbours = vec![(-1, 0), (0, -1), (0, 1), (1, 0)];
 
-    neighbours.iter()
-        .map(|&p| {
-            (current.0 + p.0, current.1 + p.1)
-        })
+    neighbours
+        .iter()
+        .map(|&p| (current.0 + p.0, current.1 + p.1))
         .filter(|&x| is_open(&x, favorite) && x.0 >= 0 && x.1 >= 0)
         .collect_vec()
 }
@@ -202,15 +201,13 @@ fn print(set: &[Point], favorite: &i32) {
         for x in 0..max_y {
             if set.contains(&(x, y)) {
                 print!("O");
+            } else if is_open(&(x, y), favorite) {
+                print!(".");
             } else {
-                if is_open(&(x, y), favorite) {
-                    print!(".");
-                } else {
-                    print!("#");
-                }
+                print!("#");
             }
         }
-        println!("");
+        println!();
     }
-    println!("");
+    println!();
 }

@@ -17,7 +17,7 @@ pub fn part1(input: &[Operation]) -> usize {
 
     let mut output: HashMap<usize, usize> = HashMap::new();
 
-    while input.len() > 0 {
+    while input.is_empty() {
         let mut new_input: Vec<Operation> = vec![];
 
         for op in input.iter() {
@@ -42,7 +42,7 @@ pub fn part1(input: &[Operation]) -> usize {
                             new_input.push(*op);
                             continue;
                         }
-                        (*b).clone()
+                        *b
                     } else {
                         new_input.push(*op);
                         continue;
@@ -112,7 +112,7 @@ pub fn part2(input: &[Operation]) -> usize {
 
     let mut output: HashMap<usize, usize> = HashMap::new();
 
-    while input.len() > 0 {
+    while !input.is_empty() {
         let mut new_input: Vec<Operation> = vec![];
 
         for op in input.iter() {
@@ -133,7 +133,7 @@ pub fn part2(input: &[Operation]) -> usize {
                             new_input.push(*op);
                             continue;
                         }
-                        (*b).clone()
+                        *b
                     } else {
                         new_input.push(*op);
                         continue;
@@ -269,7 +269,7 @@ impl Bot {
             self.b = Some(value);
             return true;
         }
-        return false;
+        false
     }
 
     fn gives(&mut self, other: &mut Self, value: Value) -> bool {
