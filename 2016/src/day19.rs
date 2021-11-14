@@ -1,5 +1,3 @@
-use itertools::Itertools;
-
 #[aoc_generator(day19)]
 pub fn generator(input: &str) -> usize {
     input.parse().unwrap()
@@ -7,52 +5,43 @@ pub fn generator(input: &str) -> usize {
 
 #[aoc(day19, part1)]
 pub fn part1(input: &usize) -> usize {
-    // solve(*input, &take_next_present)
-    solve(*input)
+    winner(*input)
 }
 
 #[aoc(day19, part2)]
 pub fn part2(input: &usize) -> usize {
-    solve2(*input)
+    winner2(*input)
 }
 
-fn solve2(input: usize) -> usize {
-    let mut elves: Vec<(usize, usize)> = Vec::new();
-
-    for i in 1..=input {
-        elves.push((i, 0));
+fn next_power_of_three(mut n: usize) -> usize {
+    let mut result = 1;
+    while n > 0 {
+        n /= 3;
+        result *= 3;
     }
-
-    let mut index = 0;
-
-    while elves.len() > 1 {
-        let next_index = (index + elves.len() / 2) % elves.len();
-        index = (index + 1) % elves.len();
-        elves.remove(next_index);
-    }
-
-    elves[0].0
+    result
 }
 
-// fn take_present_in_front(elves: &mut Vec<(usize, usize)>, index: usize) {
-//     let next_index = (index + elves.len() / 2) % elves.len();
-
-//     elves.remove(next_index);
-// }
-
-fn solve(input: usize) -> usize {
-    let mut elves: Vec<usize> = (1..=input).collect_vec();
-
-    let mut index = 0;
-
-    while elves.len() > 1 {
-        let next_index = (index + 1) % elves.len();
-        elves.remove(next_index);
-        index = next_index;
+fn winner2(elves: usize) -> usize {
+    let next = next_power_of_three(elves);
+    let prev = next / 3;
+    if elves == prev {
+        elves
+    } else if elves > prev * 2 {
+        elves * 2 - next
+    } else {
+        elves - prev
     }
-
-    elves[0]
 }
+
+fn winner(elves: usize) -> usize {
+    if elves.is_power_of_two() {
+        1
+    } else {
+        ((elves << 1) ^ elves.next_power_of_two()) | 1
+    }
+}
+
 
 #[test]
 fn test() {
