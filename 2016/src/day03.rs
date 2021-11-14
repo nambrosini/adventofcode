@@ -10,7 +10,7 @@ pub fn generator(input: &str) -> Vec<Vec<usize>> {
 
 #[aoc(day03, part1)]
 pub fn part1(input: &[Vec<usize>]) -> usize {
-    input.iter().filter(|x| is_triangle(&x)).count()
+    input.iter().filter(|x| is_triangle(x)).count()
 }
 
 #[aoc(day03, part2)]

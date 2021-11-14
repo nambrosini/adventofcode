@@ -58,12 +58,12 @@ pub fn part2(input: &str) -> String {
 fn test1() {
     let s = "abc";
 
-    assert_eq!(&part1(&s), "18f47a30");
+    assert_eq!(&part1(s), "18f47a30");
 }
 
 #[test]
 fn test2() {
     let s = "abc";
 
-    assert_eq!(&part2(&s), "05ace8e3");
+    assert_eq!(&part2(s), "05ace8e3");
 }

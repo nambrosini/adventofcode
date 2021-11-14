@@ -42,7 +42,7 @@ impl Computer {
             match &instructions[self.position] {
                 Instruction::Cpy(v1, v2) => match v1 {
                     Operator::Register(k) => {
-                        let v: i32 = self.memory[&k];
+                        let v: i32 = self.memory[k];
                         let r = self.memory.entry(*v2).or_insert(0);
                         *r = v;
                     }
@@ -63,7 +63,7 @@ impl Computer {
                     self.position = (self.position as i32
                         + match o {
                             Operator::Register(k) => {
-                                if let Some(&r) = self.memory.get(&k) {
+                                if let Some(&r) = self.memory.get(k) {
                                     if r != 0 {
                                         *v - 1
                                     } else {

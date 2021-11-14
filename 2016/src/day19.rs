@@ -1,4 +1,3 @@
-use std::collections::HashMap;
 use itertools::Itertools;
 
 #[aoc_generator(day19)]
@@ -8,71 +7,59 @@ pub fn generator(input: &str) -> usize {
 
 #[aoc(day19, part1)]
 pub fn part1(input: &usize) -> usize {
+    // solve(*input, &take_next_present)
     solve(*input)
 }
 
 #[aoc(day19, part2)]
-pub fn part2(_input: &usize) -> usize {
-    0
+pub fn part2(input: &usize) -> usize {
+    solve2(*input)
 }
 
-fn solve(input: usize) -> usize {
-    let mut map: HashMap<usize, usize> = HashMap::new();
+fn solve2(input: usize) -> usize {
+    let mut elves: Vec<(usize, usize)> = Vec::new();
 
     for i in 1..=input {
-        map.insert(i, 1);
+        elves.push((i, 0));
     }
 
-    while map.len() > 1 {
-        map = take_present(&map);
-        map = purge_no_presents(&map);
+    let mut index = 0;
+
+    while elves.len() > 1 {
+        let next_index = (index + elves.len() / 2) % elves.len();
+        index = (index + 1) % elves.len();
+        elves.remove(next_index);
     }
 
-    *map.iter().next().unwrap().0
+    elves[0].0
 }
 
-fn take_present(map: &HashMap<usize, usize>) -> HashMap<usize, usize> {
-    let mut new_map = map.clone();
-    let mut keys = map.keys().collect_vec();
-    keys.sort_unstable();
+// fn take_present_in_front(elves: &mut Vec<(usize, usize)>, index: usize) {
+//     let next_index = (index + elves.len() / 2) % elves.len();
 
-    for (i, k) in keys.iter().enumerate() {
-        if new_map[k] == 0 {
-            continue;
-        }
+//     elves.remove(next_index);
+// }
 
-        let mut index = (i + 1) % keys.len();
+fn solve(input: usize) -> usize {
+    let mut elves: Vec<usize> = (1..=input).collect_vec();
 
-        while index != i {
-            if new_map[keys[index]] != 0 {
-                let entry = new_map.entry(**k).or_default();
-                *entry += map[keys[index]];
-                let entry = new_map.entry(*keys[index]).or_default();
-                *entry = 0;
-                break;
-            }
+    let mut index = 0;
 
-            index = (index + 1) % keys.len();
-        }
+    while elves.len() > 1 {
+        let next_index = (index + 1) % elves.len();
+        elves.remove(next_index);
+        index = next_index;
     }
 
-    new_map
-}
-
-fn purge_no_presents(map: &HashMap<usize, usize>) -> HashMap<usize, usize> {
-    let mut new_map = map.clone();
-    let keys = map.keys().collect_vec();
-
-    for k in keys {
-        if map[k] == 0 {
-            new_map.remove(k);
-        }
-    }
-
-    new_map
+    elves[0]
 }
 
 #[test]
 fn test() {
     assert_eq!(part1(&5), 3);
+}
+
+#[test]
+fn test2() {
+    assert_eq!(part2(&5), 2);
 }
