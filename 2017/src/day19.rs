@@ -1,6 +1,6 @@
 use itertools::Itertools;
 use std::ops::{Add, AddAssign};
-    
+
 #[aoc_generator(day19)]
 pub fn generator(input: &str) -> Diagram {
     Diagram::new(input.lines().map(|x| x.chars().collect_vec()).collect_vec())
@@ -22,7 +22,7 @@ pub fn part2(input: &Diagram) -> usize {
 pub struct Diagram {
     path: Vec<Vec<char>>,
     position: Point,
-    direction: Direction
+    direction: Direction,
 }
 
 impl Diagram {
@@ -32,7 +32,7 @@ impl Diagram {
         Self {
             path,
             position,
-            direction: Direction::S
+            direction: Direction::S,
         }
     }
 
@@ -54,9 +54,7 @@ impl Diagram {
 
             match val {
                 '|' | '-' => continue,
-                '+' => {
-                    self.direction = self.get_new_direction()
-                },
+                '+' => self.direction = self.get_new_direction(),
                 ' ' => unreachable!(),
                 _ => {
                     res.push(val);
@@ -70,12 +68,7 @@ impl Diagram {
     }
 
     fn get_new_direction(&self) -> Direction {
-        let vals = vec![
-            Direction::N,
-            Direction::E,
-            Direction::S,
-            Direction::W
-        ];
+        let vals = vec![Direction::N, Direction::E, Direction::S, Direction::W];
 
         for d in vals {
             if d == self.direction || d == self.direction.rev() {
@@ -86,7 +79,7 @@ impl Diagram {
 
             match self.path[check.y as usize][check.x as usize] {
                 '-' | '|' => return d,
-                _ => continue
+                _ => continue,
             }
         }
 
@@ -97,7 +90,7 @@ impl Diagram {
 #[derive(Debug, PartialEq, Eq, Clone, Copy)]
 pub struct Point {
     x: i32,
-    y: i32
+    y: i32,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -105,7 +98,7 @@ pub enum Direction {
     N,
     E,
     S,
-    W
+    W,
 }
 
 impl From<Direction> for Point {
@@ -163,9 +156,6 @@ impl AddAssign for Point {
 
 impl Point {
     fn new(x: i32, y: i32) -> Self {
-        Self {
-            x,
-            y
-        }
+        Self { x, y }
     }
 }

@@ -1,5 +1,5 @@
 use itertools::Itertools;
-    
+
 #[aoc_generator(day21)]
 pub fn generator(input: &str) -> Vec<Rule> {
     input.lines().map(|x| x.into()).collect_vec()
@@ -10,16 +10,64 @@ pub fn part1(input: &[Rule]) -> usize {
     let mut v = vec![
         vec!['.', '#', '.'],
         vec!['.', '.', '#'],
-        vec!['#', '#', '#']
+        vec!['#', '#', '#'],
     ];
 
     for _ in 0..5 {
         let size = v.len();
-
-        
+        if size % 2 == 0 {
+            v = take2(&v, input);
+        } else {
+            v = take3(&v, input);
+        }
     }
 
     v.iter().flatten().filter(|&&x| x == '#').count()
+}
+
+fn take2(v: &[Vec<char>], rules: &[Rule]) -> Vec<Vec<char>> {
+    let mut squares = vec![];
+
+    for i in 0..(v.len() / 2) {
+        for j in 0..(v.len() / 2) {
+            let mut s = String::new();
+
+            s.push(v[i * 2][j * 2]);
+            s.push(v[i * 2 + 1][j * 2]);
+            s.push('/');
+            s.push(v[i * 2][j * 2 + 1]);
+            s.push(v[i * 2 + 1][j * 2 + 1]);
+
+            squares.push(s);
+        }
+    }
+
+    'outer: for s in squares {
+        for r in rules {
+            if let Some(enhancement) = r.check_pattern(&string_to_vec(&s)) {
+                s = enhancement;
+                continue 'outer;
+            }
+        }
+    }
+
+    
+}
+
+fn string_to_vec(s: &str) -> Vec<Vec<char>> {
+    let mut v = Vec::new();
+
+    let split = s.split('/');
+
+    for s in split {
+        let mut v2 = Vec::new();
+        for c in s.chars() {
+            v2.push(c);
+        }
+        v.push(v2);
+    }
+
+    v
 }
 
 #[aoc(day21, part2)]
@@ -28,50 +76,27 @@ pub fn part2(input: &[Rule]) -> usize {
 }
 
 pub struct Rule {
-    from: Vec<Vec<char>>,
-    to: Vec<Vec<char>>
+    from: String,
+    to: String,
 }
 
 impl From<&str> for Rule {
     fn from(s: &str) -> Self {
         let split = s.split(" => ").collect_vec();
 
-        let mut from = vec![];
-        let mut v = vec![];
-
-        for c in split[0].chars() {
-            match c {
-                '.' | '#' => v.push(c),
-                '/' => {
-                    from.push(v);
-                    v = vec![];
-                },
-                _ => unreachable!()
-            }
-        }
-
-        let mut to = vec![];
-
-        for c in split[1].chars() {
-            match c {
-                '.' | '#' => v.push(c),
-                '/' => {
-                    to.push(v);
-                    v = vec![];
-                },
-                _ => unreachable!()
-            }
-        }
-
-        Self {
-            from,
-            to
+        Self { 
+            from: split[0].to_string(), 
+            to: split[1].to_string(),
         }
     }
 }
 
 impl Rule {
-    fn check_pattern(&self, pattern: &[Vec<char>]) -> Option<Vec<Vec<char>>> {
+    fn check_pattern(&self, pattern: &[Vec<char>]) -> Option<String> {
+        if self.from == Self::to_string(pattern) {
+            return Some(self.to.clone());
+        }
+        
         let r0h = Self::flip_h(pattern);
         let r0v = Self::flip_v(pattern);
         let r90 = Self::rotate(pattern);
@@ -80,15 +105,14 @@ impl Rule {
         let r180 = Self::rotate(&r90);
         let r270 = Self::rotate(&r180);
 
-        if pattern == self.from ||
-            pattern == r0h ||
-            pattern == r0v ||
-            pattern == r90 ||
-            pattern == r90h ||
-            pattern == r90v ||
-            pattern == r180 ||
-            pattern == r270 {
-                return Some(self.to.to_vec());
+        if self.from == Self::to_string(&r0h) ||
+            self.from == Self::to_string(&r0v) ||
+            self.from == Self::to_string(&r90) ||
+            self.from == Self::to_string(&r90h) ||
+            self.from == Self::to_string(&r90v) ||
+            self.from == Self::to_string(&r180) ||
+            self.from == Self::to_string(&r270) {
+            return Some(self.to.clone());
         }
 
         None
@@ -131,5 +155,18 @@ impl Rule {
         }
 
         ret
+    }
+
+    fn to_string(chars: &[Vec<char>]) -> String {
+        let mut s = String::new();
+
+        for (i, r) in chars.iter().enumerate() {
+            s.push_str(&r.iter().join(" "));
+            if i < r.len() - 1 {
+                s.push('/');
+            }
+        }
+
+        s
     }
 }

@@ -10,38 +10,33 @@ pub fn generator(input: &str) -> Vec<Instruction> {
 #[aoc(day18, part1)]
 pub fn part1(input: &[Instruction]) -> i64 {
     let mut duet = Duet::new(input.to_vec());
-    let mut next = duet.next();
+    let mut res = None;
 
-    while next.is_none() {
-        next = duet.next();
+    while res == None {
+        res = duet.run();
     }
 
-    next.unwrap()
+    res.unwrap()
 }
 
 #[aoc(day18, part2)]
 pub fn part2(input: &[Instruction]) -> i64 {
-    let mut duet_1 = DuetSecond::new(input.to_vec(), 0);
-    let mut duet_2 = DuetSecond::new(input.to_vec(), 1);
+    let mut channel1 = vec![];
+    let mut channel2 = vec![];
 
-    loop { 
-        while let State::Running(v) = duet_1.next().unwrap() {
-            if let Some(message) = v {
-                duet_2.send(message);
-            }
-        }
+    let mut duet1 = DuetSecond::new(input.to_vec(), 0);
+    let mut duet2 = DuetSecond::new(input.to_vec(), 1);
 
-        while let State::Running(v) = duet_2.next().unwrap() {
-            if let Some(message) = v {
-                duet_1.send(message);
-            }
-        }
-
-        if (duet_1.state.is_waiting() && !duet_1.has_messages()) || 
-            (duet_2.state.is_waiting() && !duet_2.has_messages()) {
-            return duet_1.total_messages_count
-        }
+    while duet1.state == State::Running
+        || duet2.state == State::Running
+        || !channel1.is_empty()
+        || !channel2.is_empty()
+    {
+        duet1.step(&mut channel1, &mut channel2);
+        duet2.step(&mut channel2, &mut channel1);
     }
+
+    duet2.total_messages_count
 }
 
 struct Duet {
@@ -62,41 +57,85 @@ impl Duet {
     }
 }
 
-impl Iterator for Duet {
-    type Item = i64;
-
-    fn next(&mut self) -> Option<Self::Item> {
-        let instruction = self.instructions[self.position].clone();
+impl Duet {
+    fn run(&mut self) -> Option<i64> {
+        let instruction = self.instructions[self.position];
 
         match instruction {
-            Instruction::Snd(x) => self.last_played = Some(self.map[&x]),
+            Instruction::Snd(x) => {
+                let x = match x {
+                    Operator::Register(k) => self.map[&k],
+                    Operator::Value(v) => v,
+                };
+                self.last_played = Some(x);
+            }
             Instruction::Set(x, y) => {
-                self.map.insert(x, y.get_value(&self.map));
+                if let Operator::Register(x) = x {
+                    let y = match y {
+                        Operator::Register(k) => self.map[&k],
+                        Operator::Value(v) => v,
+                    };
+
+                    let e = self.map.entry(x).or_insert(0);
+                    *e = y;
+                }
             }
             Instruction::Add(x, y) => {
-                let val = y.get_value(&self.map);
-                let e = self.map.entry(x).or_insert(0);
-                *e += val;
+                if let Operator::Register(x) = x {
+                    let y = match y {
+                        Operator::Register(k) => self.map[&k],
+                        Operator::Value(v) => v,
+                    };
+
+                    let e = self.map.entry(x).or_insert(0);
+                    *e += y;
+                }
             }
             Instruction::Mul(x, y) => {
-                let val = y.get_value(&self.map);
-                let e = self.map.entry(x).or_insert(0);
-                *e *= val;
+                if let Operator::Register(x) = x {
+                    let y = match y {
+                        Operator::Register(k) => self.map[&k],
+                        Operator::Value(v) => v,
+                    };
+
+                    let e = self.map.entry(x).or_insert(0);
+                    *e *= y;
+                }
             }
             Instruction::Mod(x, y) => {
-                let val = y.get_value(&self.map);
-                let e = self.map.entry(x).or_insert(0);
-                *e %= val;
+                if let Operator::Register(x) = x {
+                    let y = match y {
+                        Operator::Register(k) => self.map[&k],
+                        Operator::Value(v) => v,
+                    };
+
+                    let e = self.map.entry(x).or_insert(0);
+                    *e %= y;
+                }
             }
             Instruction::Rcv(x) => {
-                if *self.map.entry(x).or_insert(0) != 0 {
+                let x = match x {
+                    Operator::Register(k) => self.map[&k],
+                    Operator::Value(v) => v,
+                };
+
+                if x != 0 {
                     return self.last_played;
                 }
             }
             Instruction::Jgz(x, y) => {
-                if *self.map.entry(x).or_insert(0) > 0 {
-                    self.position = (self.position as i64 + y.get_value(&self.map)) as usize;
-                    return None;
+                let x = match x {
+                    Operator::Register(k) => self.map[&k],
+                    Operator::Value(v) => v,
+                };
+
+                let y = match y {
+                    Operator::Register(k) => self.map[&k],
+                    Operator::Value(v) => v,
+                };
+
+                if x > 0 {
+                    self.position = (self.position as i64 + y - 1) as usize;
                 }
             }
         }
@@ -109,27 +148,15 @@ impl Iterator for Duet {
 
 #[derive(Debug, PartialEq, Clone)]
 enum State {
-    Running(Option<i64>),
-    Waiting
-}
-
-impl State {
-    fn is_waiting(&self) -> bool {
-        match self {
-            State::Waiting => true,
-            _ => false,
-        }
-    }
+    Running,
+    Waiting,
 }
 
 #[derive(Debug, Clone)]
 struct DuetSecond {
     instructions: Vec<Instruction>,
     position: usize,
-    last_played: Option<i64>,
     map: HashMap<char, i64>,
-    messages: Vec<i64>,
-    other: Option<Box<DuetSecond>>,
     total_messages_count: i64,
     state: State,
 }
@@ -141,157 +168,150 @@ impl DuetSecond {
         Self {
             instructions,
             position: 0,
-            last_played: None,
-            map: map,
-            messages: Vec::new(),
-            other: None, 
+            map,
             total_messages_count: 0,
-            state: State::Running(None),
+            state: State::Running,
         }
-    }
-
-    fn get_message(&mut self) -> Option<i64> {
-        if self.messages.len() > 0 {
-            Some(self.messages.remove(0))
-        } else {
-            None
-        }
-    }
-
-    fn send(&mut self, message: i64) {
-        self.messages.push(message);
-    }
-
-    fn has_messages(&self) -> bool {
-        self.messages.len() > 0
     }
 }
 
-impl Iterator for DuetSecond {
-    type Item = State;
-
-    fn next(&mut self) -> Option<Self::Item> {
-        let instruction = self.instructions[self.position].clone();
+impl DuetSecond {
+    fn step(&mut self, sender: &mut Vec<i64>, receiver: &mut Vec<i64>) {
+        let instruction = self.instructions[self.position];
 
         match instruction {
             Instruction::Snd(x) => {
                 self.total_messages_count += 1;
-                self.position += 1;
-                self.state = State::Running(Some(*self.map.entry(x).or_insert(0)));
-                return Some(self.state.clone());
-            },
+
+                let x = match x {
+                    Operator::Register(k) => self.map[&k],
+                    Operator::Value(v) => v,
+                };
+
+                sender.push(x);
+            }
             Instruction::Set(x, y) => {
-                self.map.insert(x, y.get_value(&self.map));
+                if let Operator::Register(x) = x {
+                    let y = match y {
+                        Operator::Register(k) => self.map[&k],
+                        Operator::Value(v) => v,
+                    };
+
+                    let e = self.map.entry(x).or_insert(0);
+                    *e = y;
+                }
             }
             Instruction::Add(x, y) => {
-                let val = y.get_value(&self.map);
-                let e = self.map.entry(x).or_insert(0);
-                *e += val;
+                if let Operator::Register(x) = x {
+                    let y = match y {
+                        Operator::Register(k) => self.map[&k],
+                        Operator::Value(v) => v,
+                    };
+
+                    let e = self.map.entry(x).or_insert(0);
+                    *e += y;
+                }
             }
             Instruction::Mul(x, y) => {
-                let val = y.get_value(&self.map);
-                let e = self.map.entry(x).or_insert(0);
-                *e *= val;
+                if let Operator::Register(x) = x {
+                    let y = match y {
+                        Operator::Register(k) => self.map[&k],
+                        Operator::Value(v) => v,
+                    };
+
+                    let e = self.map.entry(x).or_insert(0);
+                    *e *= y;
+                }
             }
             Instruction::Mod(x, y) => {
-                let val = y.get_value(&self.map);
-                let e = self.map.entry(x).or_insert(0);
-                *e %= val;
+                if let Operator::Register(x) = x {
+                    let y = match y {
+                        Operator::Register(k) => self.map[&k],
+                        Operator::Value(v) => v,
+                    };
+
+                    let e = self.map.entry(x).or_insert(0);
+                    *e %= y;
+                }
             }
             Instruction::Rcv(x) => {
-                if let Some(message) = self.get_message() {
+                if receiver.is_empty() {
+                    self.state = State::Waiting;
+                    return;
+                } else if let Operator::Register(x) = x {
+                    let message = receiver.remove(0);
                     let e = self.map.entry(x).or_insert(0);
                     *e = message;
-                } else {
-                    self.state = State::Waiting;
-                    return Some(self.state.clone());
+                    self.state = State::Running;
                 }
             }
             Instruction::Jgz(x, y) => {
-                if *self.map.entry(x).or_insert(0) > 0 {
-                    self.position = (self.position as i64 + y.get_value(&self.map)) as usize;
-                    self.state = State::Running(None);
-                    return Some(self.state.clone());
+                let x = match x {
+                    Operator::Register(k) => self.map[&k],
+                    Operator::Value(v) => v,
+                };
+
+                let y = match y {
+                    Operator::Register(k) => self.map[&k],
+                    Operator::Value(v) => v,
+                };
+
+                if x > 0 {
+                    self.position = (self.position as i64 + y - 1) as usize;
                 }
             }
         }
 
         self.position += 1;
-
-        self.state = State::Running(None);
-        Some(self.state.clone())
     }
 }
 
 #[derive(Debug, Copy, Clone)]
 pub enum Instruction {
-    Snd(char),
-    Set(char, Value),
-    Add(char, Value),
-    Mul(char, Value),
-    Mod(char, Value),
-    Rcv(char),
-    Jgz(char, Value),
+    Snd(Operator),
+    Set(Operator, Operator),
+    Add(Operator, Operator),
+    Mul(Operator, Operator),
+    Mod(Operator, Operator),
+    Rcv(Operator),
+    Jgz(Operator, Operator),
 }
 
 impl From<&str> for Instruction {
     fn from(s: &str) -> Self {
-        let instruction = &s[..3];
-        let split = s[4..].split(' ').collect_vec();
-        let x: char = split[0].chars().next().unwrap();
-        let y: Option<Value> = split.get(1).map(|v| (*v).into());
-
-        match instruction {
-            "snd" => Instruction::Snd(x),
-            "set" => Instruction::Set(x, y.unwrap()),
-            "add" => Instruction::Add(x, y.unwrap()),
-            "mul" => Instruction::Mul(x, y.unwrap()),
-            "mod" => Instruction::Mod(x, y.unwrap()),
-            "rcv" => Instruction::Rcv(x),
-            "jgz" => Instruction::Jgz(x, y.unwrap()),
+        let s = s.split(' ').collect_vec();
+        match s[0] {
+            "snd" => Instruction::Snd(s[1].into()),
+            "set" => Instruction::Set(s[1].into(), s[2].into()),
+            "add" => Instruction::Add(s[1].into(), s[2].into()),
+            "mul" => Instruction::Mul(s[1].into(), s[2].into()),
+            "mod" => Instruction::Mod(s[1].into(), s[2].into()),
+            "rcv" => Instruction::Rcv(s[1].into()),
+            "jgz" => Instruction::Jgz(s[1].into(), s[2].into()),
             _ => unreachable!(),
         }
     }
 }
 
 #[derive(Debug, Copy, Clone)]
-pub enum Value {
+pub enum Operator {
     Register(char),
     Value(i64),
 }
 
-impl From<&str> for Value {
-    fn from(s: &str) -> Self {
-        if let Ok(x) = s.parse() {
-            Value::Value(x)
+impl From<&str> for Operator {
+    fn from(s: &str) -> Operator {
+        if let Ok(v) = s.parse::<i64>() {
+            Operator::Value(v)
         } else {
-            Value::Register(s.chars().next().unwrap())
+            Operator::Register(s.chars().next().unwrap())
         }
     }
 }
 
-impl Value {
-    fn get_value(&self, registers: &HashMap<char, i64>) -> i64 {
-        match self {
-            Value::Register(v) => {
-                if let Some(val) = registers.get(v) {
-                    *val
-                } else {
-                    0
-                }
-            }
-            Value::Value(x) => *x,
-        }
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test1() {
-        let s = "set a 1
+#[test]
+fn test1() {
+    let s = "set a 1
 add a 2
 mul a a
 mod a 5
@@ -302,27 +322,27 @@ jgz a -1
 set a 1
 jgz a -2";
 
-        let s = generator(s);
-        assert_eq!(part1(&s), 4);
-    }
+    let s = generator(s);
+    assert_eq!(part1(&s), 4);
+}
 
-    #[test]
-    fn test2() {
-        let s = "snd a
-snd b
+#[test]
+fn test2() {
+    let s = generator(
+        "snd 1
+snd 2
 snd p
 rcv a
 rcv b
 rcv c
-rcv d";
+rcv d",
+    );
+    assert_eq!(part2(&s), 3);
+}
 
-        let s = generator(s);
-        assert_eq!(part2(&s), 3);
-    }
-
-    #[test]
-    fn test2_1() {
-        let s = "set a 1
+#[test]
+fn test2_1() {
+    let s = "set a 1
 add a 2
 mul a a
 mod a 5
@@ -333,7 +353,6 @@ jgz a -1
 set a 1
 jgz a -2";
 
-        let s = generator(s);
-        assert_eq!(part1(&s), 1);
-    }
+    let s = generator(s);
+    assert_eq!(part2(&s), 1);
 }

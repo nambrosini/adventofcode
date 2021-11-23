@@ -98,7 +98,7 @@ fn check(tree: &HashMap<&str, Vec<&str>>, weights: &HashMap<&str, i64>, node: &s
             let mut r = vec![];
             // build an array of weights, by recursively calling check.
             for child in children.iter() {
-                match check(&tree, &weights, child) {
+                match check(tree, weights, child) {
                     s @ Either::Solution(_) => return s,
                     Either::Weight(child_weight) => r.push(child_weight),
                 }

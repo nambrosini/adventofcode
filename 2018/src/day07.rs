@@ -7,58 +7,22 @@ use std::cmp::{Ord, Ordering};
 pub fn generator(input: &str) -> Vec<(char, char)> {
     let re = Regex::new(r"Step ([A-Z]) must be finished before step ([A-Z]) can begin.").unwrap();
 
-    input
-        .lines()
-        .map(|l| {
-            let cap = re.captures_iter(l).next().unwrap();
+    let mut vec = Vec::new();
 
-            (
-                cap[1].chars().next().unwrap(),
-                cap[2].chars().next().unwrap(),
-            )
-        })
-        .collect_vec()
+    for caps in re.captures_iter(input) {
+        let new = (
+            caps[1].chars().next().unwrap(),
+            caps[2].chars().next().unwrap(),
+        );
+
+        vec.push(new);
+    }
+
+    vec
 }
 
-// #[aoc(day07, part1)]
-// pub fn part1(input: &[(char, char)]) -> String {
-//     let mut map: HashMap<char, Vec<char>> = HashMap::new();
-
-//     for (key, connection) in input {
-//         let e = map.entry(*key).or_insert_with(Vec::new);
-//         e.push(*connection);
-//     }
-
-//     let mut queue = map
-//         .keys()
-//         .filter(|&x| !map.values().flatten().any(|y| x == y))
-//         .copied()
-//         .collect_vec();
-
-//     queue.sort_unstable();
-
-//     let mut res = String::new();
-
-//     while queue.len() > 0 {
-//         let value = queue.remove(0);
-//         res.push(value);
-//         if let Some(children) = map.get(&value) {
-//             queue.append(&mut children.clone());
-//         }
-//         queue.sort_unstable();
-//     }
-
-//     res.chars()
-//         .rev()
-//         .unique()
-//         .collect_vec()
-//         .iter()
-//         .rev()
-//         .join("")
-// }
-
 #[aoc(day07, part1)]
-pub fn part1(input: &Vec<(char, char)>) -> String {
+pub fn part1(input: &[(char, char)]) -> String {
     let mut map: HashMap<char, Vec<char>> = HashMap::new();
 
     for (key, connection) in input {
@@ -76,8 +40,7 @@ pub fn part1(input: &Vec<(char, char)>) -> String {
 
     let mut res = String::new();
 
-    while queue.len() > 0 {
-        let value = queue.remove(0);
+    while let Some(value) = queue.remove(0) {
         res.push(value.value);
         if let Some(children) = map.get(&value.value) {
             queue.append(children.clone());
@@ -92,6 +55,73 @@ pub fn part1(input: &Vec<(char, char)>) -> String {
         .iter()
         .rev()
         .join("")
+}
+
+#[aoc(day07, part2)]
+fn part2(input: &[(char, char)]) -> usize {
+    let mut time_passed = 0;
+
+    let mut map: HashMap<char, Vec<char>> = HashMap::new();
+
+    for (key, connection) in input {
+        let e = map.entry(*key).or_insert_with(Vec::new);
+        e.push(*connection);
+    }
+
+    let mut queue = PriorityQueue::new(map
+        .keys()
+        .filter(|&x| !map.values().flatten().any(|y| x == y))
+        .map(|x| Node::new(*x))
+        .collect_vec());
+
+    queue.sort();
+
+    let mut workers: Vec<(Option<Node>, usize, usize)> = [(None, 0, 0); 5].to_vec();
+
+    loop {
+        for worker in workers.iter_mut() {
+            if let Some(node) = worker.0 {
+                worker.1 += 1;
+                if worker.1 == worker.2 {
+                    if let Some(children) = map.get(&node.value) {
+                        queue.append(children.clone());
+                    }
+                    if let Some(node) = queue.remove(0) { 
+                        worker.0 = Some(node);
+                        worker.1 = 0;
+                        worker.2 = (node.value as u8 - 4) as usize;
+                    } else {
+                        worker.0 = None;
+                        worker.1 = 0;
+                        worker.2 = 0;
+                    }
+                }
+            } else if let Some(node) = queue.remove(0) {
+                worker.0 = Some(node);
+                worker.1 = 0;
+                worker.2 = (node.value as u8 - 4) as usize;
+            }
+        }
+
+        if all_workers_finished(&workers) && queue.len() == 0 {
+            break;
+        }
+        time_passed += 1;
+    }
+
+    time_passed
+}
+
+fn all_workers_finished(workers: &[(Option<Node>, usize, usize)]) -> bool {
+    let mut finished = true;
+
+    for (_, x, y) in workers {
+        if x != y {
+            finished = false;
+        }
+    }
+
+    finished
 }
 
 struct PriorityQueue {
@@ -130,12 +160,15 @@ impl PriorityQueue {
         self.queue.len()
     }
 
-    fn remove(&mut self, index: usize) -> Node {
-        self.queue.remove(index)
+    fn remove(&mut self, index: usize) -> Option<Node> {
+        if self.queue.is_empty() {
+            return None;
+        }
+        Some(self.queue.remove(index))
     }
 }
 
-#[derive(Eq)]
+#[derive(Eq, Clone, Copy)]
 struct Node {
     value: char,
     priority: usize,

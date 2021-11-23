@@ -22,7 +22,7 @@ impl FromStr for Point2 {
     type Err = ParseIntError;
 
     fn from_str(input: &str) -> Result<Point2, Self::Err> {
-        let parts: Vec<&str> = input.trim().split(",").collect();
+        let parts: Vec<&str> = input.trim().split(',').collect();
         let x: i32 = parts[0].trim().parse()?;
         let y: i32 = parts[1].trim().parse()?;
         Ok(Point2::new(x, y))
@@ -70,7 +70,7 @@ pub fn part_one(input: &[Point2]) -> i32 {
     let mut hash_map: FnvHashMap<Point2, i32> = FnvHashMap::default();
     (final_bounds.0..=final_bounds.2)
         .map(|x| (final_bounds.1..=final_bounds.3).map(move |y| Point2::new(x, y)))
-        .flat_map(|i| i.into_iter())
+        .flatten()
         .for_each(|i| {
             let (point, _, count) = input.iter().map(|p| (p, p.distance(&i))).fold(
                 (Point2::new(0, 0), 100000, 0),
@@ -109,7 +109,7 @@ fn part_two(input: &[Point2]) -> usize {
 
     (bbox.0..=bbox.2)
         .map(|x| (bbox.1..=bbox.3).map(move |y| Point2::new(x, y)))
-        .flat_map(|i| i.into_iter())
+        .flatten()
         .filter(|p| input.iter().map(|pp| pp.distance(p)).sum::<i32>() < 10000)
         .count()
 }

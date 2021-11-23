@@ -89,7 +89,7 @@ fn find_similar(id: &[String]) -> (usize, usize) {
 #[test]
 fn test_1() {
     let s = "abcdef\nbababc\nabbcde\nabcccd\naabcdd\nabcdee\nababab";
-    let s = generator(&s);
+    let s = generator(s);
 
     assert_eq!(part1(&s), 12);
 }

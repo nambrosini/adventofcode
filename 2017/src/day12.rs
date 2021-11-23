@@ -25,7 +25,7 @@ pub fn part1(input: &HashMap<usize, HashSet<usize>>) -> usize {
 
     while count < group_0.len() {
         let current = group_0[count];
-        let set = input.get(&current).unwrap();
+        let set = input.get(current).unwrap();
 
         for i in set {
             if !group_0.contains(&i) {
@@ -57,7 +57,7 @@ pub fn part2(input: &HashMap<usize, HashSet<usize>>) -> usize {
                 let set = input.get(&current).unwrap();
 
                 for i in set {
-                    if !group.contains(&i) {
+                    if !group.contains(i) {
                         group.push(*i);
                     }
                 }

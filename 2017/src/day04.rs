@@ -31,7 +31,7 @@ pub fn part2(input: &[Vec<String>]) -> i32 {
                 .map(|l| {
                     let slice = &l[..];
                     let mut chars: Vec<char> = slice.to_owned().chars().collect();
-                    chars.sort_by(|a, b| b.cmp(&a));
+                    chars.sort_by(|a, b| b.cmp(a));
                     String::from_iter(chars)
                 })
                 .collect_vec()

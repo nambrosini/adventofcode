@@ -7,8 +7,7 @@ use std::fmt;
 #[aoc_generator(day4)]
 pub fn generator(input: &str) -> Vec<Message> {
     let mut input = input.lines().collect_vec();
-
-    input.sort();
+    input.sort_unstable();
 
     input.iter().copied().map(|line| line.into()).collect_vec()
 }
@@ -58,12 +57,12 @@ pub fn part2(input: &[Message]) -> usize {
 }
 
 fn parse_guards(input: &[Message]) -> HashMap<usize, Guard> {
-    let mut input = input.iter();
+    let input = input.iter();
     let mut guards: HashMap<usize, Guard> = HashMap::new();
 
     let mut guard: Option<Guard> = None;
 
-    while let Some(next) = input.next() {
+    for next in input {
         match next.action {
             Action::Begins => {
                 let id = next.id.unwrap();
@@ -71,7 +70,7 @@ fn parse_guards(input: &[Message]) -> HashMap<usize, Guard> {
                     guards.insert(g.id, g);
                 }
 
-                guard = Some(guards.entry(id).or_insert(Guard::new(id)).clone());
+                guard = Some(guards.entry(id).or_insert_with(|| Guard::new(id)).clone());
             }
             _ => {
                 if let Some(g) = guard.take() {
@@ -109,14 +108,14 @@ impl Guard {
         match message.action {
             Action::Asleep => {
                 let e = self.map.entry(key).or_insert([false; 60]);
-                for m in message.minute..60 {
-                    e[m] = true;
+                for m in e.iter_mut().take(60).skip(message.minute) {
+                    *m = true;
                 }
             }
             Action::Wakes => {
                 let e = self.map.entry(key).or_insert([false; 60]);
-                for m in message.minute..60 {
-                    e[m] = false;
+                for m in e.iter_mut().take(60).skip(message.minute) {
+                    *m = false;
                 }
             }
             _ => {}
@@ -158,23 +157,23 @@ pub fn display(map: &HashMap<usize, Vec<usize>>) {
         println!("\t{}", d.iter().sum::<usize>());
     }
 
-    println!("")
+    println!()
 }
 
 impl fmt::Display for Guard {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "Date\tID\tMinute\n")?;
-        write!(
+        writeln!(f, "Date\tID\tMinute")?;
+        writeln!(
             f,
-            "\t\t000000000011111111112222222222333333333344444444445555555555\n"
+            "\t\t000000000011111111112222222222333333333344444444445555555555"
         )?;
-        write!(
+        writeln!(
             f,
-            "\t\t012345678901234567890123456789012345678901234567890123456789\n"
+            "\t\t012345678901234567890123456789012345678901234567890123456789"
         )?;
 
         let mut sorted_keys: Vec<(usize, usize)> = self.map.keys().copied().collect();
-        sorted_keys.sort();
+        sorted_keys.sort_unstable();
 
         for k in sorted_keys {
             write!(f, "{}-{}\t#{}\t", k.1, k.0, self.id)?;
@@ -183,10 +182,10 @@ impl fmt::Display for Guard {
                 write!(f, "{}", if *i { "#" } else { "." })?;
             }
 
-            write!(f, "\n")?;
+            writeln!(f)?;
         }
 
-        write!(f, "\n")
+        writeln!(f)
     }
 }
 
@@ -228,11 +227,7 @@ impl From<&str> for Message {
 
         let cap = re.captures_iter(s).next().unwrap();
 
-        let id = if let Some(x) = cap.get(6) {
-            Some(x.as_str().parse::<usize>().unwrap())
-        } else {
-            None
-        };
+        let id = cap.get(6).map(|x| x.as_str().parse::<usize>().unwrap());
 
         Self {
             month: cap[1].parse().unwrap(),

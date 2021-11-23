@@ -2,7 +2,7 @@ use std::ops::AddAssign;
 
 use itertools::Itertools;
 use regex::Regex;
-    
+
 #[aoc_generator(day20)]
 pub fn generator(input: &str) -> Vec<Particle> {
     input.lines().map(|x| x.into()).collect_vec()
@@ -16,7 +16,13 @@ pub fn part1(input: &[Particle]) -> usize {
         particles.iter_mut().for_each(|p| p.step());
     }
 
-    particles.iter().enumerate().map(|(i, p)| (i, p.manhattan())).min_by_key(|(_, e)| *e).unwrap().0
+    particles
+        .iter()
+        .enumerate()
+        .map(|(i, p)| (i, p.manhattan()))
+        .min_by_key(|(_, e)| *e)
+        .unwrap()
+        .0
 }
 
 #[aoc(day20, part2)]
@@ -44,7 +50,7 @@ pub fn part2(input: &[Particle]) -> usize {
 pub struct Vector {
     x: i128,
     y: i128,
-    z: i128
+    z: i128,
 }
 
 impl AddAssign for Vector {
@@ -89,7 +95,7 @@ impl From<&str> for Particle {
         Self {
             p: split[0].into(),
             v: split[1].into(),
-            a: split[2].into()
+            a: split[2].into(),
         }
     }
 }

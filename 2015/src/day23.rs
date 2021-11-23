@@ -132,10 +132,10 @@ impl Processor {
 
 #[test]
 fn test() {
-    let s = "inc b
-jio b, +2
-tpl b
-inc b";
+    let s = "inc a
+jio a, +2
+tpl a
+inc a";
 
     let s = generator(s);
     assert_eq!(part1(&s), 2);
