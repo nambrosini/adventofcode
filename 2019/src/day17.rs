@@ -43,8 +43,6 @@ pub fn part1(input: &[i64]) -> i64 {
 pub fn part2(input: &[i64]) -> i64 {
     let mut pc = Computer::new(input);
 
-    let mut s = String::new();
-
     while let Some(x) = pc.run(Some(2)) {
         let res: char = x as u8 as char;
 

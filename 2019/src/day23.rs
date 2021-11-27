@@ -53,12 +53,117 @@ pub fn part1(input: &[i64]) -> i64 {
     }
 }
 
+#[aoc(day23, part2)]
+pub fn part2(input: &[i64]) -> i64 {
+    let mut computers: Vec<Computer> = Vec::new();
+
+    // init pcs
+    for i in 0..50 {
+        let mut pc = Computer::new(input);
+        pc.run(Some(i));
+        computers.push(pc);
+    }
+
+    // init network
+    let mut network_queue: Vec<Packet> = Vec::new();
+    let mut nat = Nat::new();
+    let mut last_nat = i64::MIN;
+
+    loop {
+        for pc in computers.iter_mut() {
+            let val = if let Some(pos) = network_queue.iter().position(|p| p.receiver == pc.id && p.complete) {
+                let val = network_queue[pos].take_next();
+                if network_queue[pos].is_done() {
+                    network_queue.remove(pos);
+                }
+                Some(val)
+            } else {
+                None
+            };
+
+            if let Some(out) = pc.run(val) {
+                let mut added = false;
+                for i in (0..network_queue.len()).rev() {
+                    if network_queue[i].sender == pc.id && !network_queue[i].complete {
+                        network_queue[i].add_value(out);
+                        added = true;
+                        break;
+                    }
+                }
+                if !added {
+                    let packet = Packet::new(pc.id, out);
+                    network_queue.push(packet);
+                }
+            }
+        }
+
+        if let Some(pos) = network_queue.iter().position(|p| p.receiver == 255 && p.complete) {
+            let p = network_queue.remove(pos);
+
+            nat.receive_new_packet(p);
+        }
+
+        if let Some(p) = nat.check_if_idle(&computers, &network_queue) {
+            println!("{:?}", p);
+            if p.y == Some(last_nat) {
+                return p.y.unwrap();
+            } else {
+                last_nat = p.y.unwrap();
+                network_queue.push(p);
+            }
+        }
+
+    }
+}
+
+struct Nat {
+    last_packet: Option<Packet>,
+}
+
+impl Nat {
+    fn new() -> Self {
+        Self {
+            last_packet: None
+        }
+    }
+
+    fn receive_new_packet(&mut self, packet: Packet) {
+        self.last_packet = Some(packet);
+    }
+
+    fn check_if_idle(&mut self, computers: &[Computer], network: &[Packet]) -> Option<Packet> {
+
+        if !network.is_empty() {
+            return None;
+        }
+
+        for pc in computers {
+            if !pc.incoming.is_empty()  {
+                return None;
+            }
+        }
+
+        if let Some(p) = self.last_packet.take() {
+            let p = Packet {
+                sender: 255,
+                receiver: 0,
+                x: p.x,
+                y: p.y, 
+                complete: true
+            };
+            return Some(p);
+        }
+
+        None
+    }
+}
+
 struct Computer {
     memory: HashMap<i64, i64>,
     position: i64,
     relative_base: i64,
     id: i64, 
-    incoming: Vec<i64>
+    incoming: Vec<i64>,
 }
 
 impl Computer {
@@ -74,7 +179,7 @@ impl Computer {
             position: 0,
             relative_base: 0,
             id: -1,
-            incoming: Vec::new()
+            incoming: Vec::new(),
         }
     }
 
@@ -277,10 +382,6 @@ impl Packet {
 
     fn is_done(&self) -> bool {
         self.x.is_none() && self.y.is_none()
-    }
-
-    fn is_full(&self) -> bool {
-        self.x.is_some() && self.y.is_some()
     }
 
     fn add_value(&mut self, value: i64) {

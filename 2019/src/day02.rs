@@ -7,7 +7,7 @@ pub fn generator(input: &str) -> Vec<i64> {
 
 #[aoc(day02, part1)]
 pub fn part1(input: &[i64]) -> i64 {
-    let mut pc = Computer::new(&input);
+    let mut pc = Computer::new(input);
 
     pc.run(12, 2)
 }
