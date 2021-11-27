@@ -16,9 +16,9 @@ pub fn part1(input: &[Rule]) -> usize {
     for _ in 0..5 {
         let size = v.len();
         if size % 2 == 0 {
-            v = take2(&v, input);
+             v = take2(&v, input);
         } else {
-            v = take3(&v, input);
+            // v = take3(&v, input);
         }
     }
 
@@ -26,7 +26,7 @@ pub fn part1(input: &[Rule]) -> usize {
 }
 
 fn take2(v: &[Vec<char>], rules: &[Rule]) -> Vec<Vec<char>> {
-    let mut squares = vec![];
+    let mut squares: Vec<String> = vec![];
 
     for i in 0..(v.len() / 2) {
         for j in 0..(v.len() / 2) {
@@ -42,16 +42,74 @@ fn take2(v: &[Vec<char>], rules: &[Rule]) -> Vec<Vec<char>> {
         }
     }
 
-    'outer: for s in squares {
+    let mut new_square: Vec<Vec<Vec<char>>> = vec![];
+
+    'outer: for i in 0..squares.len() {
         for r in rules {
-            if let Some(enhancement) = r.check_pattern(&string_to_vec(&s)) {
-                s = enhancement;
+            if let Some(enhancement) = r.check_pattern(&string_to_vec(&squares[i])) {
+                new_square.push(enhancement);
                 continue 'outer;
             }
         }
     }
 
-    
+    let len = (new_square.len() as f32).sqrt() as usize;
+
+    let mut v: Vec<Vec<char>> = vec![vec![]; 3];
+
+    for i in 0..len {
+        for j in 0..new_square[i].len() {
+            v[j].extend(&new_square[i][j]);
+        }
+    }
+
+    v
+}
+
+fn take3(v: &[Vec<char>], rules: &[Rule]) -> Vec<Vec<char>> {
+    let mut squares: Vec<String> = vec![];
+
+    for i in 0..(v.len() / 3) {
+        for j in 0..(v.len() / 3) {
+            let mut s = String::new();
+
+            for x in 0..3 {
+                for y in 0..3 {
+                    s.push(v[i * 2 + x][j * 2 + y]);
+                }
+                s.push('/');
+            }
+
+            squares.push(s);
+        }
+    }
+
+    println!("{:?}", squares);
+
+    let mut new_square: Vec<Vec<Vec<char>>> = vec![];
+
+    'outer: for i in 0..squares.len() {
+        for r in rules {
+            if let Some(enhancement) = r.check_pattern(&string_to_vec(&squares[i])) {
+                new_square.push(enhancement);
+                continue 'outer;
+            }
+        }
+    }
+
+    println!("{:?}", new_square);
+
+    let len = (new_square.len() as f32).sqrt() as usize;
+
+    let mut v: Vec<Vec<char>> = vec![vec![]; 4];
+
+    for i in 0..len {
+        for j in 0..new_square[i].len() {
+            v[j].extend(&new_square[i][j]);
+        }
+    }
+
+    v
 }
 
 fn string_to_vec(s: &str) -> Vec<Vec<char>> {
@@ -92,9 +150,12 @@ impl From<&str> for Rule {
 }
 
 impl Rule {
-    fn check_pattern(&self, pattern: &[Vec<char>]) -> Option<String> {
+    fn check_pattern(&self, pattern: &[Vec<char>]) -> Option<Vec<Vec<char>>> {
+        println!("From: {:?}", self.from);
+        println!("To: {:?}", self.to);
+        println!("Pattern: {:?}", Self::to_string(pattern));
         if self.from == Self::to_string(pattern) {
-            return Some(self.to.clone());
+            return Some(string_to_vec(&self.to));
         }
         
         let r0h = Self::flip_h(pattern);
@@ -112,7 +173,7 @@ impl Rule {
             self.from == Self::to_string(&r90v) ||
             self.from == Self::to_string(&r180) ||
             self.from == Self::to_string(&r270) {
-            return Some(self.to.clone());
+            return Some(string_to_vec(&self.to));
         }
 
         None
@@ -161,12 +222,51 @@ impl Rule {
         let mut s = String::new();
 
         for (i, r) in chars.iter().enumerate() {
-            s.push_str(&r.iter().join(" "));
-            if i < r.len() - 1 {
+            s.push_str(&r.iter().join(""));
+            if i < chars.len() - 1 {
                 s.push('/');
             }
         }
 
         s
     }
+}
+
+#[test]
+fn test() {
+    let s = vec![vec!['.', '.'], vec!['.', '.']];
+    let rules = vec![
+        Rule { 
+            from: "../..".to_owned(),
+            to: "###/.../#..".to_owned()
+        }
+    ];
+
+    assert_eq!(&Rule::to_string(&take2(&s, &rules)), "###/.../#..");
+}
+
+#[test]
+fn test2() {
+    let s = ".../.../...";
+    let rules = vec![
+        Rule { 
+            from: ".../.../...".to_owned(),
+            to: "#.##/#.../..##/.##.".to_owned()
+        }
+    ];
+
+    assert_eq!(&Rule::to_string(&take3(&string_to_vec(s), &rules)), "#.##/#.../..##/.##.");
+}
+
+#[test]
+fn test3() {
+    let s = ".#./..#/###";
+    let rules: Vec<Rule> = vec![
+        "../.# => ##./#../...".into(),
+        ".#./..#/### => #..#/..../..../#..#".into()
+    ];
+
+    assert_eq!(&Rule::to_string(&take3(&string_to_vec(s), &rules)), "#..#/..../..../#..#");
+    let s = "#..#/..../..../#..#";
+    assert_eq!(&Rule::to_string(&take2(&string_to_vec(s), &rules)), "##.##./#..#../....../##.##./#..#../......");
 }

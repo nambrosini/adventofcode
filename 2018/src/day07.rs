@@ -2,6 +2,7 @@ use itertools::Itertools;
 use regex::Regex;
 use std::collections::HashMap;
 use std::cmp::{Ord, Ordering};
+use std::fmt;
 
 #[aoc_generator(day07)]
 pub fn generator(input: &str) -> Vec<(char, char)> {
@@ -74,19 +75,25 @@ fn part2(input: &[(char, char)]) -> usize {
         .map(|x| Node::new(*x))
         .collect_vec());
 
+    println!("{:?}", queue.queue);
+
     queue.sort();
 
     let mut workers: Vec<(Option<Node>, usize, usize)> = [(None, 0, 0); 5].to_vec();
 
+    println!("Second\tWorker 1\tWorker 2\tWorker 3\tWorker 4\tWorker 5\tDone");
+
+    let mut dones = vec![];
     loop {
         for worker in workers.iter_mut() {
             if let Some(node) = worker.0 {
                 worker.1 += 1;
                 if worker.1 == worker.2 {
+                    dones.push(node.value);
                     if let Some(children) = map.get(&node.value) {
                         queue.append(children.clone());
                     }
-                    if let Some(node) = queue.remove(0) { 
+                    if let Some(node) = queue.remove(0) {
                         worker.0 = Some(node);
                         worker.1 = 0;
                         worker.2 = (node.value as u8 - 4) as usize;
@@ -106,6 +113,32 @@ fn part2(input: &[(char, char)]) -> usize {
         if all_workers_finished(&workers) && queue.len() == 0 {
             break;
         }
+        let worker0 = if let Some(node) = workers[0].0 {
+            node.value
+        } else {
+            '.'
+        };
+        let worker1 = if let Some(node) = workers[1].0 {
+            node.value
+        } else {
+            '.'
+        };
+        let worker2 = if let Some(node) = workers[2].0 {
+            node.value
+        } else {
+            '.'
+        };
+        let worker3 = if let Some(node) = workers[3].0 {
+            node.value
+        } else {
+            '.'
+        };
+        let worker4 = if let Some(node) = workers[4].0 {
+            node.value
+        } else {
+            '.'
+        };
+        println!("{}\t\t   {}\t\t   {}\t\t   {}\t\t   {}\t\t   {}\t\t{}", time_passed, worker0, worker1, worker2, worker3, worker4, dones.iter().join(""));
         time_passed += 1;
     }
 
@@ -124,6 +157,7 @@ fn all_workers_finished(workers: &[(Option<Node>, usize, usize)]) -> bool {
     finished
 }
 
+#[derive(Debug)]
 struct PriorityQueue {
     queue: Vec<Node>
 }
@@ -168,7 +202,7 @@ impl PriorityQueue {
     }
 }
 
-#[derive(Eq, Clone, Copy)]
+#[derive(Debug, Eq, Clone, Copy)]
 struct Node {
     value: char,
     priority: usize,
@@ -210,6 +244,12 @@ impl PartialEq for Node {
     }
 }
 
+impl fmt::Display for Node {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{}", self.value)
+    }
+}
+
 
 #[test]
 fn test1() {
@@ -224,4 +264,5 @@ Step F must be finished before step E can begin.";
     let s = generator(s);
 
     assert_eq!(&part1(&s), "CABDFE");
+    assert_eq!(part2(&s), 1);
 }
