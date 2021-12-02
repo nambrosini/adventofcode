@@ -80,7 +80,7 @@ impl Room {
             }
         }
 
-        s
+        s.trim().to_string()
     }
 }
 
@@ -125,27 +125,21 @@ impl From<&str> for Room {
     }
 }
 
-// #[test]
-// fn test1() {
-//     let s = "aaaaa-bbb-z-y-x-123[abxyz]
-// a-b-c-d-e-f-g-h-983[abcde]
-// not-a-real-room-404[oarel]
-// totally-real-room-200[decoy]";
-//     let s = generator(s);
+#[test]
+fn test1() {
+    let s = "aaaaa-bbb-z-y-x-123[abxyz]
+a-b-c-d-e-f-g-h-987[abcde]
+not-a-real-room-404[oarel]
+totally-real-room-200[decoy]";
+    let s = generator(s);
 
-//     assert_eq!(part1(&s), 1514);
-// }
+    assert_eq!(part1(&s), 1514);
+}
 
 #[test]
 fn test2() {
-    let s = "north-pole-0[oehln]
-a-b-c-d-e-f-g-h-1[abcde]
-qzmt-zixmtkozy-ivhz-343[zimth]
-totally-real-room-200[decoy]
-aaaaa-bbb-z-y-x-123[abxyz]
-a-b-c-d-e-f-g-h-983[abcde]
-not-a-real-room-404[oarel]";
-    let s = generator(s);
+    let room: Room = "qzmt-zixmtkozy-ivhz-343".into();
 
-    assert_eq!(part2(&s), 1);
+
+    assert_eq!(&room.decrypt(), "very encrypted name");
 }

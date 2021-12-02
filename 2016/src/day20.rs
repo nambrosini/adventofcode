@@ -31,10 +31,12 @@ fn part1(input: &[(usize, usize)]) -> usize {
 fn part2(input: &[(usize, usize)]) -> usize {
     const MAX: usize = 4294967295;
 
-    let mut input = input.to_vec();
-    input.sort_unstable();
+    count_allowed_ips(input, MAX)
+}
 
-    println!("{:?}", input.last());
+fn count_allowed_ips(ranges: &[(usize, usize)], max: usize) -> usize {
+    let mut input = ranges.to_vec();
+    input.sort_unstable();
 
     let mut input_iter = input.iter();
     
@@ -50,11 +52,9 @@ fn part2(input: &[(usize, usize)]) -> usize {
             } else if index >= next_u.0 && index <= next_u.1 {
                 index = next_u.1;
             }
-            println!("{:?}, {}", next_u, index);
             next = input_iter.next();
         } else {
-            println!("{}, {}", MAX, index);
-            count += MAX - index;
+            count += max - index;
             break;
         }
     }
@@ -63,8 +63,18 @@ fn part2(input: &[(usize, usize)]) -> usize {
 }
 
 #[test]
-fn test2() {
-    let s = generator(&std::fs::read_to_string("input/2016/day20.txt").unwrap());
+fn test() {
+    let s = "5-8
+0-2
+4-7";
+    assert_eq!(part1(&generator(s)), 3);
+}
 
-    assert_eq!(part2(&s), 200);
+#[test]
+fn test2() {
+    let s = generator("5-8
+0-2
+4-7");
+
+    assert_eq!(count_allowed_ips(&s, 9), 2);
 }
