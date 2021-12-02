@@ -20,7 +20,7 @@ pub fn part1(input: &[Direction]) -> usize {
 }
 
 #[aoc(day2, part2)]
-pub fn aoc(input: &[Direction]) -> usize {
+pub fn part2(input: &[Direction]) -> usize {
     let mut aim = 0;
     let mut h = 0;
     let mut v = 0;
@@ -57,4 +57,28 @@ impl From<&str> for Direction {
             _ => unreachable!()
         }
     }
+}
+
+#[test]
+fn test1() {
+    let s = "forward 5
+down 5
+forward 8
+up 3
+down 8
+forward 2";
+
+    assert_eq!(part1(&generator(s)), 150);
+}
+
+#[test]
+fn test2() {
+    let s = "forward 5
+down 5
+forward 8
+up 3
+down 8
+forward 2";
+
+    assert_eq!(part2(&generator(s)), 900);
 }
