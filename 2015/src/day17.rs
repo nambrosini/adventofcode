@@ -8,7 +8,7 @@ pub fn generator(input: &str) -> Vec<usize> {
 #[aoc(day17, part1)]
 pub fn part1(input: &[usize]) -> usize {
     let v = get_combinations(input);
-    v.iter().count()
+    v.len()
 }
 
 #[aoc(day17, part2)]
@@ -25,7 +25,7 @@ fn get_combinations(input: &[usize]) -> Vec<Vec<&usize>> {
             input
                 .iter()
                 .combinations(i)
-                .filter(|x| x.iter().fold(0, |sum: usize, &&x| sum + x) == 150)
+                .filter(|x| x.iter().copied().sum::<usize>() == 150)
                 .collect_vec(),
         );
     }

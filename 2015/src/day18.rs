@@ -38,18 +38,14 @@ impl Grid {
 
     fn step(&mut self) {
         let mut grid_clone = self.grid.clone();
-        for i in 0..self.grid.len() {
-            for j in 0..self.grid[i].len() {
+        for (i, r) in grid_clone.iter_mut().enumerate() {
+            for (j, e) in r.iter_mut().enumerate() {
                 let count = self.check_neighbours(i, j);
 
-                if self.grid[i][j] == State::On {
-                    if count != 2 && count != 3 {
-                        grid_clone[i][j] = State::Off;
-                    }
-                } else {
-                    if count == 3 {
-                        grid_clone[i][j] = State::On;
-                    }
+                if self.grid[i][j] == State::On && count != 2 && count != 3 {
+                    *e = State::Off;
+                } else if count == 3 {
+                    *e = State::On;
                 }
             }
         }
@@ -129,10 +125,10 @@ impl Display for Grid {
                     }
                 )?;
             }
-            writeln!(f, "")?;
+            writeln!(f)?;
         }
 
-        writeln!(f, "")
+        writeln!(f)
     }
 }
 
@@ -168,23 +164,18 @@ pub fn part2(grid: &Grid) -> usize {
     grid.count_on()
 }
 
-#[cfg(test)]
-mod tests {
-    use super::*;
+#[test]
+fn sample1_test1() {
+    let s = std::fs::read_to_string("tests/day18/sample1.txt").unwrap();
+    let mut grid = generator(&s);
+    grid.run(4, false);
+    assert_eq!(grid.count_on(), 4);
+}
 
-    #[test]
-    fn sample1_test1() {
-        let s = std::fs::read_to_string("tests/day18/sample1.txt").unwrap();
-        let mut grid = generator(&s);
-        grid.run(4, false);
-        assert_eq!(grid.count_on(), 4);
-    }
-
-    #[test]
-    fn sample1_test2() {
-        let s = std::fs::read_to_string("tests/day18/sample1.txt").unwrap();
-        let mut grid = generator(&s);
-        grid.run(5, true);
-        assert_eq!(grid.count_on(), 17);
-    }
+#[test]
+fn sample1_test2() {
+    let s = std::fs::read_to_string("tests/day18/sample1.txt").unwrap();
+    let mut grid = generator(&s);
+    grid.run(5, true);
+    assert_eq!(grid.count_on(), 17);
 }
