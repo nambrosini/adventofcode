@@ -1,4 +1,3 @@
-use std::collections::HashMap;
 use itertools::Itertools;
 
 #[aoc_generator(day23)]
@@ -9,31 +8,12 @@ pub fn generator(input: &str) -> Vec<Instruction> {
 #[aoc(day23, part1)]
 pub fn part1(input: &[Instruction]) -> usize {
     let mut tablet = Tablet::new(input);
-
     tablet.run()
 }
 
 #[aoc(day23, part2)]
-pub fn part2(input: &[Instruction]) -> i32 {
-    let mut b = 105700;
-
-    for i in (0..b).step(17) {
-        println!("{}", i);
-    }
-
+pub fn part2(_input: &[Instruction]) -> i32 {
     0
-}
-
-fn is_prime(n: u32) -> bool {
-    let limit = (n as f64).sqrt() as u32;
-
-    for i in 2..=limit {
-        if n % i == 0 {
-            return false;
-        }
-    }
-
-    true
 }
 
 pub struct Tablet {
