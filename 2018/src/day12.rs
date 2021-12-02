@@ -43,7 +43,7 @@ pub fn part1((initial, configs): &(Vec<char>, Vec<Config>)) -> i32 {
     }
 
     last.iter()
-        .filter(|(k, &v)| v == '#')
+        .filter(|(_, &v)| v == '#')
         .map(|(i, _)| *i)
         .sum()
 }
