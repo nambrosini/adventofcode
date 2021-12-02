@@ -83,7 +83,7 @@ pub fn calc_recursive(bag_name: &str, bags: &HashMap<String, HashMap<String, usi
     if let Some(v) = bags.get(bag_name) {
         let mut res = 0;
         for bag in v {
-            res += bag.1 * calc_recursive(bag.0, &bags) + bag.1;
+            res += bag.1 * calc_recursive(bag.0, bags) + bag.1;
         }
 
         res

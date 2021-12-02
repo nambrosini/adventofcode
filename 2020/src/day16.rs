@@ -77,7 +77,7 @@ pub fn part2(input: &Input) -> usize {
         .iter()
         .filter(|x| {
             for i in x.iter() {
-                if !ranges.contains(&i) {
+                if !ranges.contains(i) {
                     return false;
                 }
             }
@@ -136,10 +136,10 @@ pub fn part2(input: &Input) -> usize {
             }
             d if d > 1 => {
                 let mut v = vec![];
-                let values: Vec<String> = keys.values().cloned().collect();
+                
 
                 for f in fields[index].clone() {
-                    if !values.contains(&f) {
+                    if !keys.values().cloned().any(|x| x == f) {
                         v.push(f);
                     }
                 }

@@ -33,7 +33,7 @@ pub fn generator(input: &str) -> Vec<Vec<char>> {
 
 #[aoc(day3, part1)]
 pub fn part1(input: &[Vec<char>]) -> usize {
-    Slope::new(3, 1).count_trees(&input)
+    Slope::new(3, 1).count_trees(input)
 }
 
 #[aoc(day3, part2)]
@@ -48,7 +48,7 @@ pub fn part2(input: &[Vec<char>]) -> usize {
 
     slopes
         .iter()
-        .fold(1, |res, x| res * x.clone().count_trees(&input))
+        .fold(1, |res, x| res * x.clone().count_trees(input))
 }
 
 #[cfg(test)]

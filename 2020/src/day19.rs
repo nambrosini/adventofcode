@@ -7,7 +7,7 @@ pub fn generator_part1(input: &str) -> (HashMap<usize, String>, Vec<String>) {
 
     let mut rules = HashMap::new();
 
-    while let Some(line) = lines.next() {
+    for line in &mut lines {
         if line.is_empty() {
             break;
         }
@@ -55,7 +55,7 @@ pub fn part1((raw_rules, samples): &(HashMap<usize, String>, Vec<String>)) -> us
     let num_rules = raw_rules.keys().copied().max().unwrap() + 1;
 
     let mut memo = vec![None; num_rules];
-    compute_regex(&raw_rules, &mut memo, 0);
+    compute_regex(raw_rules, &mut memo, 0);
 
     let expr = format!("^{}$", memo[0].as_ref().unwrap());
 
@@ -69,7 +69,7 @@ pub fn part2((raw_rules, samples): &(HashMap<usize, String>, Vec<String>)) -> us
     let num_rules = raw_rules.keys().copied().max().unwrap() + 1;
 
     let mut memo = vec![None; num_rules];
-    compute_regex(&raw_rules, &mut memo, 0);
+    compute_regex(raw_rules, &mut memo, 0);
 
     // Rule 0 is 8 11
     // Rule 8 is 42+
@@ -88,7 +88,7 @@ pub fn part2((raw_rules, samples): &(HashMap<usize, String>, Vec<String>)) -> us
     samples
         .iter()
         .filter(|p| {
-            if let Some(cap) = r0.captures(&p) {
+            if let Some(cap) = r0.captures(p) {
                 let n = r42.find_iter(&cap[1]).count();
                 let m = r31.find_iter(&cap[2]).count();
 

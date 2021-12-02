@@ -53,7 +53,7 @@ pub fn part2(input: &HashMap<Vec<String>, Vec<String>>) -> String {
         .iter()
         .flat_map(|(_, v)| v)
         .unique()
-        .map(|allergen| (allergen, unsafe_ingredients(allergen, &input)))
+        .map(|allergen| (allergen, unsafe_ingredients(allergen, input)))
         .collect_vec();
     let mut res = Vec::new();
     while !unsafe_ingredients.is_empty() {

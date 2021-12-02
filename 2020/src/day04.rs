@@ -64,19 +64,19 @@ impl Passport {
 
         let byr: u32 = self.byr.clone().unwrap().parse().unwrap();
 
-        if byr < 1920 || byr > 2020 {
+        if !(1920..=2020).contains(&byr) {
             return false;
         }
 
         let iyr: u32 = self.iyr.clone().unwrap().parse().unwrap();
 
-        if iyr < 2010 || iyr > 2020 {
+        if !(2010..=2020).contains(&iyr) {
             return false;
         }
 
         let eyr: u32 = self.eyr.clone().unwrap().parse().unwrap();
 
-        if eyr < 2020 || eyr > 2030 {
+        if !(2020..=2030).contains(&eyr) {
             return false;
         }
 
@@ -88,7 +88,7 @@ impl Passport {
             return false;
         }
 
-        if unit == "in" && (val < 59 || val > 76) || unit == "cm" && (val < 150 || val > 193) {
+        if unit == "in" && !(59..=76).contains(&val) || unit == "cm" && !(150..=193).contains(&val) {
             return false;
         }
 
