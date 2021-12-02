@@ -11,16 +11,16 @@ pub fn generator(input: &str) -> Vec<Instruction> {
 
 #[aoc(day23, part1)]
 pub fn part1(input: &[Instruction]) -> i128 {
-    println!("{}", input.iter().join("\n"));
     let mut processor = Processor::new([0, 0], input);
-    processor.run()
+    processor.run();
+    processor.registers[1]
 }
 
 #[aoc(day23, part2)]
 pub fn part2(input: &[Instruction]) -> i128 {
-    println!("{}", input.iter().join("\n"));
     let mut processor = Processor::new([1, 0], input);
-    processor.run()
+    processor.run();
+    processor.registers[1]
 }
 
 #[derive(Debug, Clone)]
@@ -83,12 +83,12 @@ struct Processor {
 impl Processor {
     fn new(registers: [i128; 2], instructions: &[Instruction]) -> Self {
         Self {
-            registers: registers,
+            registers,
             instructions: instructions.to_vec()
         }
     }
 
-    fn run(&mut self) -> i128 {
+    fn run(&mut self) {
         let mut position: i128 = 0;
 
         while position < self.instructions.len() as i128 {
@@ -125,8 +125,6 @@ impl Processor {
             }
             
         }
-
-        self.registers[1]
     }
 }
 
@@ -138,5 +136,7 @@ tpl a
 inc a";
 
     let s = generator(s);
-    assert_eq!(part1(&s), 2);
+    let mut processor = Processor::new([0, 0], &s);
+    processor.run();
+    assert_eq!(processor.registers[0], 2);
 }
