@@ -98,21 +98,22 @@ fn unsafe_ingredients(allergen: &str, foods: &HashMap<Vec<String>, Vec<String>>)
         .collect()
 }
 
-#[cfg(test)]
-mod tests {
-    use super::*;
+#[test]
+fn sample1() {
+    let s = generator("mxmxvkd kfcds sqjhc nhms (contains dairy, fish)
+trh fvjkl sbzzf mxmxvkd (contains dairy)
+sqjhc fvjkl (contains soy)
+sqjhc mxmxvkd sbzzf (contains fish)");
 
-    #[test]
-    fn sample1() {
-        let s = generator(&std::fs::read_to_string("tests/day21/sample").unwrap());
+    assert_eq!(part1(&s), 5);
+}
 
-        assert_eq!(part1(&s), 5);
-    }
+#[test]
+fn sample1_test2() {
+    let s = generator("mxmxvkd kfcds sqjhc nhms (contains dairy, fish)
+trh fvjkl sbzzf mxmxvkd (contains dairy)
+sqjhc fvjkl (contains soy)
+sqjhc mxmxvkd sbzzf (contains fish)");
 
-    #[test]
-    fn sample1_test2() {
-        let s = generator(&std::fs::read_to_string("tests/day21/sample").unwrap());
-
-        assert_eq!(part2(&s), "mxmxvkd,sqjhc,fvjkl");
-    }
+    assert_eq!(part2(&s), "mxmxvkd,sqjhc,fvjkl");
 }

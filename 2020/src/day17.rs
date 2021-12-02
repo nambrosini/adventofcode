@@ -70,21 +70,21 @@ fn step(n: usize, s: &HashSet<Coordinates>) -> HashSet<Coordinates> {
         .collect()
 }
 
-#[cfg(test)]
-mod tests {
-    use super::*;
 
-    #[test]
-    fn sample1_test1() {
-        let s = generator(&std::fs::read_to_string("tests/day17/sample").unwrap());
+#[test]
+fn sample1_test1() {
+    let s = generator(".#.
+..#
+###");
 
-        assert_eq!(part1(&s), 112);
-    }
+    assert_eq!(part1(&s), 112);
+}
 
-    #[test]
-    fn sample1_test2() {
-        let s = generator(&std::fs::read_to_string("tests/day17/sample").unwrap());
+#[test]
+fn sample1_test2() {
+    let s = generator(".#.
+..#
+###");
 
-        assert_eq!(part2(&s), 848);
-    }
+    assert_eq!(part2(&s), 848);
 }

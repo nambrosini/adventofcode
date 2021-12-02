@@ -41,14 +41,9 @@ fn part1((door_public, key_public): &(usize, usize)) -> usize {
     door_private
 }
 
-#[cfg(test)]
-mod tests {
-    use super::*;
+#[test]
+fn sample1() {
+    let s = generator("17807724\n5764801");
 
-    #[test]
-    fn sample1() {
-        let s = generator("17807724\n5764801");
-
-        assert_eq!(part1(&s), 14897079);
-    }
+    assert_eq!(part1(&s), 14897079);
 }

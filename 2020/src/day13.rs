@@ -1,11 +1,11 @@
 type Lines = (usize, Vec<usize>);
 
-fn egcd(a: i128, b: i128) -> (i128, i128, i128) {
-    if a == 0 {
-        (b, 0, 1)
+fn egcd(first: i128, second: i128) -> (i128, i128, i128) {
+    if first == 0 {
+        (second, 0, 1)
     } else {
-        let (g, x, y) = egcd(b % a, a);
-        (g, y - (b / a) * x, x)
+        let (g, x, y) = egcd(second % first, first);
+        (g, y - (second / first) * x, x)
     }
 }
 
@@ -83,28 +83,26 @@ pub fn part2(input: &[(i128, i128)]) -> i128 {
     x % n
 }
 
-#[cfg(test)]
-mod tests {
-    use super::*;
+#[test]
+fn sample1() {
+    let s = generator_part1("939
+7,13,x,x,59,x,31,19");
 
-    #[test]
-    fn sample1() {
-        let s = generator_part1("939\n7,13,x,x,59,x,31,19");
+    assert_eq!(part1(&s), 295);
+}
 
-        assert_eq!(part1(&s), 295);
-    }
+#[test]
+fn sample2() {
+    let s = generator_part2("939
+17,x,13,19");
 
-    #[test]
-    fn sample2() {
-        let s = generator_part2("939\n17,x,13,19");
+    assert_eq!(part2(&s), 3417);
+}
 
-        assert_eq!(part2(&s), 3417);
-    }
+#[test]
+fn sample3() {
+    let s = generator_part2("939
+67,7,59,61");
 
-    #[test]
-    fn sample3() {
-        let s = generator_part2("939\n67,7,59,61");
-
-        assert_eq!(part2(&s), 754018);
-    }
+    assert_eq!(part2(&s), 754018);
 }

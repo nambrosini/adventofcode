@@ -1,5 +1,5 @@
 #[aoc_generator(day1)]
-pub fn input_generator(input: &str) -> Vec<i32> {
+pub fn generator(input: &str) -> Vec<i32> {
     input.lines().map(|x| x.parse().unwrap()).collect()
 }
 
@@ -27,22 +27,26 @@ pub fn part2(input: &[i32]) -> i32 {
     unreachable!();
 }
 
-#[cfg(test)]
-mod tests {
-    use super::*;
-    use std::fs;
+#[test]
+fn test1() {
+    let s = "1721
+979
+366
+299
+675
+1456";
 
-    #[test]
-    fn sample1_part1() {
-        let one = input_generator(&fs::read_to_string("tests/day01/sample1").unwrap());
+    assert_eq!(part1(&generator(s)), 514579);
+}
 
-        assert_eq!(part1(&one), 514579);
-    }
+#[test]
+fn sample1_part2() {
+    let s = "1721
+979
+366
+299
+675
+1456";
 
-    #[test]
-    fn sample1_part2() {
-        let one = input_generator(&fs::read_to_string("tests/day01/sample1").unwrap());
-
-        assert_eq!(part2(&one), 241861950);
-    }
+    assert_eq!(part2(&generator(s)), 241861950);
 }

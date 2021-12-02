@@ -55,21 +55,17 @@ pub fn part2(input: &[usize]) -> usize {
     (*min..=*max).find(|x| !input.contains(x)).unwrap()
 }
 
-#[cfg(test)]
-mod tests {
-    use super::*;
 
-    #[test]
-    fn sample1_part1() {
-        let s = generator("FBFBBFFRLR\nBFFFBBFRRR\nFFFBBBFRRR\nBBFFBBFRLL");
+#[test]
+fn sample1_part1() {
+    let s = generator("FBFBBFFRLR\nBFFFBBFRRR\nFFFBBBFRRR\nBBFFBBFRLL");
 
-        assert_eq!(part1(&s), 820);
-    }
+    assert_eq!(part1(&s), 820);
+}
 
-    #[test]
-    fn sample1_part2() {
-        let s = generator("FBFBBFFRLR\nBFFFBBFRRR\nFFFBBBFRRR\nBBFFBBFRLL");
+#[test]
+fn sample1_part2() {
+    let s = generator("FBFBBFFRLR\nBFFFBBFRRR\nFFFBBBFRRR\nBBFFBBFRLL");
 
-        assert_eq!(part2(&s), 120);
-    }
+    assert_eq!(part2(&s), 120);
 }

@@ -51,22 +51,38 @@ pub fn part2(input: &[Vec<char>]) -> usize {
         .fold(1, |res, x| res * x.clone().count_trees(input))
 }
 
-#[cfg(test)]
-mod tests {
-    use super::*;
-    use std::fs;
 
-    #[test]
-    fn sample1_part1() {
-        let sample = generator(&fs::read_to_string("tests/day03/sample1").unwrap());
+#[test]
+fn test1() {
+    let s = "..##.......
+#...#...#..
+.#....#..#.
+..#.#...#.#
+.#...##..#.
+..#.##.....
+.#.#.#....#
+.#........#
+#.##...#...
+#...##....#
+.#..#...#.#";
 
-        assert_eq!(part1(&sample), 7);
-    }
-
-    #[test]
-    fn sample1_part2() {
-        let sample = generator(&fs::read_to_string("tests/day03/sample1").unwrap());
-
-        assert_eq!(part2(&sample), 336);
-    }
+    assert_eq!(part1(&generator(s)), 7);
 }
+
+#[test]
+fn test2() {
+    let s = "..##.......
+#...#...#..
+.#....#..#.
+..#.#...#.#
+.#...##..#.
+..#.##.....
+.#.#.#....#
+.#........#
+#.##...#...
+#...##....#
+.#..#...#.#";
+
+    assert_eq!(part2(&generator(s)), 336);
+}
+

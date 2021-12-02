@@ -38,36 +38,37 @@ pub fn part2(input: &[u32]) -> u64 {
     combinations[0]
 }
 
-#[cfg(test)]
-mod tests {
-    use super::*;
-    use std::fs;
 
-    #[test]
-    fn sample1_part1() {
-        let one = input_generator(&fs::read_to_string("tests/day10/sample1").unwrap());
+#[test]
+fn test1() {
+    let one = input_generator("16
+10
+15
+5
+1
+11
+7
+19
+6
+12
+4");
 
-        assert_eq!(part1(&one), 35);
-    }
+    assert_eq!(part1(&one), 35);
+}
 
-    #[test]
-    fn sample1_part2() {
-        let one = input_generator(&fs::read_to_string("tests/day10/sample1").unwrap());
+#[test]
+fn test2() {
+    let one = input_generator("16
+10
+15
+5
+1
+11
+7
+19
+6
+12
+4");
 
-        assert_eq!(part2(&one), 8);
-    }
-
-    #[test]
-    fn sample2_part1() {
-        let one = input_generator(&fs::read_to_string("tests/day10/sample2").unwrap());
-
-        assert_eq!(part1(&one), 220);
-    }
-
-    #[test]
-    fn sample2_part2() {
-        let one = input_generator(&fs::read_to_string("tests/day10/sample2").unwrap());
-
-        assert_eq!(part2(&one), 19208);
-    }
+    assert_eq!(part2(&one), 8);
 }
