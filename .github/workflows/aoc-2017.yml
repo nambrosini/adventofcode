@@ -1,0 +1,24 @@
+name: aoc-2017
+
+on:
+  push:
+    branches: [ main, 2017 ]
+  pull_request:
+    branches: [ main ]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build -- 2017
+      run: cargo build --verbose
+      working-directory: 2017
+    - name: Run tests -- 2017
+      run: cargo test --verbose
+      working-directory: 2017
