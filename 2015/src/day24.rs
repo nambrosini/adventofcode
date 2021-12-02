@@ -29,7 +29,7 @@ pub fn get_lowest_quantum(weights: &[usize], n: usize) -> usize {
             if group_weights.iter().copied().sum::<usize>() == expected_weight {
                 should_break = true;
     
-                let quantum = group_weights.iter().map(|&x| x).product();
+                let quantum = group_weights.iter().copied().product();
                 min = cmp::min(min, quantum);
             }
         }

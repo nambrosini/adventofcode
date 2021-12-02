@@ -16,12 +16,11 @@ fn part1(input: &[i16]) -> i16 {
     // 0: health, 1: damage, 2: turns poison is active, 
     let boss_start: Vec<i16> = input.to_vec();
 
-    let mut queue: Vec<(Vec<i16>, Vec<i16>, i16, bool)> = Vec::new();
-    queue.push((player_start, boss_start, 0, true));
+    let mut queue = vec![(player_start, boss_start, 0, true)];
 
     let mut least_mana_used = 10000;
 
-    while queue.is_empty() == false {
+    while !queue.is_empty() {
         let queue_entry = queue.pop().unwrap();
         let mut player = queue_entry.0;
         let mut boss = queue_entry.1;
@@ -151,12 +150,11 @@ fn part2(input: &[i16]) -> i16 {
     // 0: health, 1: damage, 2: turns poison is active, 
     let boss_start: Vec<i16> = input.to_vec();
 
-    let mut queue: Vec<(Vec<i16>, Vec<i16>, i16, bool)> = Vec::new();
-    queue.push((player_start, boss_start, 0, true));
+    let mut queue = vec![(player_start, boss_start, 0, true)];
 
     let mut least_mana_used = 10000;
 
-    while queue.is_empty() == false {
+    while !queue.is_empty() {
         let queue_entry = queue.pop().unwrap();
         let mut player = queue_entry.0;
         let mut boss = queue_entry.1;

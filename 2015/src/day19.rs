@@ -28,11 +28,11 @@ pub fn generator(input: &str) -> MapType {
 pub fn part1(map: &MapType) -> usize {
     let mut set = HashSet::new();
 
-    for (k, v) in &map.1 {
+    for (k, v) in map.1.iter() {
         for v in v {
             if k.len() == 1 {
                 for i in 0..map.0.len() {
-                    if &map.0[i..=i] == &k[..] {
+                    if map.0[i..=i] == k[..] {
                         let s = format!(
                             "{}{}{}",
                             map.0[..i].to_owned(),
@@ -45,7 +45,7 @@ pub fn part1(map: &MapType) -> usize {
                 }
             } else {
                 for i in 0..map.0.len() - 1 {
-                    if &map.0[i..=(i + 1)] == &k[..] {
+                    if &map.0[i..=(i + 1)] == k {
                         let s = format!(
                             "{}{}{}",
                             map.0[..i].to_owned(),
@@ -77,7 +77,7 @@ pub fn part2(map: &MapType) -> usize {
     let mut total = 0;
     let mut medicine = map.0.clone();
 
-    while medicine != String::from("e") {
+    while medicine != "e" {
         for (rhs, lhs) in &replacements {
             if medicine.contains(*lhs) {
                 medicine = medicine.replacen(*lhs, rhs, 1);

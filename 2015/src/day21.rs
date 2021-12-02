@@ -21,7 +21,7 @@ impl Character {
 
     fn beats(&self, opponent: &Character) -> bool {
         let a = self.rounds(opponent);
-        let b = opponent.rounds(&self);
+        let b = opponent.rounds(self);
 
         a <= b
     }
@@ -54,13 +54,11 @@ pub fn generator(input: &str) -> Character {
         .map(|x| x.parse().unwrap())
         .collect_vec();
 
-    let boss = Character {
+    Character {
         hitpoints: val[0],
         damage: val[1],
         armor: val[2],
-    };
-
-    boss
+    }
 }
 
 #[aoc(day21, part1)]
@@ -161,8 +159,7 @@ pub fn part1(boss: &Character) -> usize {
     };
 
     for weapon in &weapons {
-        let mut inventories = vec![];
-        inventories.push(weapon.clone());
+        let mut inventories = vec![weapon.clone()];
 
         for armor in &armor {
             inventories.push(weapon + armor);
@@ -186,7 +183,7 @@ pub fn part1(boss: &Character) -> usize {
                 armor: inventory.armor,
             };
 
-            let winner = player.beats(&boss);
+            let winner = player.beats(boss);
 
             if winner && inventory.cost < minimal_inventory.cost {
                 minimal_inventory = inventory.clone();
@@ -294,8 +291,7 @@ pub fn part2(boss: &Character) -> usize {
     };
 
     for weapon in &weapons {
-        let mut inventories = Vec::new();
-        inventories.push(weapon.clone());
+        let mut inventories = vec![weapon.clone()];
 
         for armor in &armor {
             inventories.push(weapon + armor);
@@ -304,8 +300,8 @@ pub fn part2(boss: &Character) -> usize {
         let mut additional = Vec::with_capacity(rings.len() * 3);
         for rings in rings.iter().combinations(2) {
             for inventory in inventories.iter() {
-                additional.push(inventory + &rings[0]);
-                additional.push(inventory + &rings[1]);
+                additional.push(inventory + rings[0]);
+                additional.push(inventory + rings[1]);
                 additional.push(inventory + &(rings[0] + rings[1]));
             }
         }
@@ -318,7 +314,7 @@ pub fn part2(boss: &Character) -> usize {
                 armor: inventory.armor,
             };
 
-            let winner = player.beats(&boss);
+            let winner = player.beats(boss);
             if !winner && inventory.cost >= maximal_inventory.cost {
                 maximal_inventory = inventory.clone();
             }
