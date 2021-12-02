@@ -148,6 +148,7 @@ impl From<char> for Cell {
 }
 
 #[test]
+#[ignore]
 fn test() {
     let s = "#########
 #b.A.@.a#
