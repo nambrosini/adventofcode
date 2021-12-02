@@ -1,5 +1,5 @@
 #[aoc_generator(day25)]
-pub fn generator(input: &str) -> (usize, usize) {
+pub fn generator(_: &str) -> (usize, usize) {
     (2978, 3083)
 }
 
