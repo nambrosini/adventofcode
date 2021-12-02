@@ -18,7 +18,7 @@ pub fn part1(input: &[Instruction]) -> i32 {
         memory.insert('a', counter);
         let mut computer = Computer {
             position: 0,
-            memory: memory,
+            memory,
         };
         output = computer.run(input);
         counter +=1;
@@ -125,18 +125,4 @@ impl From<&str> for Operator {
             Operator::Register(s.chars().next().unwrap())
         }
     }
-}
-
-#[test]
-fn test1() {
-    let s = "cpy 41 a
-inc a
-inc a
-dec a
-jnz a 2
-dec a";
-
-    let s = generator(s);
-
-    assert_eq!(part1(&s), 42);
 }

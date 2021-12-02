@@ -11,7 +11,7 @@ pub fn generator(input: &str) -> Vec<Vec<char>> {
 
 #[aoc(day24, part1)]
 pub fn part1(map: &[Vec<char>]) -> usize {
-    let mut keys = find_keys(map);
+    let keys = find_keys(map);
 
     let mut routes: HashMap<(char, char), usize> = HashMap::new();
 
@@ -38,7 +38,7 @@ pub fn part1(map: &[Vec<char>]) -> usize {
 
 #[aoc(day24, part2)]
 pub fn part2(map: &[Vec<char>]) -> usize {
-    let mut keys = find_keys(map);
+    let keys = find_keys(map);
 
     let mut routes: HashMap<(char, char), usize> = HashMap::new();
 

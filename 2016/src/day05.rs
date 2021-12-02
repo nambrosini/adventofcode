@@ -1,6 +1,6 @@
 use itertools::Itertools;
 
-// #[aoc(day05, part1)]
+#[aoc(day05, part1)]
 pub fn part1(input: &str) -> String {
     let mut s = String::new();
 
@@ -10,7 +10,7 @@ pub fn part1(input: &str) -> String {
         let digest = format!("{:x}", digest);
         if &digest[..5] == "00000" {
             s.push_str(&digest[5..6]);
-            // println!("\n{}", s);
+            println!("\n{}", s);
 
             if s.len() == 8 {
                 return s;
