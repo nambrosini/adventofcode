@@ -73,7 +73,7 @@ impl Wire {
         let common_points: Vec<&(i64, i64)> = path1
             .iter()
             .skip(1)
-            .filter(|e| path2.contains(&e))
+            .filter(|e| path2.contains(e))
             .collect();
 
         common_points
