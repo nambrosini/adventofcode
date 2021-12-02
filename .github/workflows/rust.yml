@@ -28,7 +28,7 @@ jobs:
     - name: Run tests -- 2016
       run: cargo test --verbose
       working-directory: 2016
-      - name: Build -- 2017
+    - name: Build -- 2017
       run: cargo build --verbose
       working-directory: 2017
     - name: Run tests -- 2017
