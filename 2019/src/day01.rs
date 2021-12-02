@@ -14,7 +14,7 @@ pub fn part1(input: &[usize]) -> usize {
 }
 
 #[aoc(day01, part2)]
-pub fn part2(input: &[usize]) -> usize {
+pub fn part2(input: &[usize]) -> i32 {
     let mut sum: i32 = 0;
 
     for &i in input.iter() {
@@ -30,7 +30,7 @@ pub fn part2(input: &[usize]) -> usize {
         }
     }
 
-    sum as usize
+    sum
 }
 
 #[test]
