@@ -2,9 +2,9 @@ name: Rust
 
 on:
   push:
-    branches: [ 2015 ]
+    branches: [ main, 2016 ]
   pull_request:
-    branches: [ 2015 ]
+    branches: [ main ]
 
 env:
   CARGO_TERM_COLOR: always
@@ -16,9 +16,9 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: Build -- 2015
+    - name: Build -- 2016
       run: cargo build --verbose
-      working-directory: 2015
-    - name: Run tests -- 2015
+      working-directory: 2016
+    - name: Run tests -- 2016
       run: cargo test --verbose
-      working-directory: 2015
+      working-directory: 2016
