@@ -77,7 +77,7 @@ pub fn part2(input: &Input) -> usize {
         .iter()
         .filter(|x| {
             for i in x.iter() {
-                if !ranges.contains(&i) {
+                if !ranges.contains(i) {
                     return false;
                 }
             }
@@ -89,10 +89,10 @@ pub fn part2(input: &Input) -> usize {
 
     let mut pos: Vec<Vec<usize>> = vec![];
 
-    for i in 0..tickets[0].len() {
+    for r in tickets.iter() {
         let mut v = vec![];
-        for j in 0..tickets.len() {
-            v.push(tickets[j][i]);
+        for e in r.iter() {
+            v.push(*e);
         }
         pos.push(v);
     }
@@ -127,8 +127,6 @@ pub fn part2(input: &Input) -> usize {
     let mut index = 0;
 
     while keys.len() != fields.len() {
-        println!("{:?}", fields);
-        println!("{:?}", keys);
         match fields[index].len() {
             1 => {
                 keys.insert(index, fields[index][0].clone());
@@ -136,10 +134,10 @@ pub fn part2(input: &Input) -> usize {
             }
             d if d > 1 => {
                 let mut v = vec![];
-                let values: Vec<String> = keys.values().cloned().collect();
+                
 
                 for f in fields[index].clone() {
-                    if !values.contains(&f) {
+                    if !keys.values().cloned().any(|x| x == f) {
                         v.push(f);
                     }
                 }
@@ -167,21 +165,20 @@ pub fn part2(input: &Input) -> usize {
     //     .fold(1, |res, x| res * x)
 }
 
-#[cfg(test)]
-mod tests {
-    use super::*;
+#[test]
+fn test1() {
+    let s = "class: 1-3 or 5-7
+row: 6-11 or 33-44
+seat: 13-40 or 45-50
 
-    #[test]
-    fn sample1_test1() {
-        let s = generator(&std::fs::read_to_string("tests/day16/sample1").unwrap());
+your ticket:
+7,1,14
 
-        assert_eq!(part1(&s), 71);
-    }
+nearby tickets:
+7,3,47
+40,4,50
+55,2,20
+38,6,12";
 
-    #[test]
-    fn sample2_test2() {
-        let s = generator(&std::fs::read_to_string("tests/day16/sample2").unwrap());
-
-        assert_eq!(part2(&s), 12 * 11);
-    }
+    assert_eq!(part1(&generator(s)), 71);
 }

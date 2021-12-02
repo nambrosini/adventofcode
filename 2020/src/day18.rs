@@ -111,70 +111,65 @@ pub fn eval_part2(expr: String) -> i64 {
     split[0].parse().unwrap()
 }
 
-#[cfg(test)]
-mod tests {
-    use super::*;
+#[test]
+fn sample1_test1() {
+    let s = generator("2 * 3 + (4 * 5)");
 
-    #[test]
-    fn sample1_test1() {
-        let s = generator("2 * 3 + (4 * 5)");
+    assert_eq!(part1(&s), 26);
+}
 
-        assert_eq!(part1(&s), 26);
-    }
+#[test]
+fn sample2_test1() {
+    let s = generator("5 + (8 * 3 + 9 + 3 * 4 * 3)");
 
-    #[test]
-    fn sample2_test1() {
-        let s = generator("5 + (8 * 3 + 9 + 3 * 4 * 3)");
+    assert_eq!(part1(&s), 437);
+}
 
-        assert_eq!(part1(&s), 437);
-    }
+#[test]
+fn sample3_test1() {
+    let s = generator("5 * 9 * (7 * 3 * 3 + 9 * 3 + (8 + 6 * 4))");
 
-    #[test]
-    fn sample3_test1() {
-        let s = generator("5 * 9 * (7 * 3 * 3 + 9 * 3 + (8 + 6 * 4))");
+    assert_eq!(part1(&s), 12240);
+}
 
-        assert_eq!(part1(&s), 12240);
-    }
+#[test]
+fn sample4_test1() {
+    let s = generator("((2 + 4 * 9) * (6 + 9 * 8 + 6) + 6) + 2 + 4 * 2");
 
-    #[test]
-    fn sample4_test1() {
-        let s = generator("((2 + 4 * 9) * (6 + 9 * 8 + 6) + 6) + 2 + 4 * 2");
+    assert_eq!(part1(&s), 13632);
+}
 
-        assert_eq!(part1(&s), 13632);
-    }
+#[test]
+fn sample5_test2() {
+    let s = generator("1 + (2 * 3) + (4 * (5 + 6))");
 
-    #[test]
-    fn sample5_test2() {
-        let s = generator("1 + (2 * 3) + (4 * (5 + 6))");
+    assert_eq!(part2(&s), 51);
+}
 
-        assert_eq!(part2(&s), 51);
-    }
+#[test]
+fn sample6_test2() {
+    let s = generator("2 * 3 + (4 * 5)");
 
-    #[test]
-    fn sample6_test2() {
-        let s = generator("2 * 3 + (4 * 5)");
+    assert_eq!(part2(&s), 46);
+}
 
-        assert_eq!(part2(&s), 46);
-    }
+#[test]
+fn sample7_test2() {
+    let s = generator("5 + (8 * 3 + 9 + 3 * 4 * 3)");
 
-    #[test]
-    fn sample7_test2() {
-        let s = generator("5 + (8 * 3 + 9 + 3 * 4 * 3)");
+    assert_eq!(part2(&s), 1445);
+}
 
-        assert_eq!(part2(&s), 1445);
-    }
+#[test]
+fn sample8_test2() {
+    let s = generator("5 * 9 * (7 * 3 * 3 + 9 * 3 + (8 + 6 * 4))");
 
-    #[test]
-    fn sample8_test2() {
-        let s = generator("5 * 9 * (7 * 3 * 3 + 9 * 3 + (8 + 6 * 4))");
+    assert_eq!(part2(&s), 669060);
+}
 
-        assert_eq!(part2(&s), 669060);
-    }
+#[test]
+fn sample9_test2() {
+    let s = generator("((2 + 4 * 9) * (6 + 9 * 8 + 6) + 6) + 2 + 4 * 2");
 
-    #[test]
-    fn sample9_test2() {
-        let s = generator("((2 + 4 * 9) * (6 + 9 * 8 + 6) + 6) + 2 + 4 * 2");
-
-        assert_eq!(part2(&s), 23340);
-    }
+    assert_eq!(part2(&s), 23340);
 }

@@ -43,22 +43,45 @@ pub fn part2(input: &[String]) -> usize {
     sum
 }
 
-#[cfg(test)]
-mod tests {
-    use super::*;
-    use std::fs;
 
-    #[test]
-    fn sample1_part1() {
-        let s = generator(&fs::read_to_string("tests/day06/sample").unwrap());
+#[test]
+fn sample1_part1() {
+    let s = generator("abc
 
-        assert_eq!(part1(&s), 11);
-    }
+a
+b
+c
 
-    #[test]
-    fn sample1_part2() {
-        let s = generator(&fs::read_to_string("tests/day06/sample").unwrap());
+ab
+ac
 
-        assert_eq!(part2(&s), 6);
-    }
+a
+a
+a
+a
+
+b");
+
+    assert_eq!(part1(&s), 11);
+}
+
+#[test]
+fn sample1_part2() {
+    let s = generator("abc
+
+a
+b
+c
+
+ab
+ac
+
+a
+a
+a
+a
+
+b");
+
+    assert_eq!(part2(&s), 6);
 }

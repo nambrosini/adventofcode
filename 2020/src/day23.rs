@@ -116,21 +116,17 @@ pub fn part2(game: &Game) -> usize {
     game.get_score()
 }
 
-#[cfg(test)]
-mod tests {
-    use super::*;
 
-    #[test]
-    fn sample1() {
-        let mut s = generator_part1("389125467");
+#[test]
+fn sample1() {
+    let s = generator_part1("389125467");
 
-        assert_eq!(part1(&mut s), "67384529");
-    }
+    assert_eq!(part1(&s), "67384529");
+}
 
-    #[test]
-    fn sample1_test2() {
-        let s = generator_part2("389125467");
+#[test]
+fn sample1_test2() {
+    let s = generator_part2("389125467");
 
-        assert_eq!(part2(&s), 149245887792);
-    }
+    assert_eq!(part2(&s), 149245887792);
 }

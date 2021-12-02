@@ -237,21 +237,25 @@ pub fn part2(input: &[Action]) -> i32 {
     Ship::new().run_part2(input)
 }
 
-#[cfg(test)]
-mod tests {
-    use super::*;
 
-    #[test]
-    fn sample_part1() {
-        let data = generator(&std::fs::read_to_string("tests/day12/sample").unwrap());
+#[test]
+fn test1() {
+    let data = generator("F10
+N3
+F7
+R90
+F11");
 
-        assert_eq!(part1(&data), 25);
-    }
+    assert_eq!(part1(&data), 25);
+}
 
-    #[test]
-    fn sample_part2() {
-        let data = generator(&std::fs::read_to_string("tests/day12/sample").unwrap());
+#[test]
+fn test2() {
+    let data = generator("F10
+N3
+F7
+R90
+F11");
 
-        assert_eq!(part2(&data), 286);
-    }
+    assert_eq!(part2(&data), 286);
 }

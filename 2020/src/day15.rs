@@ -58,56 +58,16 @@ pub fn part2(input: &[usize]) -> usize {
     last_number
 }
 
-#[cfg(test)]
-mod tests {
-    use super::*;
+#[test]
+fn sample1_test1() {
+    let s = generator("0,3,6");
 
-    #[test]
-    fn sample1_test1() {
-        let s = generator("1,3,2");
+    assert_eq!(part1(&s), 436);
+}
 
-        assert_eq!(part1(&s), 1);
-    }
+#[test]
+fn test2() {
+    let s = generator("0,3,6");
 
-    #[test]
-    fn sample2_test1() {
-        let s = generator("2,1,3");
-
-        assert_eq!(part1(&s), 10);
-    }
-
-    #[test]
-    fn sample3_test1() {
-        let s = generator("1,2,3");
-
-        assert_eq!(part1(&s), 27);
-    }
-
-    #[test]
-    fn sample4_test1() {
-        let s = generator("2,3,1");
-
-        assert_eq!(part1(&s), 78);
-    }
-
-    #[test]
-    fn sample5_test1() {
-        let s = generator("3,2,1");
-
-        assert_eq!(part1(&s), 438);
-    }
-
-    #[test]
-    fn sample6_test1() {
-        let s = generator("3,1,2");
-
-        assert_eq!(part1(&s), 1836);
-    }
-
-    // #[test]
-    // fn sample1_test2() {
-    //     let s = generator("1,3,2");
-
-    //     assert_eq!(part2(&s), 2578);
-    // }
+    assert_eq!(part2(&s), 175594);
 }

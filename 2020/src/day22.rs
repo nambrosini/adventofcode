@@ -111,21 +111,41 @@ fn recursive_cards(p1: &mut Vec<usize>, p2: &mut Vec<usize>) -> Player {
     }
 }
 
-#[cfg(test)]
-mod tests {
-    use super::*;
 
-    #[test]
-    fn sample1() {
-        let s = generator(&std::fs::read_to_string("tests/day22/sample1.txt").unwrap());
+#[test]
+fn sample1() {
+    let s = generator("Player 1:
+9
+2
+6
+3
+1
 
-        assert_eq!(part1(&s), 306);
-    }
+Player 2:
+5
+8
+4
+7
+10");
 
-    #[test]
-    fn sample1_test2() {
-        let s = generator(&std::fs::read_to_string("tests/day22/sample1.txt").unwrap());
+    assert_eq!(part1(&s), 306);
+}
 
-        assert_eq!(part2(&s), 291);
-    }
+#[test]
+fn sample1_test2() {
+    let s = generator("Player 1:
+9
+2
+6
+3
+1
+
+Player 2:
+5
+8
+4
+7
+10");
+
+    assert_eq!(part2(&s), 291);
 }

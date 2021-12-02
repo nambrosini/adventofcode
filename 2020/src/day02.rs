@@ -79,22 +79,20 @@ pub fn part2(input: &[Password]) -> usize {
     })
 }
 
-#[cfg(test)]
-mod tests {
-    use super::*;
-    use std::fs;
+#[test]
+fn sample1() {
+    let s = "1-3 a: abcde
+1-3 b: cdefg
+2-9 c: ccccccccc";
 
-    #[test]
-    fn sample1() {
-        let sample = generator(&fs::read_to_string("tests/day02/sample1").unwrap());
+    assert_eq!(part1(&generator(s)), 2);
+}
 
-        assert_eq!(part1(&sample), 2);
-    }
+#[test]
+fn sample2() {
+    let s = "1-3 a: abcde
+1-3 b: cdefg
+2-9 c: ccccccccc";
 
-    #[test]
-    fn sample2() {
-        let sample = generator(&fs::read_to_string("tests/day02/sample1").unwrap());
-
-        assert_eq!(part2(&sample), 1);
-    }
+    assert_eq!(part2(&generator(s)), 1);
 }

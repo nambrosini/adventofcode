@@ -112,7 +112,7 @@ impl From<&[Vec<Direction>]> for TileFloor {
         let start = (0, 0, 0).into();
 
         for tile_directions in tiles_directions {
-            let coordinates = follow_directions(&start, &tile_directions);
+            let coordinates = follow_directions(&start, tile_directions);
 
             let color: TileColor = if let Some(&current_color) = floor.0.get(&coordinates) {
                 !current_color
@@ -225,15 +225,15 @@ fn update_floor(floor: &mut TileFloor) {
     let mut to_flip = Vec::new();
 
     for (coordinates, color) in floor.0.iter() {
-        if (*color == Black && black_flip_rule(&(*floor), &coordinates))
-            || (*color == White && white_flip_rule(&(*floor), &coordinates))
+        if (*color == Black && black_flip_rule(&(*floor), coordinates))
+            || (*color == White && white_flip_rule(&(*floor), coordinates))
         {
             to_flip.push(*coordinates)
         }
     }
 
     for coordinates in to_flip.iter() {
-        if let Some(color) = floor.0.get_mut(&coordinates) {
+        if let Some(color) = floor.0.get_mut(coordinates) {
             *color = !(*color);
         } else {
             floor.0.insert(*coordinates, Black);
@@ -259,21 +259,54 @@ fn part2(tiles_directions: &[Vec<Direction>]) -> usize {
     count_black_after(&mut floor, 100)
 }
 
-#[cfg(test)]
-mod tests {
-    use super::*;
+#[test]
+fn sample1() {
+    let s = generator("sesenwnenenewseeswwswswwnenewsewsw
+neeenesenwnwwswnenewnwwsewnenwseswesw
+seswneswswsenwwnwse
+nwnwneseeswswnenewneswwnewseswneseene
+swweswneswnenwsewnwneneseenw
+eesenwseswswnenwswnwnwsewwnwsene
+sewnenenenesenwsewnenwwwse
+wenwwweseeeweswwwnwwe
+wsweesenenewnwwnwsenewsenwwsesesenwne
+neeswseenwwswnwswswnw
+nenwswwsewswnenenewsenwsenwnesesenew
+enewnwewneswsewnwswenweswnenwsenwsw
+sweneswneswneneenwnewenewwneswswnese
+swwesenesewenwneswnwwneseswwne
+enesenwswwswneneswsenwnewswseenwsese
+wnwnesenesenenwwnenwsewesewsesesew
+nenewswnwewswnenesenwnesewesw
+eneswnwswnwsenenwnwnwwseeswneewsenese
+neswnwewnwnwseenwseesewsenwsweewe
+wseweeenwnesenwwwswnew");
 
-    #[test]
-    fn sample1() {
-        let s = generator(&std::fs::read_to_string("tests/day24/sample1.txt").unwrap());
+    assert_eq!(part1(&s), 10);
+}
 
-        assert_eq!(part1(&s), 10);
-    }
+#[test]
+fn sample1_test2() {
+    let s = generator("sesenwnenenewseeswwswswwnenewsewsw
+neeenesenwnwwswnenewnwwsewnenwseswesw
+seswneswswsenwwnwse
+nwnwneseeswswnenewneswwnewseswneseene
+swweswneswnenwsewnwneneseenw
+eesenwseswswnenwswnwnwsewwnwsene
+sewnenenenesenwsewnenwwwse
+wenwwweseeeweswwwnwwe
+wsweesenenewnwwnwsenewsenwwsesesenwne
+neeswseenwwswnwswswnw
+nenwswwsewswnenenewsenwsenwnesesenew
+enewnwewneswsewnwswenweswnenwsenwsw
+sweneswneswneneenwnewenewwneswswnese
+swwesenesewenwneswnwwneseswwne
+enesenwswwswneneswsenwnewswseenwsese
+wnwnesenesenenwwnenwsewesewsesesew
+nenewswnwewswnenesenwnesewesw
+eneswnwswnwsenenwnwnwwseeswneewsenese
+neswnwewnwnwseenwseesewsenwsweewe
+wseweeenwnesenwwwswnew");
 
-    #[test]
-    fn sample1_test2() {
-        let s = generator(&std::fs::read_to_string("tests/day24/sample1.txt").unwrap());
-
-        assert_eq!(part2(&s), 2208);
-    }
+    assert_eq!(part2(&s), 2208);
 }

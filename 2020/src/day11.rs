@@ -68,9 +68,9 @@ impl WaitingHall {
 
     fn compute_occupied_count_part1(&self) -> Vec<Vec<usize>> {
         let mut occupied: Vec<Vec<usize>> = vec![vec![0; self.seats[0].len()]; self.seats.len()];
-        for i in 0..self.seats.len() {
-            for j in 0..self.seats[i].len() {
-                occupied[i][j] = self.count_occupied_part1(i, j);
+        for (i, r) in occupied.iter_mut().enumerate() {
+            for (j, e) in r.iter_mut().enumerate() {
+                *e = self.count_occupied_part1(i, j);
             }
         }
 
@@ -153,9 +153,9 @@ impl WaitingHall {
 
     fn compute_occupied_count_part2(&self) -> Vec<Vec<usize>> {
         let mut occupied: Vec<Vec<usize>> = vec![vec![0; self.seats[0].len()]; self.seats.len()];
-        for i in 0..self.seats.len() {
-            for j in 0..self.seats[i].len() {
-                occupied[i][j] = self.count_occupied_part2(i, j);
+        for (i, r) in occupied.iter_mut().enumerate() {
+            for (j, e) in r.iter_mut().enumerate() {
+                *e = self.count_occupied_part2(i, j);
             }
         }
 
@@ -235,22 +235,34 @@ pub fn part2(input: &WaitingHall) -> usize {
         .count()
 }
 
-#[cfg(test)]
-mod tests {
-    use super::*;
-    use std::fs;
+#[test]
+fn sample1_part1() {
+    let one = generator("L.LL.LL.LL
+LLLLLLL.LL
+L.L.L..L..
+LLLL.LL.LL
+L.LL.LL.LL
+L.LLLLL.LL
+..L.L.....
+LLLLLLLLLL
+L.LLLLLL.L
+L.LLLLL.LL");
 
-    #[test]
-    fn sample1_part1() {
-        let one = generator(&fs::read_to_string("tests/day11/sample").unwrap());
+    assert_eq!(part1(&one), 37);
+}
 
-        assert_eq!(part1(&one), 37);
-    }
+#[test]
+fn sample1_part2() {
+    let one = generator("L.LL.LL.LL
+LLLLLLL.LL
+L.L.L..L..
+LLLL.LL.LL
+L.LL.LL.LL
+L.LLLLL.LL
+..L.L.....
+LLLLLLLLLL
+L.LLLLLL.L
+L.LLLLL.LL");
 
-    #[test]
-    fn sample1_part2() {
-        let one = generator(&fs::read_to_string("tests/day11/sample").unwrap());
-
-        assert_eq!(part2(&one), 26);
-    }
+    assert_eq!(part2(&one), 26);
 }

@@ -140,23 +140,23 @@ fn part2(input: &[String]) -> u64 {
     mem.values().sum()
 }
 
-#[cfg(test)]
-mod tests {
-    use super::*;
+#[test]
+fn test1() {
+    let s = generator(
+        "mask = XXXXXXXXXXXXXXXXXXXXXXXXXXXXX1XXXX0X
+mem[8] = 11
+mem[7] = 101
+mem[8] = 0");
 
-    #[test]
-    fn sample1() {
-        let s = generator(
-            "mask = XXXXXXXXXXXXXXXXXXXXXXXXXXXXX1XXXX0X\nmem[8] = 11\nmem[7] = 101\nmem[8] = 0",
-        );
+    assert_eq!(part1(&s), 165);
+}
 
-        assert_eq!(part1(&s), 165);
-    }
+#[test]
+fn test2() {
+    let s = generator("mask = 000000000000000000000000000000X1001X
+mem[42] = 100
+mask = 00000000000000000000000000000000X0XX
+mem[26] = 1");
 
-    #[test]
-    fn sample2() {
-        let s = generator("mask = 000000000000000000000000000000X1001X\nmem[42] = 100\nmask = 00000000000000000000000000000000X0XX\nmem[26] = 1");
-
-        assert_eq!(part2(&s), 208);
-    }
+    assert_eq!(part2(&s), 208);
 }
