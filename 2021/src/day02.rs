@@ -47,7 +47,7 @@ pub enum Direction {
 
 impl From<&str> for Direction {
     fn from(d: &str) -> Direction {
-        let split: Vec<&str> = d.split(" ").collect();
+        let split: Vec<&str> = d.split(' ').collect();
         let v: usize = split[1].parse().unwrap();
 
         match split[0] {
