@@ -16,9 +16,9 @@ pub fn part1(input: &[Rule]) -> usize {
     for _ in 0..5 {
         let size = v.len();
         if size % 2 == 0 {
-             v = take2(&v, input);
+            v = take2(&v, input);
         } else {
-            // v = take3(&v, input);
+            v = take3(&v, input);
         }
     }
 
@@ -44,22 +44,20 @@ fn take2(v: &[Vec<char>], rules: &[Rule]) -> Vec<Vec<char>> {
 
     let mut new_square: Vec<Vec<Vec<char>>> = vec![];
 
-    'outer: for i in 0..squares.len() {
+    'outer: for square in &squares {
         for r in rules {
-            if let Some(enhancement) = r.check_pattern(&string_to_vec(&squares[i])) {
+            if let Some(enhancement) = r.check_pattern(&string_to_vec(square)) {
                 new_square.push(enhancement);
                 continue 'outer;
             }
         }
     }
 
-    let len = (new_square.len() as f32).sqrt() as usize;
-
     let mut v: Vec<Vec<char>> = vec![vec![]; 3];
 
-    for i in 0..len {
-        for j in 0..new_square[i].len() {
-            v[j].extend(&new_square[i][j]);
+    for r in new_square.iter() {
+        for (j, e) in r.iter().enumerate() {
+            v[j].extend(e);
         }
     }
 
@@ -88,24 +86,20 @@ fn take3(v: &[Vec<char>], rules: &[Rule]) -> Vec<Vec<char>> {
 
     let mut new_square: Vec<Vec<Vec<char>>> = vec![];
 
-    'outer: for i in 0..squares.len() {
+    'outer: for square in &squares {
         for r in rules {
-            if let Some(enhancement) = r.check_pattern(&string_to_vec(&squares[i])) {
+            if let Some(enhancement) = r.check_pattern(&string_to_vec(square)) {
                 new_square.push(enhancement);
                 continue 'outer;
             }
         }
     }
 
-    println!("{:?}", new_square);
-
-    let len = (new_square.len() as f32).sqrt() as usize;
-
     let mut v: Vec<Vec<char>> = vec![vec![]; 4];
 
-    for i in 0..len {
-        for j in 0..new_square[i].len() {
-            v[j].extend(&new_square[i][j]);
+    for r in new_square {
+        for (j, e) in r.iter().enumerate() {
+            v[j].extend(e);
         }
     }
 
@@ -129,7 +123,7 @@ fn string_to_vec(s: &str) -> Vec<Vec<char>> {
 }
 
 #[aoc(day21, part2)]
-pub fn part2(input: &[Rule]) -> usize {
+pub fn part2(_input: &[Rule]) -> usize {
     0
 }
 
@@ -183,9 +177,9 @@ impl Rule {
         let n = pattern.len();
         let mut ret = pattern.to_vec();
 
-        for i in 0..n {
-            for j in 0..n {
-                ret[i][j] = pattern[n - j - 1][i];
+        for (i, r) in ret.iter_mut().enumerate() {
+            for (j, e) in r.iter_mut().enumerate() {
+                *e = pattern[n - j - 1][i];
             }
         }
 
