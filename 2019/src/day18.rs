@@ -48,45 +48,64 @@ fn search_keys(start: &(usize, usize), count: usize, maze: &[Vec<Cell>], keys: &
     tx.send(count + min_len).unwrap();
 }
 
-fn find_point(start: &(usize, usize), maze: &[Vec<Cell>], keys: &[char]) -> Vec<(char, usize, (usize, usize))> {
-    let mut open_cells = vec![(*start, 0)];
-    let mut close_cells = Vec::new();
-
-    let mut found = vec![];
-
-    while !open_cells.is_empty() {
-        let (next_cell, count) = open_cells.remove(0);
-        close_cells.push(next_cell);
-
-        if &next_cell != start {
-            if let Cell::Key(v) = maze[next_cell.0][next_cell.1] {
-                if !keys.contains(&v) {
-                    found.push((v, count, next_cell));
-                }
-            }
-    
-            if let Cell::Door(v) = maze[next_cell.0][next_cell.1] {
-                if !keys.contains(&v.to_ascii_lowercase()) {
-                    continue;
-                }
-            }
-        }
-
-        let frontier = expand_frontier(&next_cell, maze);
-
-        for f in frontier.iter() {
-            if close_cells.contains(f) {
-                continue;
-            }
-            match maze[f.0][f.1] {
-                Cell::Close => continue,
-                _ => open_cells.push((*f, count + 1))
-            }
-        }
+fn find_key(start: &(usize, usize), maze: &[Vec<Cell>], keys: &[char], count: usize) -> Vec<(char, (usize, usize), usize)> {
+    match maze[start.0][start.1] {
+        Cell::Key(key) => return vec![(k, *start, count)],
+        Cell::Door(key) => if keys.con
+    }
+    if let Cell::Key(k) =  {
+        return vec![(k, *start, count)];
     }
 
-    found
+    let neighbours = expand_frontier(start, maze);
+
+    let l = vec![];
+
+    for n in neighbours {
+        
+    }
 }
+
+// fn find_point(start: &(usize, usize), maze: &[Vec<Cell>], keys: &[char]) -> Vec<(char, usize, (usize, usize))> {
+//     let mut open_cells = vec![(*start, 0)];
+//     let mut close_cells = Vec::new();
+
+//     let mut found = vec![];
+
+//     while !open_cells.is_empty() {
+//         let (next_cell, count) = open_cells.remove(0);
+//         close_cells.push(next_cell);
+
+//         if &next_cell != start {
+//             if let Cell::Key(v) = maze[next_cell.0][next_cell.1] {
+//                 if !keys.contains(&v) {
+//                     println!("{}", v);
+//                     found.push((v, count, next_cell));
+//                 }
+//             }
+    
+//             if let Cell::Door(v) = maze[next_cell.0][next_cell.1] {
+//                 if !keys.contains(&v.to_ascii_lowercase()) {
+//                     continue;
+//                 }
+//             }
+//         }
+
+//         let frontier = expand_frontier(&next_cell, maze);
+
+//         for f in frontier.iter() {
+//             if close_cells.contains(f) {
+//                 continue;
+//             }
+//             match maze[f.0][f.1] {
+//                 Cell::Close => continue,
+//                 _ => open_cells.push((*f, count + 1))
+//             }
+//         }
+//     }
+
+//     found
+// }
 
 fn expand_frontier(frontier: &(usize, usize), maze: &[Vec<Cell>]) -> Vec<(usize, usize)> {
     let neighbours: Vec<(i32, i32)> = vec![(-1, 0), (0, -1), (0, 1), (1, 0)];
@@ -99,6 +118,10 @@ fn expand_frontier(frontier: &(usize, usize), maze: &[Vec<Cell>]) -> Vec<(usize,
         let y = frontier.1 + n.1;
 
         if x < 0 || x >= maze.len() as i32 || y < 0 || y >= maze[0].len() as i32 {
+            continue;
+        }
+
+        if let Cell::Close = maze[x as usize][y as usize] {
             continue;
         }
 
@@ -129,6 +152,16 @@ pub enum Cell {
     Entrance
 }
 
+impl Cell {
+    fn is_key(&self) -> bool {
+        if let Self::Key(_) = self {
+            true
+        } else {
+            false
+        }
+    }
+}
+
 impl From<char> for Cell {
     fn from(c: char) -> Self {
         if c == '#' { 
@@ -148,7 +181,6 @@ impl From<char> for Cell {
 }
 
 #[test]
-#[ignore]
 fn test() {
     let s = "#########
 #b.A.@.a#
