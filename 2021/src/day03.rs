@@ -2,7 +2,10 @@ use itertools::Itertools;
 
 #[aoc_generator(day03)]
 pub fn generator(input: &str) -> Vec<Vec<u32>> {
-    input.lines().map(|line| line.chars().map(|c| c.to_digit(10).unwrap()).collect()).collect()
+    input
+        .lines()
+        .map(|line| line.chars().map(|c| c.to_digit(10).unwrap()).collect())
+        .collect()
 }
 
 #[aoc(day03, part1)]
@@ -25,7 +28,6 @@ pub fn part1(input: &[Vec<u32>]) -> usize {
         println!("{:0b}", gamma);
     }
 
-
     gamma * epsilon
 }
 
@@ -46,7 +48,7 @@ pub fn part2(input: &[Vec<u32>]) -> usize {
             }
         }
 
-        if co_two.len()  == 1 {
+        if co_two.len() == 1 {
             continue;
         }
 
@@ -57,7 +59,8 @@ pub fn part2(input: &[Vec<u32>]) -> usize {
         }
     }
 
-    usize::from_str_radix(&o_two[0].iter().join(""), 2).unwrap() * usize::from_str_radix(&co_two[0].iter().join(""), 2).unwrap()
+    usize::from_str_radix(&o_two[0].iter().join(""), 2).unwrap()
+        * usize::from_str_radix(&co_two[0].iter().join(""), 2).unwrap()
 }
 
 #[test]
