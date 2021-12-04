@@ -30,7 +30,7 @@ pub fn part2(input: &[Direction]) -> usize {
             Direction::Forward(k) => {
                 h += k;
                 v += aim * k;
-            },
+            }
             Direction::Up(k) => aim -= k,
             Direction::Down(k) => aim += k,
         }
@@ -54,7 +54,7 @@ impl From<&str> for Direction {
             "forward" => Direction::Forward(v),
             "up" => Direction::Up(v),
             "down" => Direction::Down(v),
-            _ => unreachable!()
+            _ => unreachable!(),
         }
     }
 }
