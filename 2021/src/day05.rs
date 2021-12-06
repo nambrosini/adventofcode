@@ -115,28 +115,6 @@ impl Line {
         v
     }
 }
-
-fn print(map: &HashMap<(i32, i32), usize>) {
-    let min_x = map.keys().min_by_key(|(x, _)| x).unwrap().0;
-    let max_x = map.keys().max_by_key(|(x, _)| x).unwrap().0;
-    let min_y = map.keys().min_by_key(|(_, y)| y).unwrap().1;
-    let max_y = map.keys().max_by_key(|(_, y)| y).unwrap().1;
-
-
-    for y in min_y..=max_y {
-        for x in min_x..=max_x {
-            if let Some(v) = map.get(&(x, y)) {
-                print!("{}", v);
-            } else {
-                print!(".");
-            }
-        }
-        println!();
-    }
-
-    println!();
-}
-
 #[test]
 fn test() {
     let s = "0,9 -> 5,9
