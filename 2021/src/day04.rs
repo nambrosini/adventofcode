@@ -23,9 +23,7 @@ pub fn generator(input: &str) -> (Vec<usize>, Vec<Board>) {
                         .collect_vec()
                 })
                 .collect_vec();
-            Board {
-                board
-            }
+            Board { board }
         })
         .collect_vec();
 
@@ -69,7 +67,7 @@ pub fn part2((extracted, boards): &(Vec<usize>, Vec<Board>)) -> usize {
 
 #[derive(Debug, Clone)]
 pub struct Board {
-    board: Vec<Vec<usize>>
+    board: Vec<Vec<usize>>,
 }
 
 impl Board {
@@ -100,9 +98,11 @@ impl Board {
     }
 
     fn calc_score(&self, extracted: &[usize]) -> usize {
-        self.board.iter()
+        self.board
+            .iter()
             .flatten()
             .filter(|x| !extracted.contains(x))
-            .sum::<usize>() * extracted.last().unwrap()
+            .sum::<usize>()
+            * extracted.last().unwrap()
     }
 }

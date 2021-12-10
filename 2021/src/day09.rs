@@ -47,7 +47,7 @@ fn is_low_point(map: &[Vec<u32>], x: usize, y: usize) -> bool {
     let x = x as i32;
     let y = y as i32;
 
-    let neighbours: [(i32, i32); 4]  = [(-1, 0), (1, 0), (0, -1), (0, 1)];
+    let neighbours: [(i32, i32); 4] = [(-1, 0), (1, 0), (0, -1), (0, 1)];
 
     for n in neighbours {
         let xx = x + n.0;
@@ -69,7 +69,7 @@ fn get_neighbours(x: usize, y: usize, map: &[Vec<u32>]) -> Vec<(usize, usize)> {
     let x = x as i32;
     let y = y as i32;
 
-    let neighbours: [(i32, i32); 4]  = [(-1, 0), (1, 0), (0, -1), (0, 1)];
+    let neighbours: [(i32, i32); 4] = [(-1, 0), (1, 0), (0, -1), (0, 1)];
 
     let mut v = vec![];
 
