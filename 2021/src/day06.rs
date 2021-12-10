@@ -50,8 +50,6 @@ fn simulate_opti(input: &[usize], days: usize) -> usize {
     map.values().sum::<usize>()
 }
 
-
-
 #[test]
 fn test() {
     let s = "3,4,3,1,2";

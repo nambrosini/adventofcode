@@ -4,10 +4,7 @@ use std::collections::HashMap;
 
 #[aoc_generator(day05)]
 pub fn generator(input: &str) -> Vec<Line> {
-    input
-        .lines()
-        .map(|line| line.into())
-        .collect_vec()
+    input.lines().map(|line| line.into()).collect_vec()
 }
 
 #[aoc(day05, part1)]
@@ -25,9 +22,7 @@ pub fn part1(input: &[Line]) -> usize {
         }
     }
 
-    map.iter()
-        .filter(|(_, &v)| v > 1)
-        .count()
+    map.iter().filter(|(_, &v)| v > 1).count()
 }
 
 #[aoc(day05, part2)]
@@ -42,15 +37,13 @@ pub fn part2(input: &[Line]) -> usize {
             *entry += 1;
         }
     }
-    
-    map.iter()
-        .filter(|(_, &v)| v > 1)
-        .count()
+
+    map.iter().filter(|(_, &v)| v > 1).count()
 }
 
 pub struct Line {
     from: (i32, i32),
-    to: (i32, i32)
+    to: (i32, i32),
 }
 
 impl From<&str> for Line {
@@ -63,15 +56,9 @@ impl From<&str> for Line {
         let p2 = (caps[3].parse().unwrap(), caps[4].parse().unwrap());
 
         if p1.0 + p1.1 < p2.0 + p2.1 {
-            Self {
-                from: p1,
-                to: p2
-            }
+            Self { from: p1, to: p2 }
         } else {
-            Self {
-                from: p2,
-                to: p1
-            }
+            Self { from: p2, to: p1 }
         }
     }
 }
@@ -111,7 +98,7 @@ impl Line {
                 v.push((x, y));
             }
         }
-    
+
         v
     }
 }
