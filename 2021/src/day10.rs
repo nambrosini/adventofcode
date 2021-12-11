@@ -15,7 +15,6 @@ pub fn part1(input: &[Vec<char>]) -> usize {
         let mut stack = vec![];
 
         for &ch in line {
-
             if ch == ')' || ch == ']' || ch == '}' || ch == '>' {
                 if let Some(c) = stack.pop() {
                     if get_other(&ch) != c {
@@ -33,14 +32,12 @@ pub fn part1(input: &[Vec<char>]) -> usize {
 
 #[aoc(day10, part2)]
 pub fn part2(input: &[Vec<char>]) -> usize {
-    let mut ok_lines: Vec<char> = vec![];
     let mut scores = vec![];
     for line in input {
         let mut stack = vec![];
         let mut ok = true;
 
         for &ch in line {
-
             if ch == ')' || ch == ']' || ch == '}' || ch == '>' {
                 if let Some(c) = stack.pop() {
                     if get_other(&ch) != c {
