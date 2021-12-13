@@ -18,14 +18,14 @@ pub fn part2(_input: &[Instruction]) -> i32 {
 
 pub struct Tablet {
     instructions: Vec<Instruction>,
-    memory: [i32; 8]
+    memory: [i32; 8],
 }
 
 impl Tablet {
     fn new(input: &[Instruction]) -> Tablet {
-        Self { 
+        Self {
             instructions: input.to_vec(),
-            memory: [0; 8]
+            memory: [0; 8],
         }
     }
 
@@ -43,7 +43,7 @@ impl Tablet {
                         self.memory[index] = y;
                     }
                     position += 1;
-                },
+                }
                 Instruction::Sub(x, y) => {
                     if let Param::Register(x) = x {
                         let index = Self::get_index(x);
@@ -52,7 +52,7 @@ impl Tablet {
                         self.memory[index] -= y;
                     }
                     position += 1;
-                },
+                }
                 Instruction::Mul(x, y) => {
                     if let Param::Register(x) = x {
                         let index = Self::get_index(x);
@@ -62,7 +62,7 @@ impl Tablet {
                     }
                     position += 1;
                     mults += 1;
-                },
+                }
                 Instruction::Jnz(x, y) => {
                     let x = self.mem_get(x);
                     let y = self.mem_get(y);
@@ -87,8 +87,8 @@ impl Tablet {
                 } else {
                     0
                 }
-            },
-            Param::Value(v) => v
+            }
+            Param::Value(v) => v,
         }
     }
 
@@ -102,7 +102,7 @@ pub enum Instruction {
     Set(Param, Param),
     Sub(Param, Param),
     Mul(Param, Param),
-    Jnz(Param, Param)
+    Jnz(Param, Param),
 }
 
 impl From<&str> for Instruction {
@@ -114,7 +114,7 @@ impl From<&str> for Instruction {
             "sub" => Instruction::Sub(split[1].into(), split[2].into()),
             "mul" => Instruction::Mul(split[1].into(), split[2].into()),
             "jnz" => Instruction::Jnz(split[1].into(), split[2].into()),
-            _ => unreachable!()
+            _ => unreachable!(),
         }
     }
 }
@@ -122,14 +122,14 @@ impl From<&str> for Instruction {
 #[derive(Debug, Copy, Clone)]
 pub enum Param {
     Register(char),
-    Value(i32)
+    Value(i32),
 }
 
 impl From<&str> for Param {
     fn from(s: &str) -> Self {
         match s.parse::<i32>() {
             Ok(v) => Param::Value(v),
-            Err(_) => Param::Register(s.chars().next().unwrap())
+            Err(_) => Param::Register(s.chars().next().unwrap()),
         }
     }
 }
