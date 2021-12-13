@@ -16,6 +16,42 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+    - name: Build -- 2015
+      run: cargo build --verbose
+      working-directory: 2015
+    - name: Run tests -- 2015
+      run: cargo test --verbose
+      working-directory: 2015
+    - name: Build -- 2016
+      run: cargo build --verbose
+      working-directory: 2016
+    - name: Run tests -- 2016
+      run: cargo test --verbose
+      working-directory: 2016
+    - name: Build -- 2017
+      run: cargo build --verbose
+      working-directory: 2017
+    - name: Run tests -- 2017
+      run: cargo test --verbose
+      working-directory: 2017
+    - name: Build -- 2018
+      run: cargo build --verbose
+      working-directory: 2018
+    - name: Run tests -- 2018
+      run: cargo test --verbose
+      working-directory: 2018
+    - name: Build -- 2019
+      run: cargo build --verbose
+      working-directory: 2019
+    - name: Run tests -- 2019
+      run: cargo test --verbose
+      working-directory: 2019
+    - name: Build -- 2020
+      run: cargo build --verbose
+      working-directory: 2020
+    - name: Run tests -- 2020
+      run: cargo test --verbose
+      working-directory: 2020
     - name: Build -- 2021
       run: cargo build --verbose
       working-directory: 2021
