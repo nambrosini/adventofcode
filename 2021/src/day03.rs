@@ -25,7 +25,6 @@ pub fn part1(input: &[Vec<u32>]) -> usize {
             epsilon <<= 1;
             gamma <<= 1;
         }
-        println!("{:0b}", gamma);
     }
 
     gamma * epsilon
