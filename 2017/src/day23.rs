@@ -12,9 +12,34 @@ pub fn part1(input: &[Instruction]) -> usize {
 }
 
 #[aoc(day23, part2)]
-pub fn part2(_input: &[Instruction]) -> i32 {
-    0
+pub fn part2(_input: &[Instruction]) -> usize {
+    let mut b = 105700;
+    let mut count = 0;
+    while b <= 122700 {
+        if !is_prime(b) {
+            count += 1;
+        }
+        b += 17;
+    }
+    count
 }
+
+fn is_prime(num: u32) -> bool {
+    if num <= 1 { return false; }
+    if num <= 3 { return true; }
+    if ((num % 2) == 0) || ((num % 3) == 0) {
+        return false;
+    }
+    let mut i = 5;
+    while (i * i) <= num {
+        if ((num % i) == 0) || ((num % (i + 2)) == 0) {
+            return false;
+        }
+        i += 6;
+    }
+    true
+}
+
 
 pub struct Tablet {
     instructions: Vec<Instruction>,
