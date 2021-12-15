@@ -9,19 +9,14 @@ pub fn generator(input: &str) -> Vec<i64> {
 #[aoc(day17, part1)]
 pub fn part1(input: &[i64]) -> i64 {
     let mut pc = Computer::new(input);
-
     let mut s = String::new();
 
     while let Some(x) = pc.run(Some(1)) {
-
         let res: char = x as u8 as char;
-
         s.push(res);
     }
 
     let map: Vec<Vec<char>> = s.lines().map(|x| x.chars().collect_vec()).collect_vec();
-
-
     let mut inters = 0;
 
     for x in 1..map.len() - 2 {
@@ -45,8 +40,6 @@ pub fn part2(input: &[i64]) -> i64 {
 
     while let Some(x) = pc.run(Some(2)) {
         let res: char = x as u8 as char;
-
-        print!("{}", res);
     }
 
     0

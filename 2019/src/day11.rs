@@ -1,144 +1,22 @@
 use std::collections::HashMap;
-use itertools::Itertools;
 
 #[aoc_generator(day11)]
 pub fn generator(input: &str) -> Vec<i64> {
-    input.split(',').map(|x| x.parse().unwrap()).collect_vec()
+    input.split(',')
+        .map(|c| c.parse().unwrap())
+        .collect()
 }
 
 #[aoc(day11, part1)]
-pub fn part1(memory: &[i64]) -> usize {
-    let mut map: HashMap<(i64, i64), i64> = HashMap::new();
-
-    let mut pc = Computer::new(memory);
-    let mut dir = Direction::N;
-    let mut pos = (0, 0);
-
-    loop {
-        let v = if let Some(val) = map.get(&pos) {
-            *val
-        } else {
-            0
-        };
-
-        if let Some(out) = pc.run(Some(v)) {
-            let entry = map.entry(pos).or_insert(0);
-            *entry = out;
-        } else {
-            break;
-        }
-
-        if let Some(out) = pc.run(Some(v)) {
-            dir = dir.turn(out);
-            pos = dir.move_forward(pos);
-        }
-    }
-
-    map.len()
+pub fn part1(input: &[i64]) -> i64 {
+    let mut pc = Computer::new(input);
+    pc.run(Some(1)).unwrap()
 }
 
-#[aoc(day11, part2)]
-pub fn part2(memory: &[i64]) -> String {
-    let mut map: HashMap<(i64, i64), i64> = HashMap::new();
-
-    let mut pc = Computer::new(memory);
-    let mut dir = Direction::N;
-    let mut pos = (0, 0);
-
-    let mut i = 0;
-
-    loop {
-        let v = if i == 0 { 
-            1
-        } else if let Some(val) = map.get(&pos) {
-            *val
-        } else {
-            0
-        };
-
-        if let Some(out) = pc.run(Some(v)) {
-            let entry = map.entry(pos).or_insert(0);
-            *entry = out;
-        } else {
-            break;
-        }
-        println!("{}", v);
-        if let Some(out) = pc.run(Some(v)) {
-            dir = dir.turn(out);
-            pos = dir.move_forward(pos);
-        }
-
-        i += 1;
-    }
-
-    let min_x = map.keys().min_by_key(|(x, _)| x).unwrap().0;
-    let min_y = map.keys().min_by_key(|(_, y)| y).unwrap().1;
-    let max_x = map.keys().max_by_key(|(x, _)| x).unwrap().0;
-    let max_y = map.keys().max_by_key(|(_, y)| y).unwrap().1;
-
-    let mut s = String::from("\n");
-
-    for x in min_x..max_x {
-        for y in min_y..max_y {
-            if let Some(v) = map.get(&(x, y)) {
-                if v == &1 {
-                    s.push('#');
-                }
-            } else {
-                s.push('.');
-            }
-        }
-        s.push('\n');
-    }
-
-    s
-}
-
-enum Direction {
-    N,
-    E,
-    S,
-    W
-}
-
-impl Direction {
-    fn turn(&self, dir: i64) -> Self {
-        match dir {
-            0 => {
-                match self {
-                    Self::N => Self::W,
-                    Self::E => Self::N,
-                    Self::S => Self::E,
-                    Self::W => Self::S
-                }
-            },
-            1 => {
-                match self {
-                    Self::N => Self::E,
-                    Self::E => Self::S,
-                    Self::S => Self::W,
-                    Self::W => Self::N
-                }
-            },
-            _ => unreachable!()
-        }
-    }
-
-    fn move_forward(&self, (x, y): (i64, i64)) -> (i64, i64) {
-        match self {
-            Self::N => (x - 1, y),
-            Self::E => (x, y + 1), 
-            Self::S => (x + 1, y),
-            Self::W => (x, y - 1)
-        }
-    }
-}
-
-
-#[derive(Debug, Clone)]
 struct Computer {
     memory: HashMap<i64, i64>,
-    position: i64
+    position: i64,
+    relative_base: i64
 }
 
 impl Computer {
@@ -151,7 +29,8 @@ impl Computer {
 
         Self { 
             memory: map, 
-            position: 0 
+            position: 0,
+            relative_base: 0
         }
     }
 
@@ -171,9 +50,9 @@ impl Computer {
                     self.set_mem(3, v1 * v2, m3);
                     self.position += 4;
                 },
-                Operation::Save => {
-                    if let Some(inp) = input {
-                        self.set_mem(1, inp, Mode::Position);
+                Operation::Save(m1) => {
+                    if let Some(v) = input {
+                        self.set_mem(1, v, m1);
                     }
                     self.position += 2;
                 },
@@ -224,6 +103,11 @@ impl Computer {
                     }
                     self.position += 4;
                 },
+                Operation::Rb(m1) => {
+                    let p1 = self.get_mem(1, m1);
+                    self.relative_base += p1;
+                    self.position += 2;
+                }
                 Operation::Exit => {
                     return None;
                 },
@@ -246,7 +130,8 @@ impl Computer {
     fn get_index(&self, offset: i64, mode: Mode) -> i64 {
         match mode {
             Mode::Position => self.memory[&(self.position + offset)],
-            Mode::Immediate => self.position + offset
+            Mode::Immediate => self.position + offset,
+            Mode::Relative => self.memory[&(self.position + offset)] + self.relative_base
         }
     }
 }
@@ -255,19 +140,21 @@ impl Computer {
 enum Operation {
     Add(Mode, Mode, Mode),
     Mul(Mode, Mode, Mode),
-    Save,
+    Save(Mode),
     Out(Mode),
     Exit,
     Jit(Mode, Mode),
     Jif(Mode, Mode),
     Lt(Mode, Mode, Mode),
-    Eq(Mode, Mode, Mode)
+    Eq(Mode, Mode, Mode),
+    Rb(Mode)
 }
 
 #[derive(Debug, Eq, PartialEq)]
 enum Mode {
     Position,
-    Immediate
+    Immediate,
+    Relative
 }
 
 impl From<i64> for Operation {
@@ -280,12 +167,13 @@ impl From<i64> for Operation {
         match code {
             1 => Self::Add(m1.into(), m2.into(), m3.into()),
             2 => Self::Mul(m1.into(), m2.into(), m3.into()),
-            3 => Self::Save,
+            3 => Self::Save(m1.into()),
             4 => Self::Out(m1.into()),
             5 => Self::Jit(m1.into(), m2.into()),
             6 => Self::Jif(m1.into(), m2.into()),
             7 => Self::Lt(m1.into(), m2.into(), m3.into()),
             8 => Self::Eq(m1.into(), m2.into(), m3.into()),
+            9 => Self::Rb(m1.into()),
             99 => Self::Exit,
             _ => unreachable!()
         }
@@ -297,6 +185,7 @@ impl From<i64> for Mode {
         match i {
             0 => Self::Position,
             1 => Self::Immediate,
+            2 => Self::Relative,
             _ => unreachable!()
         }
     }

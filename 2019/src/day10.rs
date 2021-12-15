@@ -3,17 +3,22 @@ use std::f64::consts::PI;
 
 #[aoc_generator(day10)]
 pub fn generator(input: &str) -> Vec<Point> {
-    input
+    let asteroids: Vec<Vec<Point>> = input
         .lines()
         .enumerate()
         .map(|(i, l)| {
             l.chars()
                 .enumerate()
                 .map(|(j, c)| Point::new(j, i, &c.to_string()))
-                .collect::<Vec<Point>>()
+                .collect()
         })
+        .collect();
+
+    asteroids
+        .iter()
         .flatten()
         .filter(|a| a.point_type == PointType::Asteroid)
+        .cloned()
         .collect()
 }
 
@@ -63,7 +68,7 @@ impl Map {
             .find(|(_, a)| a.asteroids_seen(input) == max)
             .unwrap()
             .0;
-        let mut other: Vec<Point> = input.to_vec().clone();
+        let mut other: Vec<Point> = input.to_vec();
         let center = other.remove(base_index);
 
         for i in &mut other {
@@ -85,7 +90,7 @@ impl Map {
             }
 
             while !angles.is_empty() {
-                let min: i32 = *angles.iter().min().unwrap();
+                let min = *angles.iter().min().unwrap();
                 let (index, _) = v
                     .iter()
                     .enumerate()
@@ -106,7 +111,7 @@ impl From<&str> for PointType {
         match s {
             "." => PointType::Empty,
             "#" => PointType::Asteroid,
-            _ => unreachable!(),
+            _ => unreachable!()
         }
     }
 }
@@ -169,115 +174,4 @@ fn mcd(a: i32, b: i32) -> i32 {
     }
 
     a
-}
-
-#[test]
-fn test_one() {
-    let input = ".#..#
-.....
-#####
-....#
-...##";
-
-    assert_eq!(part1(&generator(input)), 8);
-}
-
-#[test]
-fn test_two() {
-    let input = "......#.#.
-#..#.#....
-..#######.
-.#.#.###..
-.#..#.....
-..#....#.#
-#..#....#.
-.##.#..###
-##...#..#.
-.#....####";
-
-    assert_eq!(part1(&generator(input)), 33);
-}
-
-#[test]
-fn test_three() {
-    let input = "#.#...#.#.
-.###....#.
-.#....#...
-##.#.#.#.#
-....#.#.#.
-.##..###.#
-..#...##..
-..##....##
-......#...
-.####.###.";
-
-    assert_eq!(part1(&generator(input)), 35);
-}
-
-#[test]
-fn test_four() {
-    let input = ".#..#..###
-####.###.#
-....###.#.
-..###.##.#
-##.##.#.#.
-....###..#
-..#.#..#.#
-#..#.#.###
-.##...##.#
-.....#.#..";
-
-    assert_eq!(part1(&generator(input)), 41);
-}
-
-#[test]
-fn test_five() {
-    let input = ".#..##.###...#######
-##.############..##.
-.#.######.########.#
-.###.#######.####.#.
-#####.##.#.##.###.##
-..#####..#.#########
-####################
-#.####....###.#.#.##
-##.#################
-#####.##.###..####..
-..######..##.#######
-####.##.####...##..#
-.#####..#.######.###
-##...#.##########...
-#.##########.#######
-.####.#.###.###.#.##
-....##.##.###..#####
-.#.#.###########.###
-#.#.#.#####.####.###
-###.##.####.##.#..##";
-
-    assert_eq!(part1(&generator(input)), 210);
-}
-
-#[test]
-fn test_part_2() {
-    let input = ".#..##.###...#######
-##.############..##.
-.#.######.########.#
-.###.#######.####.#.
-#####.##.#.##.###.##
-..#####..#.#########
-####################
-#.####....###.#.#.##
-##.#################
-#####.##.###..####..
-..######..##.#######
-####.##.####...##..#
-.#####..#.######.###
-##...#.##########...
-#.##########.#######
-.####.#.###.###.#.##
-....##.##.###..#####
-.#.#.###########.###
-#.#.#.#####.####.###
-###.##.####.##.#..##";
-
-    assert_eq!(part2(&generator(input)), 802);
 }
