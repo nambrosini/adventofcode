@@ -1,3 +1,5 @@
+use std::cmp::Ordering;
+
 #[aoc_generator(day04)]
 pub fn generator(input: &str) -> (usize, usize) {
     let v: Vec<usize> = input.split('-').map(|x| x.parse().unwrap()).collect();
@@ -7,14 +9,14 @@ pub fn generator(input: &str) -> (usize, usize) {
 #[aoc(day04, part1)]
 pub fn part1(range: &(usize, usize)) -> usize {
     (range.0..=range.1)
-        .filter(|x| filter(x))
+        .filter(filter)
         .count()
 }
 
 #[aoc(day04, part2)]
 pub fn part2(range: &(usize, usize)) -> usize {
     (range.0..=range.1)
-        .filter(|x| filter_2(x))
+        .filter(filter_2)
         .count()
 }
 
@@ -23,10 +25,10 @@ pub fn filter(x: &usize) -> bool {
     for i in (1..6).rev() {
         let a = x / 10usize.pow(i) % 10;
         let b = x / 10usize.pow(i - 1) % 10;
-        if a == b {
-            double = true;
-        } else if a > b {
-            return false;
+        match a.cmp(&b) {
+            Ordering::Equal => double = true,
+            Ordering::Greater => return false,
+            Ordering::Less => continue
         }
     }
     double
@@ -35,8 +37,8 @@ pub fn filter(x: &usize) -> bool {
 pub fn filter_2(x: &usize) -> bool {
     let mut v: [u8; 6] = [0; 6];
 
-    for i in 0..6 {
-        v[i] = (x / 10usize.pow(5 - i as u32) % 10) as u8;
+    for (i, e) in v.iter_mut().enumerate() {
+        *e = (x / 10usize.pow(5 - i as u32) % 10) as u8;
     }
 
     let mut double = false;

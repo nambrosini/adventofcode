@@ -18,6 +18,8 @@
 # Vscode
 **/*/.vscode
 
+# Intellij
+**/*/.idea
 
 # Added by cargo
 

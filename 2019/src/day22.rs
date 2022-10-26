@@ -69,7 +69,7 @@ fn cut(cards: &[i32], v: i32) -> Vec<i32> {
         new_deck.extend_from_slice(&cards[v as usize..]);
         new_deck.extend_from_slice(&cards[..v as usize]);
     } else {
-        let v: usize = cards.len() - v.abs() as usize;
+        let v: usize = cards.len() - v.unsigned_abs() as usize;
         new_deck.extend_from_slice(&cards[v..]);
         new_deck.extend_from_slice(&cards[..v]);
     }
