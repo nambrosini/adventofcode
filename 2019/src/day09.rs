@@ -1,250 +1,187 @@
-use itertools::Itertools;
 use std::collections::HashMap;
 
 #[aoc_generator(day09)]
 pub fn generator(input: &str) -> Vec<i64> {
-    input.split(',').map(|x| x.parse().unwrap()).collect_vec()
+    input.split(',')
+        .map(|x| x.parse().unwrap())
+        .collect()
 }
 
 #[aoc(day09, part1)]
-pub fn part1(input: &[i64]) -> i64 {
-    let mut pc = Computer::new(input);
-
-    let mut last = 0;
-
-    while let Some(x) = pc.run(Some(1)) {
-        last = x;
-    }
-
-    last
+pub fn part1(mem: &[i64]) -> i64 {
+    Intcode::new(mem).run(1)
 }
 
 #[aoc(day09, part2)]
-pub fn part2(input: &[i64]) -> i64 {
-    let mut pc = Computer::new(input);
-
-    pc.run(Some(2)).unwrap()
+pub fn part2(mem: &[i64]) -> i64 {
+    Intcode::new(mem).run(2)
 }
 
-struct Computer {
-    memory: HashMap<i64, i64>,
-    position: i64,
-    relative_base: i64
+pub struct Intcode {
+    mem: HashMap<usize, i64>,
+    pos: usize,
+    rel_base: usize
 }
 
-impl Computer {
-    fn new(memory: &[i64]) -> Computer {
-        let mut map = HashMap::new();
-
-        for (i, e) in memory.iter().enumerate() {
-            map.insert(i as i64, *e);
-        }
-
-        Self { 
-            memory: map, 
-            position: 0,
-            relative_base: 0
+impl Intcode {
+    fn new(mem: &[i64]) -> Self {
+        Self {
+            mem: mem.iter().copied().enumerate().collect(),
+            pos: 0,
+            rel_base: 0
         }
     }
 
-    fn run(&mut self, input: Option<i64>) -> Option<i64> {
+    fn run(&mut self, input: i64) -> i64 {
+        let mut res = 0;
         loop {
-            let op: Operation = self.memory[&self.position].into();
+            let op: Opcode = self.mem[&self.pos].into();
             match op {
-                Operation::Add(m1, m2, m3) => {
+                Opcode::Add(m1, m2, m3) => {
                     let v1 = self.get_mem(1, m1);
                     let v2 = self.get_mem(2, m2);
+    
                     self.set_mem(3, v1 + v2, m3);
-                    self.position += 4;
+                    self.pos += 4;
                 },
-                Operation::Mul(m1, m2, m3) => {
+                Opcode::Mul(m1, m2, m3) => {
                     let v1 = self.get_mem(1, m1);
                     let v2 = self.get_mem(2, m2);
+    
                     self.set_mem(3, v1 * v2, m3);
-                    self.position += 4;
+                    self.pos += 4;
                 },
-                Operation::Save(m1) => {
-                    if let Some(v) = input {
-                        self.set_mem(1, v, m1);
-                    }
-                    self.position += 2;
+                Opcode::Save(m1) => {
+                    self.set_mem(1, input, m1);
+                    self.pos += 2;
                 },
-                Operation::Out(m1) => {
-                    let output = self.get_mem(1, m1);
-                    self.position += 2;
-                    return Some(output);
+                Opcode::Out(m1) => {
+                    res = self.get_mem(1, m1);
+                    println!("{}", res);
+                    self.pos += 2;
                 },
-                Operation::Jit(m1, m2) => {
-                    let p1 = self.get_mem(1, m1);
-                    let p2 = self.get_mem(2, m2);
-
-                    if p1 != 0 {
-                        self.position = p2;
+                Opcode::Jit(m1, m2) => {
+                    if self.get_mem(1, m1) != 0 {
+                        self.pos = self.get_mem(2, m2) as usize;
                     } else {
-                        self.position += 3;
+                        self.pos += 3;
                     }
                 },
-                Operation::Jif(m1, m2) => {
-                    let p1 = self.get_mem(1, m1);
-                    let p2 = self.get_mem(2, m2);
-
-                    if p1 == 0 {
-                        self.position = p2;
+                Opcode::Jif(m1, m2) => {
+                    if self.get_mem(1, m1) == 0 {
+                        self.pos = self.get_mem(2, m2) as usize;
                     } else {
-                        self.position += 3;
+                        self.pos += 3;
                     }
                 },
-                Operation::Lt(m1, m2, m3) => {
-                    let p1 = self.get_mem(1, m1);
-                    let p2 = self.get_mem(2, m2);
-
-                    if p1 < p2 {
-                        self.set_mem(3, 1, m3);
+                Opcode::Lt(m1, m2, m3) => {
+                    let v = if self.get_mem(1, m1) < self.get_mem(2, m2) {
+                        1
                     } else {
-                        self.set_mem(3, 0, m3);
-                    }
-                    self.position += 4;
+                        0
+                    };
+                    self.set_mem(3, v, m3);
+                    self.pos += 4;
                 },
-                Operation::Eq(m1, m2, m3) => {
-                    let p1 = self.get_mem(1, m1);
-                    let p2 = self.get_mem(2, m2);
-
-                    if p1 == p2 {
-                        self.set_mem(3, 1, m3);
+                Opcode::Eq(m1, m2, m3) => {
+                    let v = if self.get_mem(1, m1) == self.get_mem(2, m2) {
+                        1
                     } else {
-                        self.set_mem(3, 0, m3);
-                    }
-                    self.position += 4;
+                        0
+                    };
+                    self.set_mem(3, v, m3);
+                    self.pos += 4;
                 },
-                Operation::Rb(m1) => {
-                    let p1 = self.get_mem(1, m1);
-                    self.relative_base += p1;
-                    self.position += 2;
+                Opcode::Rb(m1) => {
+                    self.rel_base += self.get_mem(1, m1) as usize;
+                    self.pos += 2;
+                },
+                Opcode::Exit => {
+                    return res
                 }
-                Operation::Exit => {
-                    return None;
-                },
             }
         }
     }
 
-    fn get_mem(&mut self, offset: i64, mode: Mode) -> i64 {
+    fn set_mem(&mut self, offset: usize, val: i64, mode: Mode) {
         let index = self.get_index(offset, mode);
-        let entry = self.memory.entry(index).or_insert(0);
-        *entry
+        let entry = self.mem.entry(index).or_insert(0);
+        *entry = val;
     }
 
-    fn set_mem(&mut self, offset: i64, value: i64, mode: Mode) {
+    fn get_mem(&self, offset: usize, mode: Mode) -> i64 {
         let index = self.get_index(offset, mode);
-        let entry = self.memory.entry(index).or_insert(0);
-        *entry = value
+        self.mem[&index]
     }
 
-    fn get_index(&self, offset: i64, mode: Mode) -> i64 {
+    fn get_index(&self, offset: usize, mode: Mode) -> usize {
         match mode {
-            Mode::Position => self.memory[&(self.position + offset)],
-            Mode::Immediate => self.position + offset,
-            Mode::Relative => self.memory[&(self.position + offset)] + self.relative_base
+            Mode::Pos => self.mem[&(self.pos + offset)] as usize,
+            Mode::Imm => self.pos + offset,
+            Mode::Rel => self.mem[&(self.pos + offset)] as usize + self.rel_base,
         }
     }
 }
 
-#[derive(Debug, Eq, PartialEq)]
-enum Operation {
+#[derive(Debug)]
+enum Mode {
+    Pos,
+    Imm,
+    Rel
+}
+
+impl From<i64> for Mode {
+    fn from(x: i64) -> Self {
+        match x {
+            0 => Self::Pos,
+            1 => Self::Imm,
+            2 => Self::Rel,
+            _ => unreachable!()
+        }
+    }
+}
+
+#[derive(Debug)]
+enum Opcode {
     Add(Mode, Mode, Mode),
     Mul(Mode, Mode, Mode),
     Save(Mode),
     Out(Mode),
-    Exit,
     Jit(Mode, Mode),
     Jif(Mode, Mode),
     Lt(Mode, Mode, Mode),
     Eq(Mode, Mode, Mode),
-    Rb(Mode)
+    Rb(Mode),
+    Exit
 }
 
-#[derive(Debug, Eq, PartialEq)]
-enum Mode {
-    Position,
-    Immediate,
-    Relative
-}
+impl From<i64> for Opcode {
+    fn from(x: i64) -> Self {
+        let op = x % 100;
+        let m1: Mode = (x / 100 % 10).into();
+        let m2: Mode = (x / 1000 % 10).into();
+        let m3: Mode = (x / 10000 % 10).into();
 
-impl From<i64> for Operation {
-    fn from(i: i64) -> Self {
-        let code = i % 100;
-        let m1 = (i / 100) % 10;
-        let m2 = (i / 1000) % 10;
-        let m3 = (i / 10000) % 10;
-
-        match code {
-            1 => Self::Add(m1.into(), m2.into(), m3.into()),
-            2 => Self::Mul(m1.into(), m2.into(), m3.into()),
-            3 => Self::Save(m1.into()),
-            4 => Self::Out(m1.into()),
-            5 => Self::Jit(m1.into(), m2.into()),
-            6 => Self::Jif(m1.into(), m2.into()),
-            7 => Self::Lt(m1.into(), m2.into(), m3.into()),
-            8 => Self::Eq(m1.into(), m2.into(), m3.into()),
-            9 => Self::Rb(m1.into()),
+        match op {
+            1 => Self::Add(m1, m2, m3),
+            2 => Self::Mul(m1, m2, m3),
+            3 => Self::Save(m1),
+            4 => Self::Out(m1),
+            5 => Self::Jit(m1, m2),
+            6 => Self::Jif(m1, m2),
+            7 => Self::Lt(m1, m2, m3),
+            8 => Self::Eq(m1, m2, m3),
+            9 => Self::Rb(m1),
             99 => Self::Exit,
             _ => unreachable!()
         }
     }
 }
 
-impl From<i64> for Mode {
-    fn from(i: i64) -> Self {
-        match i {
-            0 => Self::Position,
-            1 => Self::Immediate,
-            2 => Self::Relative,
-            _ => unreachable!()
-        }
-    }
-}
-
 #[test]
-fn test1() {
-    let s = generator("104,1125899906842624,99");
+pub fn test() {
+    let s = std::fs::read_to_string("/Users/nambrosini/IdeaProjects/adventofcode/2019/input/2019/day9.txt").unwrap();
+    let s = generator(&s);
 
-    let mut pc = Computer::new(&s);
-
-    let mut output = vec![];
-
-    while let Some(v) = pc.run(None) {
-        output.push(v);
-    }
-
-    assert_eq!(output, vec![1125899906842624]);
-}
-
-#[test]
-fn test2() {
-    let s = generator("1102,34915192,34915192,7,4,7,99,0");
-
-    let mut pc = Computer::new(&s);
-
-    let mut output = vec![];
-
-    while let Some(v) = pc.run(None) {
-        output.push(v);
-    }
-
-    assert_eq!(output[0].to_string().len(), 16);
-}
-
-#[test]
-fn test3() {
-    let s = generator("109,1,204,-1,1001,100,1,100,1008,100,16,101,1006,101,0,99");
-
-    let mut pc = Computer::new(&s);
-
-    let mut output = vec![];
-
-    while let Some(v) = pc.run(None) {
-        output.push(v);
-    }
-
-    assert_eq!(output, vec![109,1,204,-1,1001,100,1,100,1008,100,16,101,1006,101,0,99]);
+    assert_eq!(3839402290, part1(&s));
 }
