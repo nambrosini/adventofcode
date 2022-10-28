@@ -1,32 +1,26 @@
-use itertools::Itertools;
 use std::collections::HashMap;
 
 #[aoc_generator(day11)]
-pub fn generator(input: &str) -> HashMap<i64, i64> {
-    let input = input.split(',').map(|x| x.parse().unwrap()).collect_vec();
-
-    let mut memory: HashMap<i64, i64> = HashMap::new();
-
-    for (i, &e) in input.iter().enumerate() {
-        memory.insert(i as i64, e);
-    }
-
-    memory
+pub fn generator(input: &str) -> Vec<i64> {
+    input.split(',')
+        .map(|x| x.parse().unwrap())
+        .collect()
 }
 
 #[aoc(day11, part1)]
-pub fn part1(input: &HashMap<i64, i64>) -> usize {
-    let memory = input.clone();
+pub fn part1(mem: &[i64]) -> usize {
+    let memory: HashMap<i64, i64> = mem.iter().enumerate().map(|(i, e)| (i as i64, *e)).collect();
+
     IntCode::new(memory).run(0).unwrap().len() - 1
 }
 
 #[aoc(day11, part2)]
-pub fn part2(input: &HashMap<i64, i64>) -> usize {
-    let memory = input.clone();
+pub fn part2(mem: &[i64]) -> usize {
+    let memory: HashMap<i64, i64> = mem.iter().enumerate().map(|(i, e)| (i as i64, *e)).collect();
     let result = IntCode::new(memory).run(1).unwrap();
 
-    let min_x = result.keys().min_by_key(|(x, _)| x).unwrap().0;
-    let min_y = result.keys().min_by_key(|(_, y)| y).unwrap().1;
+    let min_x = &result.keys().min_by_key(|(x, _)| x).unwrap().0;
+    let min_y = &result.keys().min_by_key(|(_, y)| y).unwrap().1;
     let max_x = result.keys().max_by_key(|(x, _)| x).unwrap().0 - min_x + 1;
     let max_y = result.keys().max_by_key(|(_, y)| y).unwrap().1 - min_y + 1;
 
@@ -35,8 +29,6 @@ pub fn part2(input: &HashMap<i64, i64>) -> usize {
     for ((x, y), c) in &result {
         grid[(y - min_y) as usize][(x - min_x) as usize] = c.clone();
     }
-
-    println!("Part 2:");
 
     for i in grid {
         for j in i {
@@ -169,33 +161,6 @@ impl IntCode {
     }
 }
 
-#[derive(Clone)]
-pub enum Color {
-    Black,
-    White
-}
-
-impl From<Color> for i64 {
-    fn from(value: Color) -> Self {
-        match value {
-            Color::Black => 0,
-            Color::White => 1
-        }
-    }
-}
-
-impl TryFrom<i64> for Color {
-    type Error = String;
-
-    fn try_from(value: i64) -> Result<Self, Self::Error> {
-        match value {
-            0 => Ok(Color::Black),
-            1 => Ok(Color::White),
-            _ => Err(format!("Color not recognized: {}", value))
-        }
-    }
-}
-
 
 pub enum Direction {
     Up,
@@ -244,6 +209,36 @@ impl Direction {
             Direction::Down => (0, 1),
             Direction::Left => (-1, 0),
             Direction::Right => (1, 0)
+        }
+    }
+}
+
+use std::convert::{TryFrom};
+use std::convert::From;
+
+#[derive(Clone)]
+pub enum Color {
+    Black,
+    White
+}
+
+impl From<Color> for i64 {
+    fn from(value: Color) -> Self {
+        match value {
+            Color::Black => 0,
+            Color::White => 1
+        }
+    }
+}
+
+impl TryFrom<i64> for Color {
+    type Error = String;
+
+    fn try_from(value: i64) -> Result<Self, Self::Error> {
+        match value {
+            0 => Ok(Color::Black),
+            1 => Ok(Color::White),
+            _ => Err(format!("Color not recognized: {}", value))
         }
     }
 }
