@@ -1,4 +1,3 @@
-use itertools::Itertools;
 use std::sync::mpsc;
 use std::thread;
 
@@ -6,7 +5,7 @@ use std::thread;
 pub fn generator(input: &str) -> Vec<Vec<Cell>> {
     input.lines()
         .map(|line| line.chars().map(|c| c.into()).collect::<Vec<Cell>>())
-        .collect_vec()
+        .collect()
 }
 
 #[aoc(day18, part1)]

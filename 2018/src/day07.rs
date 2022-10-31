@@ -1,258 +1,144 @@
-use itertools::Itertools;
-use regex::Regex;
-use std::collections::HashMap;
-use std::cmp::{Ord, Ordering};
-use std::fmt;
+use std::{collections::HashMap, vec};
+
+const WORKERS_NUM: usize = 5;
 
 #[aoc_generator(day07)]
-pub fn generator(input: &str) -> Vec<(char, char)> {
-    let re = Regex::new(r"Step ([A-Z]) must be finished before step ([A-Z]) can begin.").unwrap();
+pub fn generator(input: &str) -> HashMap<String, Vec<String>> {
+    let mut map = HashMap::new();
+    
+    for l in input.lines() {
+        let split: Vec<&str> = l.split_whitespace().collect();
 
-    let mut vec = Vec::new();
+        let first = split[1].to_string();
+        let second = split[7].to_string();
 
-    for caps in re.captures_iter(input) {
-        let new = (
-            caps[1].chars().next().unwrap(),
-            caps[2].chars().next().unwrap(),
-        );
-
-        vec.push(new);
+        let entry = map.entry(first).or_insert(vec![]);
+        entry.push(second);
     }
 
-    vec
+    map
 }
 
 #[aoc(day07, part1)]
-pub fn part1(input: &[(char, char)]) -> String {
-    let mut map: HashMap<char, Vec<char>> = HashMap::new();
+pub fn part1(map: &HashMap<String, Vec<String>>) -> String {
+    let mut map = map.clone();
 
-    for (key, connection) in input {
-        let e = map.entry(*key).or_insert_with(Vec::new);
-        e.push(*connection);
-    }
+    let mut queue = find_start(&map);
+    queue.sort_by(|a, b| b.cmp(a));
+    let mut done: Vec<String> = vec![];
 
-    let mut queue = PriorityQueue::new(map
-        .keys()
-        .filter(|&x| !map.values().flatten().any(|y| x == y))
-        .map(|x| Node::new(*x))
-        .collect_vec());
-
-    queue.sort();
-
-    let mut res = String::new();
-
-    while let Some(value) = queue.remove(0) {
-        res.push(value.value);
-        if let Some(children) = map.get(&value.value) {
-            queue.append(children.clone());
+    while let Some(x) = queue.pop() {
+        if done.contains(&x) || map.values().flatten().any(|v| v == &x) {
+            continue;
         }
-        queue.sort();
+        done.push(x.clone());
+
+        if let Some(v) = map.get(&x) {
+            let mut v = v.to_vec();
+            queue.append(&mut v);
+            map.remove(&x);
+        }
+
+        queue.sort_by(|a, b| b.cmp(a));
     }
 
-    res.chars()
-        .rev()
-        .unique()
-        .collect_vec()
-        .iter()
-        .rev()
-        .join("")
+    done.join("")
 }
 
 #[aoc(day07, part2)]
-fn part2(input: &[(char, char)]) -> usize {
-    let mut time_passed = 0;
+fn part2(map: &HashMap<String, Vec<String>>) -> usize {
+    let mut map = map.clone();
+    let mut queue = find_start(&map);
+    queue.sort_by(|a, b| b.cmp(a));
 
-    let mut map: HashMap<char, Vec<char>> = HashMap::new();
+    let mut done: Vec<String> = vec![];
+    let mut workers: Vec<Worker> = vec![];
 
-    for (key, connection) in input {
-        let e = map.entry(*key).or_insert_with(Vec::new);
-        e.push(*connection);
-    }
+    let mut ticks = 0;
 
-    let mut queue = PriorityQueue::new(map
-        .keys()
-        .filter(|&x| !map.values().flatten().any(|y| x == y))
-        .map(|x| Node::new(*x))
-        .collect_vec());
+    while !map.is_empty() || !queue.is_empty() || !workers.is_empty() {
+        let mut index_remove: Vec<usize> = vec![];
 
-    println!("{:?}", queue.queue);
-
-    queue.sort();
-
-    let mut workers: Vec<(Option<Node>, usize, usize)> = [(None, 0, 0); 5].to_vec();
-
-    println!("Second\tWorker 1\tWorker 2\tWorker 3\tWorker 4\tWorker 5\tDone");
-
-    let mut dones = vec![];
-    loop {
-        for worker in workers.iter_mut() {
-            if let Some(node) = worker.0 {
-                worker.1 += 1;
-                if worker.1 == worker.2 {
-                    dones.push(node.value);
-                    if let Some(children) = map.get(&node.value) {
-                        queue.append(children.clone());
-                    }
-                    if let Some(node) = queue.remove(0) {
-                        worker.0 = Some(node);
-                        worker.1 = 0;
-                        worker.2 = (node.value as u8 - 4) as usize;
-                    } else {
-                        worker.0 = None;
-                        worker.1 = 0;
-                        worker.2 = 0;
-                    }
+        for (i, w) in workers.iter_mut().enumerate() {
+            if let Some(letter) = w.step() {
+                done.push(letter.to_string());
+                if let Some(v) = map.get(&letter) {
+                    let mut v = v.to_vec();
+                    queue.append(&mut v);
+                    map.remove(&letter);
                 }
-            } else if let Some(node) = queue.remove(0) {
-                worker.0 = Some(node);
-                worker.1 = 0;
-                worker.2 = (node.value as u8 - 4) as usize;
+                index_remove.push(i);
+                queue.sort_by(|a, b| b.cmp(a));
             }
         }
 
-        if all_workers_finished(&workers) && queue.len() == 0 {
-            break;
+        for i in &index_remove {
+            workers.remove(*i);
         }
-        let worker0 = if let Some(node) = workers[0].0 {
-            node.value
-        } else {
-            '.'
-        };
-        let worker1 = if let Some(node) = workers[1].0 {
-            node.value
-        } else {
-            '.'
-        };
-        let worker2 = if let Some(node) = workers[2].0 {
-            node.value
-        } else {
-            '.'
-        };
-        let worker3 = if let Some(node) = workers[3].0 {
-            node.value
-        } else {
-            '.'
-        };
-        let worker4 = if let Some(node) = workers[4].0 {
-            node.value
-        } else {
-            '.'
-        };
-        println!("{}\t\t   {}\t\t   {}\t\t   {}\t\t   {}\t\t   {}\t\t{}", time_passed, worker0, worker1, worker2, worker3, worker4, dones.iter().join(""));
-        time_passed += 1;
+
+        while workers.len() < WORKERS_NUM {
+            if let Some(x) = queue.pop() {
+                if done.contains(&x) || map.values().flatten().any(|v| v == &x) || workers.iter().map(|w| w.letter.clone()).any(|l| l == x) {
+                    continue;
+                }
+                workers.push(Worker::new(x));
+            } else {
+                break;
+            }
+        }
+        println!("Ticks: {}", ticks);
+        println!("Workers: {:?}", workers);
+        println!("Queue: {:?}", queue);
+        println!("Done: {:?}", done);
+        println!("Keys: {:?}", map.keys().collect::<Vec<&String>>());
+        println!("Values: {:?}", map.values().flatten().collect::<Vec<&String>>());
+        ticks += 1;
     }
 
-    time_passed
-}
-
-fn all_workers_finished(workers: &[(Option<Node>, usize, usize)]) -> bool {
-    let mut finished = true;
-
-    for (_, x, y) in workers {
-        if x != y {
-            finished = false;
-        }
-    }
-
-    finished
+    ticks - 1
 }
 
 #[derive(Debug)]
-struct PriorityQueue {
-    queue: Vec<Node>
+struct Worker {
+    letter: String,
+    max_time: usize,
+    tick: usize
 }
 
-impl PriorityQueue {
-    fn new(queue: Vec<Node>) -> Self {
+impl Worker {
+    fn new(letter: String) -> Self {
+        let max_time = 60 + letter.chars().next().unwrap() as usize - 64;
         Self {
-            queue
+            letter,
+            max_time,
+            tick: 0
         }
     }
 
-    fn push(&mut self, value: char) {
-        for n in self.queue.iter_mut() {
-            if n.value == value {
-                n.increase_priority();
-                return;
-            }
-        }
-
-        self.queue.push(Node::new(value));
-    }
-
-    fn append(&mut self, values: Vec<char>) {
-        for c in values {
-            self.push(c);
-        }
-    }
-
-    fn sort(&mut self) {
-        self.queue.sort();
-    }
-
-    fn len(&self) -> usize {
-        self.queue.len()
-    }
-
-    fn remove(&mut self, index: usize) -> Option<Node> {
-        if self.queue.is_empty() {
-            return None;
-        }
-        Some(self.queue.remove(index))
-    }
-}
-
-#[derive(Debug, Eq, Clone, Copy)]
-struct Node {
-    value: char,
-    priority: usize,
-}
-
-impl Node {
-    fn new(value: char) -> Self {
-        Self {
-            value,
-            priority: 1
-        }
-    }
-    fn increase_priority(&mut self) {
-        self.priority += 1;
-    }
-}
-
-impl Ord for Node {
-    fn cmp(&self, other: &Self) -> Ordering {
-        if self.eq(other) {
-            Ordering::Equal
-        } else if self.priority < other.priority || self.priority == other.priority && self.value < other.value {
-            Ordering::Less
+    fn step(&mut self) -> Option<String> {
+        self.tick += 1;
+        if self.tick >= self.max_time {
+            Some(self.letter.clone())
         } else {
-            Ordering::Greater
+            None
         }
     }
 }
 
-impl PartialOrd for Node {
-    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
-        Some(self.cmp(other))
-    }
-}
+fn find_start(map: &HashMap<String, Vec<String>>) -> Vec<String> {
+    let mut start = vec![];
 
-impl PartialEq for Node {
-    fn eq(&self, other: &Self) -> bool {
-        self.value == other.value && self.priority == other.priority
+    for k in map.keys() {
+        if !map.values().flatten().any(|v| v == k) {
+            start.push(k.to_string());
+        }
     }
-}
 
-impl fmt::Display for Node {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{}", self.value)
-    }
+    start
 }
-
 
 #[test]
-fn test1() {
+pub fn test() {
     let s = "Step C must be finished before step A can begin.
 Step C must be finished before step F can begin.
 Step A must be finished before step B can begin.
@@ -260,9 +146,30 @@ Step A must be finished before step D can begin.
 Step B must be finished before step E can begin.
 Step D must be finished before step E can begin.
 Step F must be finished before step E can begin.";
+    assert_eq!("CABDFE", &part1(&generator(s)));
+}
 
-    let s = generator(s);
+#[test]
+pub fn test1() {
+    let s = std::fs::read_to_string("input/2018/day7.txt").unwrap();
 
-    assert_eq!(&part1(&s), "CABDFE");
-    assert_eq!(part2(&s), 1);
+    assert_eq!("CGKMUWXFAIHSYDNLJQTREOPZBV", &part1(&generator(&s)));
+}
+
+#[test]
+pub fn test2() {
+    let s = "Step C must be finished before step A can begin.
+Step C must be finished before step F can begin.
+Step A must be finished before step B can begin.
+Step A must be finished before step D can begin.
+Step B must be finished before step E can begin.
+Step D must be finished before step E can begin.
+Step F must be finished before step E can begin.";
+    assert_eq!(15, part2(&generator(s)));
+}
+
+#[test]
+fn test3() {
+    let w = Worker::new("A".to_string());
+    assert_eq!(61, w.max_time);
 }

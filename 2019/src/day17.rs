@@ -1,9 +1,8 @@
-use itertools::Itertools;
 use std::collections::HashMap;
 
 #[aoc_generator(day17)]
 pub fn generator(input: &str) -> Vec<i64> {
-    input.split(',').map(|x| x.parse().unwrap()).collect_vec()
+    input.split(',').map(|x| x.parse().unwrap()).collect()
 }
 
 #[aoc(day17, part1)]
@@ -19,7 +18,7 @@ pub fn part1(input: &[i64]) -> i64 {
         s.push(res);
     }
 
-    let map: Vec<Vec<char>> = s.lines().map(|x| x.chars().collect_vec()).collect_vec();
+    let map: Vec<Vec<char>> = s.lines().map(|x| x.chars().collect()).collect();
 
 
     let mut inters = 0;
@@ -41,7 +40,9 @@ pub fn part1(input: &[i64]) -> i64 {
 
 #[aoc(day17, part2)]
 pub fn part2(input: &[i64]) -> i64 {
-    let mut pc = Computer::new(input);
+    let mut input = input.to_vec();
+    input[0] = 2;
+    let mut pc = Computer::new(&input);
 
     while let Some(x) = pc.run(Some(2)) {
         let res: char = x as u8 as char;

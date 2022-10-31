@@ -1,8 +1,6 @@
-use itertools::Itertools;
-
 #[aoc_generator(day24)]
 pub fn generator(input: &str) -> Vec<Vec<Cell>> {
-    input.lines().map(|line| line.chars().map(|c| c.into()).collect_vec()).collect_vec()
+    input.lines().map(|line| line.chars().map(|c| c.into()).collect()).collect()
 }
 
 #[aoc(day24, part1)]
