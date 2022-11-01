@@ -214,7 +214,6 @@ impl From<&str> for Action {
 pub struct Message {
     month: usize,
     day: usize,
-    hour: usize,
     minute: usize,
     action: Action,
     id: Option<usize>,
@@ -232,7 +231,6 @@ impl From<&str> for Message {
         Self {
             month: cap[1].parse().unwrap(),
             day: cap[2].parse().unwrap(),
-            hour: cap[3].parse().unwrap(),
             minute: cap[4].parse().unwrap(),
             action: cap[5].into(),
             id,
