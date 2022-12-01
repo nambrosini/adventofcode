@@ -1,3 +1,4 @@
+use std::collections::HashMap;
 use std::collections::hash_map::DefaultHasher;
 use std::hash::{Hash, Hasher};
 
@@ -18,20 +19,26 @@ pub fn part1(input: &Grid) -> usize {
 #[aoc(day18, part2)]
 pub fn part2(input: &Grid) -> usize {
     let mut grid = input.clone();
-    let mut history: Vec<(u64, usize)> = vec![];
+    let mut history: HashMap<u64, Vec<usize>> = HashMap::new();
     let minutes = 1_000_000_000;
 
-    for _ in 0..minutes {
+    for minute in 0..minutes {
         let mut hasher = DefaultHasher::new();
         grid.hash(&mut hasher);
         let hash = hasher.finish();
 
-        if history.iter().enumerate().any(|(_, (h, _))| h == &hash) {
-            let index = minutes % history.len();
-            println!("{:#?}", &history[index - 5..index + 5]);
-            return history[index].1;
-        } else {
-            history.push((hasher.finish(), grid.calc_result()));
+        let entry = history
+            .entry(hash)
+            .or_insert_with(Vec::new);
+        entry.push(minute);
+
+        if entry.len() == 5 {
+            let period = entry[4] - entry[3];
+            let remaining = minutes - minute;
+            for _ in 0..remaining % period {
+                grid.simulate_next_gen();
+            }
+            return grid.calc_result()
         }
 
         grid.simulate_next_gen();
