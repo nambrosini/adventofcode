@@ -1,94 +1,127 @@
-use itertools::Itertools;
-use std::collections::HashMap;
+use std::{collections::HashMap, fmt::Display};
 
 #[aoc_generator(day12)]
-pub fn generator(input: &str) -> (Vec<char>, Vec<Config>) {
-    let lines = input.lines().collect_vec();
-    let initial: Vec<char> = lines[0].split(' ').collect_vec()[2].chars().collect_vec();
-    let configs: Vec<Config> = lines[2..].iter()
-        .map(|&line| line.into())
-        .collect_vec();
-
-    (initial, configs)
+pub fn generator(input: &str) -> Pots {
+    input.into()
 }
 
 #[aoc(day12, part1)]
-pub fn part1((initial, configs): &(Vec<char>, Vec<Config>)) -> i32 {
-    let mut last: HashMap<i32, char> = HashMap::new();
-
-    for i in 0..configs.len() as i32 {
-        last.insert(i, initial[i as usize]);
-    }
-
-    for (i, e) in initial.iter().enumerate() {
-        last.insert(i as i32, *e);
-    }
-
+pub fn part1(pots: &Pots) -> i64 {
+    let mut pots = pots.clone();
     for _ in 0..20 {
-        print(&last);
-        let mut next_gen = HashMap::new();
-        for i in last.keys() {
-            let mut v = vec![];
-            for j in i - 2..=i + 2 {
-                if last.keys().any(|&k| k == j) {
-                    v.push(last[&j]);
+        pots.simulate();
+    }
+
+    pots.pots.iter().filter(|(_, c)| c == &&'#').map(|(i, _)| i).sum()
+}
+
+#[aoc(day12, part2)]
+pub fn part2(pots: &Pots) -> i64 {
+    run(&mut pots.clone(), 50_000_000_000)
+}
+
+fn run(pots: &mut Pots, cycles: usize) -> i64 {
+    for i in 0..cycles {
+        pots.simulate();
+        if i == 5 || i == 50 || i == 500 || i == 5000 || i == 50000 {
+            println!("\nsum of pots with plants after {} generations: {}", i, pots.calc());
+        }
+        print!("\r{}", i);
+    }
+
+    pots.calc()
+}
+
+#[derive(Clone)]
+pub struct Pots {
+    pots: HashMap<i64, char>,
+    states: Vec<State>
+}
+
+impl Pots {
+    fn simulate(&mut self) {
+        let mut pots_clone = self.pots.clone();
+
+        let min = *self.pots.keys().min().unwrap();
+        let max = *self.pots.keys().max().unwrap();
+        
+        for i in min - 2..=max + 2 {
+            let mut string = String::new();
+            for j in i-2..=i+2 {
+                if let Some(c) = self.pots.get(&j) {
+                    string.push(*c);
                 } else {
-                    v.push('.');
-                    next_gen.insert(j, '.');
+                    string.push('.');
                 }
             }
-            next_gen.insert(*i, get_res_from_config(configs, &v));
+            let val = self.get_pot_from_states(string);
+            if !((i < min || i > max) && val == '.') {
+                let entry = pots_clone.entry(i).or_insert('.');
+                *entry = val;
+            }
         }
-        last = next_gen;
+
+        self.pots = pots_clone;
     }
 
-    last.iter()
-        .filter(|(_, &v)| v == '#')
-        .map(|(i, _)| *i)
-        .sum()
-}
-
-fn print(map: &HashMap<i32, char>) {
-    let min_key = *map.keys().min().unwrap();
-    let max_key = *map.keys().max().unwrap();
-
-    for i in min_key..=max_key {
-        print!("{}", map[&i]);
-    }
-    println!();
-}
-
-fn get_res_from_config(configs: &[Config], val: &[char]) -> char {
-    for c in configs.iter() {
-        if c.equal(val) {
-            return c.to;
+    fn get_pot_from_states(&self, string: String) -> char {
+        if let Some(x) = self.states
+            .iter()
+            .find(|state| state.left == string) {
+            x.right
+        } else {
+            '.'
         }
     }
-    '.'
-}
 
-#[derive(Debug, Clone)]
-pub struct Config {
-    from: Vec<char>,
-    to: char
-}
-
-impl Config {
-    fn equal(&self, c: &[char]) -> bool {
-        self.from == c
+    fn calc(&self) -> i64 {
+        self.pots.iter().filter(|(_, c)| c == &&'#').map(|(i, _)| i).sum()
     }
 }
 
-impl From<&str> for Config {
-    fn from(s: &str) -> Config {
-        let mut split = s.split(" => ");
+impl From<&str> for Pots {
+    fn from(s: &str) -> Self {
+        let split: Vec<&str> = s.split("\n\n").collect();
 
-        let from = split.next().unwrap().chars().collect_vec();
-        let to = split.next().unwrap().chars().next().unwrap();
+        let pots = split[0].split_whitespace().last().unwrap().chars().enumerate().map(|(i, e)| (i as i64, e)).collect();
+        let states = split[1].lines()
+            .map(|l| l.into())
+            .collect();
 
-        Config { 
-            from,
-            to
+        Self {
+            pots,
+            states
+        }
+    }
+}
+
+impl Display for Pots {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let min = *self.pots.keys().min().unwrap();
+        let max = *self.pots.keys().max().unwrap();
+
+        for i in min..=max {
+            write!(f, "{}", self.pots[&i])?;
+        }
+        writeln!(f)
+    }
+}
+
+#[derive(Clone)]
+struct State {
+    left: String,
+    right: char
+}
+
+impl From<&str> for State {
+    fn from(s: &str) -> Self {
+        let split: Vec<&str> = s.split(" => ").collect();
+        let left = split[0].to_string();
+        let right = split[1].chars().next().unwrap();
+
+        Self {
+            left,
+            right
         }
     }
 }
@@ -111,6 +144,5 @@ fn test() {
 ###.. => #
 ###.# => #
 ####. => #";
-
-    assert_eq!(part1(&generator(s)), 324);
+    assert_eq!(325, part1(&generator(s)));
 }
