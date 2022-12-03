@@ -1,0 +1,30 @@
+version: 2
+updates:
+  - package-ecosystem: cargo
+    directory: /2016
+    schedule:
+      interval: daily
+  - package-ecosystem: cargo
+    directory: /2017
+    schedule:
+      interval: daily
+  - package-ecosystem: cargo
+    directory: /2018
+    schedule:
+      interval: daily
+  - package-ecosystem: cargo
+    directory: /2019
+    schedule:
+      interval: daily
+  - package-ecosystem: cargo
+    directory: /2020
+    schedule:
+      interval: daily
+  - package-ecosystem: cargo
+    directory: /2021
+    schedule:
+      interval: daily
+  - package-ecosystem: cargo
+    directory: /2022
+    schedule:
+      interval: daily
