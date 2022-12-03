@@ -16,12 +16,9 @@
 **/*/.idea
 
 # Vscode
-**/*/.vscode
+.vscode
 
 # Intellij
-**/*/.idea
+.idea/
 
-# Added by cargo
-
-/target
-output.txt
+**/*/*.iml
