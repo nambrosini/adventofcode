@@ -1,9 +1,5 @@
 version: 2
 updates:
-  - package-ecosystem: cargo
-    directory: /2015
-    schedule:
-      interval: daily
   - package-cosystem: cargo
     directory: /2016
     schedule:
