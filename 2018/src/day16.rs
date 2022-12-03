@@ -45,7 +45,7 @@ pub fn part2(input: &(Vec<Check>, Vec<Vec<usize>>)) -> usize {
 
     while !map.is_empty() {
         let mut new_map = map.clone();
-        let singles = map.iter().filter(|(v, k)| k.len() == 1);
+        let singles = map.iter().filter(|(_, k)| k.len() == 1);
 
         for single in singles {
             let op = *single.1.iter().next().unwrap();
@@ -60,8 +60,6 @@ pub fn part2(input: &(Vec<Check>, Vec<Vec<usize>>)) -> usize {
         }
         map = new_map;
     }
-
-    println!("{:#?}", codes);
 
     let mut device = Device { regs: vec![0; 4] };
 
@@ -275,9 +273,6 @@ fn get_matching(instruction: &Vec<usize>, before: &Vec<usize>, after: &Vec<usize
 
 #[test]
 fn test() {
-    let s = "Before: [instruction[3], 2, 1, 1]
-9 2 1 2
-After:  [instruction[3], 2, 2, 1]";
     let expected = vec![OpCode::Mulr, OpCode::Addi, OpCode::Seti];
     let got = get_matching(&vec![9, 2, 1, 2], &vec![3, 2, 1, 1], &vec![3, 2, 2, 1]);
 

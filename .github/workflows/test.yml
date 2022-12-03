@@ -1,0 +1,25 @@
+name: aoc-2021
+on: [push]
+env:
+  CARGO_TERM_COLOR: always
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          components: rustfmt
+          override: true
+      - name: clippy-check
+        uses: LoliGothick/clippy-check@v.0.2.2
+      - uses: mbrobbel/rustfmt-check@master
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - uses: maboesanman/rust-codecov@v0
+        workingDirectory: 2022
+      - uses: codecov/codecov-action@v3
+        workingDirectory: 2022
+        with:
+          files: coverage.json
