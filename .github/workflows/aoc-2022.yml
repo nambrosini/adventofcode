@@ -35,6 +35,7 @@ jobs:
         run: cargo test
         working-directory: "2022"
   rust-clippy-analyze:
+    if: github.event_name == 'pull_request'
     name: Run rust-clippy analyzing
     runs-on: ubuntu-latest
     permissions:
