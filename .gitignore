@@ -20,5 +20,6 @@
 
 # Intellij
 .idea/
+adventofcode.iml
 
 **/*/*.iml
