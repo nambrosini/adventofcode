@@ -22,9 +22,7 @@ pub fn generator(input: &str) -> (State, Vec<Instruction>) {
         }
     }
 
-    let instructions = split[1].lines()
-        .map(|l| l.into())
-        .collect();
+    let instructions = split[1].lines().map(|l| l.into()).collect();
 
     (state, instructions)
 }
@@ -39,9 +37,7 @@ pub fn part1(input: &(State, Vec<Instruction>)) -> String {
         }
     }
 
-    state.iter()
-        .map(|t| t.last().unwrap())
-        .join("")
+    state.iter().map(|t| t.last().unwrap()).join("")
 }
 
 #[aoc(day05, part2)]
@@ -49,19 +45,19 @@ pub fn part2(input: &(State, Vec<Instruction>)) -> String {
     let mut state = input.0.clone();
     for instruction in &input.1 {
         let len = state[instruction.from - 1].len();
-        let mut v: Vec<char> = state[instruction.from - 1].drain(len - instruction.n..).collect();
+        let mut v: Vec<char> = state[instruction.from - 1]
+            .drain(len - instruction.n..)
+            .collect();
         state[instruction.to - 1].append(&mut v);
     }
 
-    state.iter()
-        .map(|t| t.last().unwrap())
-        .join("")
+    state.iter().map(|t| t.last().unwrap()).join("")
 }
 
 pub struct Instruction {
     n: usize,
     from: usize,
-    to: usize
+    to: usize,
 }
 
 impl From<&str> for Instruction {
@@ -70,11 +66,7 @@ impl From<&str> for Instruction {
         let n = split[1].parse().unwrap();
         let from = split[3].parse().unwrap();
         let to = split[5].parse().unwrap();
-        Self {
-            n,
-            from,
-            to
-        }
+        Self { n, from, to }
     }
 }
 
