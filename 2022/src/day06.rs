@@ -2,8 +2,7 @@ use std::collections::HashSet;
 
 #[aoc_generator(day06)]
 pub fn generator(input: &str) -> Vec<char> {
-    input.chars()
-        .collect()
+    input.chars().collect()
 }
 
 #[aoc(day6, part1)]
@@ -29,7 +28,10 @@ fn find_distinct_sequential(input: &[char], size: usize) -> usize {
 
 #[test]
 fn test() {
-    let s = ["mjqjpqmgbljsphdztnvjfqwrcgsmlb", "bvwbjplbgvbhsrlpgdmjqwftvncz"];
+    let s = [
+        "mjqjpqmgbljsphdztnvjfqwrcgsmlb",
+        "bvwbjplbgvbhsrlpgdmjqwftvncz",
+    ];
 
     let want = [7, 5];
 
@@ -40,7 +42,10 @@ fn test() {
 
 #[test]
 fn test1() {
-    let s = ["mjqjpqmgbljsphdztnvjfqwrcgsmlb", "bvwbjplbgvbhsrlpgdmjqwftvncz"];
+    let s = [
+        "mjqjpqmgbljsphdztnvjfqwrcgsmlb",
+        "bvwbjplbgvbhsrlpgdmjqwftvncz",
+    ];
 
     let want = [19, 23];
 
