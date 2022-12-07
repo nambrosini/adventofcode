@@ -49,11 +49,7 @@ pub fn generator(input: &str) -> HashMap<String, usize> {
         if folders.is_empty() {
             let mut size = 0;
             for (s, n) in content {
-                size += if s == &0 {
-                    folder_sizes[n]
-                } else {
-                    *s
-                }
+                size += if s == &0 { folder_sizes[n] } else { *s }
             }
             folder_sizes.insert(current.to_string(), size);
         } else {
@@ -67,7 +63,8 @@ pub fn generator(input: &str) -> HashMap<String, usize> {
 
 #[aoc(day7, part1)]
 pub fn part1(input: &HashMap<String, usize>) -> usize {
-    input.iter()
+    input
+        .iter()
         .filter(|(_, v)| v <= &&100_000)
         .map(|(_, v)| *v)
         .sum()
@@ -77,7 +74,8 @@ pub fn part1(input: &HashMap<String, usize>) -> usize {
 pub fn part2(input: &HashMap<String, usize>) -> usize {
     let needed = 30000000 - (70000000 - input["/"]);
 
-    input.iter()
+    input
+        .iter()
         .map(|(_, v)| *v)
         .filter(|v| v >= &needed)
         .min()
