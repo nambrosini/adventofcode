@@ -4,10 +4,13 @@ type Movement = (String, usize);
 
 #[aoc_generator(day09)]
 pub fn generator(input: &str) -> Vec<Movement> {
-    input.lines().map(|l| {
-        let split: Vec<&str> = l.split_whitespace().collect();
-        (split[0].to_string(), split[1].parse().unwrap())
-    }).collect()
+    input
+        .lines()
+        .map(|l| {
+            let split: Vec<&str> = l.split_whitespace().collect();
+            (split[0].to_string(), split[1].parse().unwrap())
+        })
+        .collect()
 }
 
 #[aoc(day09, part1)]
@@ -41,7 +44,7 @@ fn move_head(rope: &mut Vec<Knot>, dir: &str) {
         "D" => rope[0].irow += 1,
         "L" => rope[0].icol -= 1,
         "R" => rope[0].icol += 1,
-        _ => unreachable!()
+        _ => unreachable!(),
     }
 
     for i in 1..rope.len() {
@@ -51,7 +54,7 @@ fn move_head(rope: &mut Vec<Knot>, dir: &str) {
         if drow.abs() > 1 || dcol.abs() > 1 {
             rope[i] = Knot {
                 irow: rope[i].irow + drow.signum(),
-                icol: rope[i].icol + dcol.signum()
+                icol: rope[i].icol + dcol.signum(),
             }
         }
     }

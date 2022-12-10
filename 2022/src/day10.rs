@@ -1,8 +1,6 @@
 #[aoc_generator(day10)]
 pub fn generator(input: &str) -> Vec<Instruction> {
-    input.lines()
-        .map(|x| x.into())
-        .collect()
+    input.lines().map(|x| x.into()).collect()
 }
 
 #[aoc(day10, part1)]
@@ -10,7 +8,8 @@ pub fn part1(instructions: &[Instruction]) -> i32 {
     let cycles = [20, 60, 100, 140, 180, 220];
     let v = get_vec(instructions);
     println!("{:?}", v);
-    get_vec(instructions).iter()
+    get_vec(instructions)
+        .iter()
         .filter(|(cycle, _)| cycles.contains(cycle))
         .map(|(cycle, x)| *cycle * x)
         .sum()
@@ -23,7 +22,11 @@ pub fn part2(instructions: &[Instruction]) -> String {
         let sprite_middle = x;
         let screen_column = (cycle - 1) % 40;
 
-        screen.push(if (sprite_middle - screen_column).abs() < 2 { '█' } else { '.' });
+        screen.push(if (sprite_middle - screen_column).abs() < 2 {
+            '█'
+        } else {
+            '.'
+        });
 
         if screen_column == 39 {
             screen.push('\n');
@@ -40,7 +43,7 @@ fn get_vec(instructions: &[Instruction]) -> Vec<(i32, i32)> {
             Instruction::Noop => {
                 cycle += 1;
                 res.push((cycle, x));
-            },
+            }
             Instruction::Add(val) => {
                 cycle += 1;
                 res.push((cycle, x));
@@ -56,7 +59,7 @@ fn get_vec(instructions: &[Instruction]) -> Vec<(i32, i32)> {
 
 pub enum Instruction {
     Noop,
-    Add(i32)
+    Add(i32),
 }
 
 impl From<&str> for Instruction {
@@ -65,7 +68,7 @@ impl From<&str> for Instruction {
         match split[0] {
             "noop" => Self::Noop,
             "addx" => Self::Add(split[1].parse().unwrap()),
-            _ => unreachable!()
+            _ => unreachable!(),
         }
     }
 }
