@@ -1,5 +1,5 @@
-use std::fmt::{Display, Formatter};
 use itertools::Itertools;
+use std::fmt::{Display, Formatter};
 
 type Monkeys = Vec<Monkey>;
 
@@ -48,13 +48,12 @@ fn simulate(monkeys: &Monkeys, div: usize, cycles: usize, operation: &str) -> us
 }
 
 #[derive(Clone)]
-pub struct Monkey
-{
+pub struct Monkey {
     items: Vec<usize>,
     operation: String,
     test: usize,
     t: usize,
-    f: usize
+    f: usize,
 }
 
 impl Monkey {
@@ -64,7 +63,7 @@ impl Monkey {
             operation,
             test,
             t,
-            f
+            f,
         }
     }
 
@@ -89,7 +88,7 @@ impl Monkey {
         match operation[1] {
             "*" => first * second,
             "+" => first + second,
-            _ => unreachable!()
+            _ => unreachable!(),
         }
     }
 }
@@ -103,7 +102,13 @@ impl Display for Monkey {
 impl From<&str> for Monkey {
     fn from(s: &str) -> Self {
         let parts: Vec<&str> = s.lines().collect();
-        let items: Vec<usize> = parts[1].split(": ").last().unwrap().split(", ").map(|x| x.parse().unwrap()).collect();
+        let items: Vec<usize> = parts[1]
+            .split(": ")
+            .last()
+            .unwrap()
+            .split(", ")
+            .map(|x| x.parse().unwrap())
+            .collect();
         let operation = parts[2];
         let operation: String = operation.split("= ").last().unwrap().to_string();
         let test = parts[3].split_whitespace().last().unwrap().parse().unwrap();
