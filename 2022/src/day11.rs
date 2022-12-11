@@ -68,12 +68,6 @@ impl Monkey {
     }
 
     fn calc(item: usize, operation: &str) -> usize {
-        // Expr::new(operation)
-        //     .value("old", item)
-        //     .exec()
-        //     .unwrap()
-        //     .as_i64()
-        //     .unwrap() as usize
         let operation: Vec<&str> = operation.split_whitespace().collect();
         let first = if let Ok(val) = operation[0].parse() {
             val
