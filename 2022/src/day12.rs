@@ -10,20 +10,9 @@ pub fn generator(input: &str) -> Vec<Vec<char>> {
 
 #[aoc(day12, part1)]
 pub fn part1(input: &[Vec<char>]) -> usize {
+    let start = find_character(input, 'S')[0];
+    let end = find_character(input, 'E')[0];
     let mut input = input.to_vec();
-    let mut start = (0, 0);
-    let mut end = (0, 0);
-
-    for (i, row) in input.iter().enumerate() {
-        for (j, e) in row.iter().enumerate() {
-            if e == &'S' {
-                start = (i as i32, j as i32);
-            }
-            if e == &'E' {
-                end = (i as i32, j as i32);
-            }
-        }
-    }
 
     input[start.0 as usize][start.1 as usize] = 'a';
     input[end.0 as usize][end.1 as usize] = 'z';
@@ -33,21 +22,12 @@ pub fn part1(input: &[Vec<char>]) -> usize {
 
 #[aoc(day12, part2)]
 pub fn part2(input: &[Vec<char>]) -> usize {
-    let mut input = input.to_vec();
-    let mut start = vec![];
-    let mut end = (0, 0);
+    let mut start = find_character(input, 'a');
+    start.append(&mut find_character(input, 'S'));
 
-    for (i, row) in input.iter().enumerate() {
-        for (j, e) in row.iter().enumerate() {
-            if e == &'S' {
-                start.insert(0, (i as i32, j as i32));
-            } else if e == &'a' {
-                start.push((i as i32, j as i32));
-            } else if e == &'E' {
-                end = (i as i32, j as i32);
-            }
-        }
-    }
+    let end = find_character(input, 'E')[0];
+
+    let mut input = input.to_vec();
 
     input[start[0].0 as usize][start[0].1 as usize] = 'a';
     input[end.0 as usize][end.1 as usize] = 'z';
@@ -59,6 +39,15 @@ pub fn part2(input: &[Vec<char>]) -> usize {
         .min()
         .unwrap()
         - 1
+}
+
+fn find_character(map: &[Vec<char>], searched: char) -> Vec<Point> {
+    map.iter()
+        .flatten()
+        .enumerate()
+        .filter(|(_, c)| c == &&searched)
+        .map(|(i, _)| (i as i32 / map[0].len() as i32, i as i32 % map[0].len() as i32))
+        .collect()
 }
 
 type Point = (i32, i32);

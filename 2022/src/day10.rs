@@ -6,8 +6,6 @@ pub fn generator(input: &str) -> Vec<Instruction> {
 #[aoc(day10, part1)]
 pub fn part1(instructions: &[Instruction]) -> i32 {
     let cycles = [20, 60, 100, 140, 180, 220];
-    let v = get_vec(instructions);
-    println!("{:?}", v);
     get_vec(instructions)
         .iter()
         .filter(|(cycle, _)| cycles.contains(cycle))
