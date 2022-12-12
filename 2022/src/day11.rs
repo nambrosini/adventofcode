@@ -27,12 +27,12 @@ pub struct Monkey {
     test: usize,
     t: usize,
     f: usize,
-    count: usize
+    count: usize,
 }
 
 enum Operator {
     Division,
-    Modulo
+    Modulo,
 }
 
 trait Simulate {
@@ -49,7 +49,12 @@ impl Simulate for Monkeys {
             }
         }
 
-        self.iter().map(|m| m.count).sorted().rev().take(2).product()
+        self.iter()
+            .map(|m| m.count)
+            .sorted()
+            .rev()
+            .take(2)
+            .product()
     }
 }
 
@@ -61,7 +66,7 @@ impl Monkey {
             test,
             t,
             f,
-            count: 0
+            count: 0,
         }
     }
 

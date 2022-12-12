@@ -46,7 +46,12 @@ fn find_character(map: &[Vec<char>], searched: char) -> Vec<Point> {
         .flatten()
         .enumerate()
         .filter(|(_, c)| c == &&searched)
-        .map(|(i, _)| (i as i32 / map[0].len() as i32, i as i32 % map[0].len() as i32))
+        .map(|(i, _)| {
+            (
+                i as i32 / map[0].len() as i32,
+                i as i32 % map[0].len() as i32,
+            )
+        })
         .collect()
 }
 
