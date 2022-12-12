@@ -1,13 +1,11 @@
+use itertools::Itertools;
 use std::collections::HashSet;
 use std::hash::{Hash, Hasher};
 use std::usize;
-use itertools::Itertools;
 
 #[aoc_generator(day12)]
 pub fn generator(input: &str) -> Vec<Vec<char>> {
-    input.lines()
-        .map(|line| line.chars().collect())
-        .collect()
+    input.lines().map(|line| line.chars().collect()).collect()
 }
 
 #[aoc(day12, part1)]
@@ -54,11 +52,13 @@ pub fn part2(input: &[Vec<char>]) -> usize {
     input[start[0].0 as usize][start[0].1 as usize] = 'a';
     input[end.0 as usize][end.1 as usize] = 'z';
 
-    start.iter()
+    start
+        .iter()
         .map(|start| astar(&input, start, &end).len())
         .filter(|res| res != &0)
         .min()
-        .unwrap() - 1
+        .unwrap()
+        - 1
 }
 
 type Point = (i32, i32);
@@ -91,10 +91,13 @@ pub fn astar(map: &[Vec<char>], start: &Point, end: &Point) -> Vec<Point> {
         let children = get_neighbours(&current_node);
 
         for child in children {
-            if !(0..map.len() as i32).contains(&child.position.0) || !(0..map[0].len() as i32).contains(&child.position.1) {
+            if !(0..map.len() as i32).contains(&child.position.0)
+                || !(0..map[0].len() as i32).contains(&child.position.1)
+            {
                 continue;
             }
-            let current_value = map[current_node.position.0 as usize][current_node.position.1 as usize];
+            let current_value =
+                map[current_node.position.0 as usize][current_node.position.1 as usize];
             let child_value = map[child.position.0 as usize][child.position.1 as usize];
             if current_value as u8 + 1 < child_value as u8 {
                 continue;
@@ -105,7 +108,9 @@ pub fn astar(map: &[Vec<char>], start: &Point, end: &Point) -> Vec<Point> {
 
             let mut child = child;
             child.g = current_node.g + 1;
-            child.h = ((end.position.0 - child.position.0).pow(2) as f64 + (end.position.1 - child.position.1).pow(2) as f64).sqrt() as i32;
+            child.h = ((end.position.0 - child.position.0).pow(2) as f64
+                + (end.position.1 - child.position.1).pow(2) as f64)
+                .sqrt() as i32;
             child.f = child.g + child.h;
 
             if open_list.iter().any(|&x| x == child && child.g > x.g) {
@@ -152,9 +157,7 @@ impl PartialEq for Node {
     }
 }
 
-impl Eq for Node {
-
-}
+impl Eq for Node {}
 
 fn get_neighbours(current: &Node) -> Vec<Node> {
     let neighbours = vec![(-1, 0), (0, -1), (0, 1), (1, 0)];
@@ -169,7 +172,6 @@ fn get_neighbours(current: &Node) -> Vec<Node> {
         })
         .collect_vec()
 }
-
 
 #[test]
 fn test() {
