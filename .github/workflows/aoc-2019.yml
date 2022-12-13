@@ -1,12 +1,12 @@
 name: CI-2019
-on: 
+on:
   pull_request:
     branches:
       - main
   push:
     branches:
       - main
-      - 2019
+      - 2022
 env:
   CARGO_TERM_COLOR: always
 jobs:
@@ -17,10 +17,9 @@ jobs:
       - uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
-      - uses: actions-rs/cargo@v1
-        with:
-          command: fmt
-        working-directory: 2019
+      - name: format
+        run: cargo fmt
+        working-directory: "2019"
       - uses: stefanzweifel/git-auto-commit-action@v4
         with:
           commit_message: Apply cargo fmt changes
@@ -31,10 +30,9 @@ jobs:
       - uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
-      - uses: actions-rs/cargo@v1
-        with:
-          command: test
-        working-directory: 2019
+      - name: test
+        run: cargo test
+        working-directory: "2019"
   rust-clippy-analyze:
     name: Run rust-clippy analyzing
     runs-on: ubuntu-latest
@@ -58,9 +56,9 @@ jobs:
         run:
           cargo clippy
           --all-features
-          --message-format=json | clippy-sarif | tee rust-clippy-results.sarif | sarif-fmt
+          --message-format=json | clippy-sarif | tee ../rust-clippy-results.sarif | sarif-fmt
         continue-on-error: true
-        working-directory: 2019
+        working-directory: "2019"
       - name: Upload analysis results to GitHub
         uses: github/codeql-action/upload-sarif@v1
         with:
