@@ -8,16 +8,12 @@ pub fn generator(input: &str) -> (usize, usize) {
 
 #[aoc(day04, part1)]
 pub fn part1(range: &(usize, usize)) -> usize {
-    (range.0..=range.1)
-        .filter(filter)
-        .count()
+    (range.0..=range.1).filter(filter).count()
 }
 
 #[aoc(day04, part2)]
 pub fn part2(range: &(usize, usize)) -> usize {
-    (range.0..=range.1)
-        .filter(filter_2)
-        .count()
+    (range.0..=range.1).filter(filter_2).count()
 }
 
 pub fn filter(x: &usize) -> bool {
@@ -28,7 +24,7 @@ pub fn filter(x: &usize) -> bool {
         match a.cmp(&b) {
             Ordering::Equal => double = true,
             Ordering::Greater => return false,
-            Ordering::Less => continue
+            Ordering::Less => continue,
         }
     }
     double
@@ -43,7 +39,7 @@ pub fn filter_2(x: &usize) -> bool {
 
     let mut double = false;
 
-    for i in 0..v.len() - 1  {
+    for i in 0..v.len() - 1 {
         let a = v[i];
         let b = v[i + 1];
 

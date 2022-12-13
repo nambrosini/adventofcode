@@ -1,8 +1,9 @@
 use std::collections::HashMap;
 
 #[aoc_generator(day14)]
-pub fn generator(input: &str) ->  HashMap<String, Reaction> {
-    input.lines()
+pub fn generator(input: &str) -> HashMap<String, Reaction> {
+    input
+        .lines()
         .map(|l| {
             let r: Reaction = l.into();
             (r.output.0.clone(), r)
@@ -43,7 +44,7 @@ pub fn part2(rules: &HashMap<String, Reaction>) -> usize {
 
 pub struct Reaction {
     input: HashMap<String, usize>,
-    output: (String, usize)
+    output: (String, usize),
 }
 
 impl From<&str> for Reaction {

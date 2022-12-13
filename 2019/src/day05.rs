@@ -1,8 +1,6 @@
 #[aoc_generator(day05)]
 pub fn generator(input: &str) -> Vec<i64> {
-    input.split(',')
-        .map(|x| x.parse().unwrap())
-        .collect()
+    input.split(',').map(|x| x.parse().unwrap()).collect()
 }
 
 #[aoc(day05, part1)]
@@ -33,14 +31,14 @@ pub fn part2(mem: &[i64]) -> i64 {
 
 pub struct Intcode {
     mem: Vec<i64>,
-    pos: usize
+    pos: usize,
 }
 
 impl Intcode {
     fn new(mem: &[i64]) -> Self {
         Self {
             mem: mem.to_vec(),
-            pos: 0
+            pos: 0,
         }
     }
 
@@ -51,40 +49,40 @@ impl Intcode {
                 Opcode::Add(m1, m2, m3) => {
                     let v1 = self.get_mem(1, m1);
                     let v2 = self.get_mem(2, m2);
-    
+
                     self.set_mem(3, v1 + v2, m3);
                     self.pos += 4;
-                },
+                }
                 Opcode::Mul(m1, m2, m3) => {
                     let v1 = self.get_mem(1, m1);
                     let v2 = self.get_mem(2, m2);
-    
+
                     self.set_mem(3, v1 * v2, m3);
                     self.pos += 4;
-                },
+                }
                 Opcode::Save => {
                     self.set_mem(1, input, Mode::Pos);
                     self.pos += 2;
-                },
+                }
                 Opcode::Out(m1) => {
                     let out = self.get_mem(1, m1);
                     self.pos += 2;
                     return Some(out);
-                },
+                }
                 Opcode::Jit(m1, m2) => {
                     if self.get_mem(1, m1) != 0 {
                         self.pos = self.get_mem(2, m2) as usize;
                     } else {
                         self.pos += 3;
                     }
-                },
+                }
                 Opcode::Jif(m1, m2) => {
                     if self.get_mem(1, m1) == 0 {
                         self.pos = self.get_mem(2, m2) as usize;
                     } else {
                         self.pos += 3;
                     }
-                },
+                }
                 Opcode::Lt(m1, m2, m3) => {
                     let v = if self.get_mem(1, m1) < self.get_mem(2, m2) {
                         1
@@ -93,7 +91,7 @@ impl Intcode {
                     };
                     self.set_mem(3, v, m3);
                     self.pos += 4;
-                },
+                }
                 Opcode::Eq(m1, m2, m3) => {
                     let v = if self.get_mem(1, m1) == self.get_mem(2, m2) {
                         1
@@ -102,7 +100,7 @@ impl Intcode {
                     };
                     self.set_mem(3, v, m3);
                     self.pos += 4;
-                },
+                }
                 Opcode::Exit => return None,
             }
         }
@@ -121,14 +119,14 @@ impl Intcode {
     fn get_index(&self, offset: usize, mode: Mode) -> usize {
         match mode {
             Mode::Pos => self.mem[self.pos + offset] as usize,
-            Mode::Imm => self.pos + offset
+            Mode::Imm => self.pos + offset,
         }
     }
 }
 
 enum Mode {
     Pos,
-    Imm
+    Imm,
 }
 
 impl From<i64> for Mode {
@@ -136,7 +134,7 @@ impl From<i64> for Mode {
         match x {
             0 => Self::Pos,
             1 => Self::Imm,
-            _ => unreachable!()
+            _ => unreachable!(),
         }
     }
 }
@@ -150,7 +148,7 @@ enum Opcode {
     Jif(Mode, Mode),
     Lt(Mode, Mode, Mode),
     Eq(Mode, Mode, Mode),
-    Exit
+    Exit,
 }
 
 impl From<i64> for Opcode {
@@ -170,7 +168,7 @@ impl From<i64> for Opcode {
             7 => Self::Lt(m1, m2, m3),
             8 => Self::Eq(m1, m2, m3),
             99 => Self::Exit,
-            _ => unreachable!()
+            _ => unreachable!(),
         }
     }
 }

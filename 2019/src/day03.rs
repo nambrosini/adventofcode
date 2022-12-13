@@ -70,11 +70,8 @@ impl Wire {
     pub fn manhattan(&self, other: &Wire) -> i64 {
         let path1: HashSet<(i64, i64)> = self.path.clone().into_iter().skip(1).collect();
         let path2: HashSet<(i64, i64)> = other.path.clone().into_iter().skip(1).collect();
-        let common_points: Vec<&(i64, i64)> = path1
-            .iter()
-            .skip(1)
-            .filter(|e| path2.contains(e))
-            .collect();
+        let common_points: Vec<&(i64, i64)> =
+            path1.iter().skip(1).filter(|e| path2.contains(e)).collect();
 
         common_points
             .iter()

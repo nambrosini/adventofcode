@@ -26,7 +26,13 @@ pub fn part2(input: &HashMap<String, Vec<String>>) -> usize {
     transfer("YOU", "SAN", 0, input, &mut visited) - 2
 }
 
-fn transfer(start: &str, end: &str, count: usize, map: &HashMap<String, Vec<String>>, visited: &mut HashSet<String>) -> usize {
+fn transfer(
+    start: &str,
+    end: &str,
+    count: usize,
+    map: &HashMap<String, Vec<String>>,
+    visited: &mut HashSet<String>,
+) -> usize {
     if start == end {
         return count;
     }

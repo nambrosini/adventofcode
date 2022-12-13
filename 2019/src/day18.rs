@@ -3,7 +3,8 @@ use std::thread;
 
 #[aoc_generator(day18)]
 pub fn generator(input: &str) -> Vec<Vec<Cell>> {
-    input.lines()
+    input
+        .lines()
         .map(|line| line.chars().map(|c| c.into()).collect::<Vec<Cell>>())
         .collect()
 }
@@ -15,14 +16,18 @@ pub fn part1(input: &[Vec<Cell>]) -> usize {
 
     let (tx, rx) = mpsc::channel();
 
-    thread::spawn(move || {
-        search_keys(&start, 0, &input, &[], tx)
-    });
+    thread::spawn(move || search_keys(&start, 0, &input, &[], tx));
 
     rx.recv().unwrap()
 }
 
-fn search_keys(start: &(usize, usize), count: usize, maze: &[Vec<Cell>], keys: &[char], tx: std::sync::mpsc::Sender<usize>) {
+fn search_keys(
+    start: &(usize, usize),
+    count: usize,
+    maze: &[Vec<Cell>],
+    keys: &[char],
+    tx: std::sync::mpsc::Sender<usize>,
+) {
     let found = find_point(start, maze, keys);
     let mut min_len = usize::MAX;
 
@@ -47,7 +52,11 @@ fn search_keys(start: &(usize, usize), count: usize, maze: &[Vec<Cell>], keys: &
     tx.send(count + min_len).unwrap();
 }
 
-fn find_point(start: &(usize, usize), maze: &[Vec<Cell>], keys: &[char]) -> Vec<(char, usize, (usize, usize))> {
+fn find_point(
+    start: &(usize, usize),
+    maze: &[Vec<Cell>],
+    keys: &[char],
+) -> Vec<(char, usize, (usize, usize))> {
     let mut open_cells = vec![(*start, 0)];
     let mut close_cells = Vec::new();
 
@@ -63,7 +72,7 @@ fn find_point(start: &(usize, usize), maze: &[Vec<Cell>], keys: &[char]) -> Vec<
                     found.push((v, count, next_cell));
                 }
             }
-    
+
             if let Cell::Door(v) = maze[next_cell.0][next_cell.1] {
                 if !keys.contains(&v.to_ascii_lowercase()) {
                     continue;
@@ -79,7 +88,7 @@ fn find_point(start: &(usize, usize), maze: &[Vec<Cell>], keys: &[char]) -> Vec<
             }
             match maze[f.0][f.1] {
                 Cell::Close => continue,
-                _ => open_cells.push((*f, count + 1))
+                _ => open_cells.push((*f, count + 1)),
             }
         }
     }
@@ -125,12 +134,12 @@ pub enum Cell {
     Open,
     Door(char),
     Key(char),
-    Entrance
+    Entrance,
 }
 
 impl From<char> for Cell {
     fn from(c: char) -> Self {
-        if c == '#' { 
+        if c == '#' {
             Cell::Close
         } else if c == '.' {
             Cell::Open

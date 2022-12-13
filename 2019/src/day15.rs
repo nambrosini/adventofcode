@@ -1,10 +1,12 @@
-use std::{collections::{HashMap, HashSet}, ops::Add, hash::Hash};
+use std::{
+    collections::{HashMap, HashSet},
+    hash::Hash,
+    ops::Add,
+};
 
 #[aoc_generator(day15)]
 pub fn generator(input: &str) -> HashMap<Position, i64> {
-    let mem: Vec<i64> = input.split(',')
-        .map(|x| x.parse().unwrap())
-        .collect();
+    let mem: Vec<i64> = input.split(',').map(|x| x.parse().unwrap()).collect();
 
     let mut map: HashMap<Position, i64> = HashMap::new();
     map.insert(Position::new(0, 0), 0);
@@ -25,10 +27,7 @@ pub fn part1(map: &HashMap<Position, i64>) -> i64 {
 
 #[aoc(day15, part2)]
 pub fn part2(map: &HashMap<Position, i64>) -> i64 {
-    let start = *map.iter()
-        .find(|(_, v)| v == &&2)
-        .unwrap()
-        .0;
+    let start = *map.iter().find(|(_, v)| v == &&2).unwrap().0;
 
     fill_oxygen(map, &start)
 }
@@ -50,10 +49,7 @@ pub fn fill_oxygen(map: &HashMap<Position, i64>, start: &Position) -> i64 {
         }
     }
 
-    set.iter()
-        .max_by_key(|x| x.1)
-        .unwrap()
-        .1
+    set.iter().max_by_key(|x| x.1).unwrap().1
 }
 
 pub fn search(map: &HashMap<Position, i64>, start: &Position) -> i64 {
@@ -99,7 +95,7 @@ pub fn move_robot(map: &mut HashMap<Position, i64>, pc: &Intcode, pos: &Position
 pub struct Intcode {
     mem: HashMap<usize, i64>,
     pos: usize,
-    rel_base: usize
+    rel_base: usize,
 }
 
 impl Intcode {
@@ -107,7 +103,7 @@ impl Intcode {
         Self {
             mem: mem.iter().copied().enumerate().collect(),
             pos: 0,
-            rel_base: 0
+            rel_base: 0,
         }
     }
 
@@ -118,40 +114,40 @@ impl Intcode {
                 Opcode::Add(m1, m2, m3) => {
                     let v1 = self.get_mem(1, m1);
                     let v2 = self.get_mem(2, m2);
-    
+
                     self.set_mem(3, v1 + v2, m3);
                     self.pos += 4;
-                },
+                }
                 Opcode::Mul(m1, m2, m3) => {
                     let v1 = self.get_mem(1, m1);
                     let v2 = self.get_mem(2, m2);
-    
+
                     self.set_mem(3, v1 * v2, m3);
                     self.pos += 4;
-                },
+                }
                 Opcode::Save(m1) => {
                     self.set_mem(1, input, m1);
                     self.pos += 2;
-                },
+                }
                 Opcode::Out(m1) => {
                     let res = self.get_mem(1, m1);
                     self.pos += 2;
                     return Some(res);
-                },
+                }
                 Opcode::Jit(m1, m2) => {
                     if self.get_mem(1, m1) != 0 {
                         self.pos = self.get_mem(2, m2) as usize;
                     } else {
                         self.pos += 3;
                     }
-                },
+                }
                 Opcode::Jif(m1, m2) => {
                     if self.get_mem(1, m1) == 0 {
                         self.pos = self.get_mem(2, m2) as usize;
                     } else {
                         self.pos += 3;
                     }
-                },
+                }
                 Opcode::Lt(m1, m2, m3) => {
                     let v = if self.get_mem(1, m1) < self.get_mem(2, m2) {
                         1
@@ -160,7 +156,7 @@ impl Intcode {
                     };
                     self.set_mem(3, v, m3);
                     self.pos += 4;
-                },
+                }
                 Opcode::Eq(m1, m2, m3) => {
                     let v = if self.get_mem(1, m1) == self.get_mem(2, m2) {
                         1
@@ -169,14 +165,12 @@ impl Intcode {
                     };
                     self.set_mem(3, v, m3);
                     self.pos += 4;
-                },
+                }
                 Opcode::Rb(m1) => {
                     self.rel_base += self.get_mem(1, m1) as usize;
                     self.pos += 2;
-                },
-                Opcode::Exit => {
-                    return None
                 }
+                Opcode::Exit => return None,
             }
         }
     }
@@ -205,7 +199,7 @@ impl Intcode {
 enum Mode {
     Pos,
     Imm,
-    Rel
+    Rel,
 }
 
 impl From<i64> for Mode {
@@ -214,7 +208,7 @@ impl From<i64> for Mode {
             0 => Self::Pos,
             1 => Self::Imm,
             2 => Self::Rel,
-            _ => unreachable!()
+            _ => unreachable!(),
         }
     }
 }
@@ -230,7 +224,7 @@ enum Opcode {
     Lt(Mode, Mode, Mode),
     Eq(Mode, Mode, Mode),
     Rb(Mode),
-    Exit
+    Exit,
 }
 
 impl From<i64> for Opcode {
@@ -251,7 +245,7 @@ impl From<i64> for Opcode {
             8 => Self::Eq(m1, m2, m3),
             9 => Self::Rb(m1),
             99 => Self::Exit,
-            _ => unreachable!()
+            _ => unreachable!(),
         }
     }
 }
@@ -260,7 +254,7 @@ pub enum Direction {
     Up = 1,
     Down = 2,
     Left = 3,
-    Right = 4
+    Right = 4,
 }
 
 impl From<i64> for Direction {
@@ -270,7 +264,7 @@ impl From<i64> for Direction {
             2 => Direction::Down,
             3 => Direction::Left,
             4 => Direction::Right,
-            _ => unreachable!()
+            _ => unreachable!(),
         }
     }
 }
@@ -281,7 +275,7 @@ impl From<Direction> for Position {
             Direction::Up => Position::new(0, -1),
             Direction::Down => Position::new(0, 1),
             Direction::Left => Position::new(-1, 0),
-            Direction::Right => Position::new(1, 0)
+            Direction::Right => Position::new(1, 0),
         }
     }
 }
@@ -289,15 +283,12 @@ impl From<Direction> for Position {
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub struct Position {
     x: i64,
-    y: i64
+    y: i64,
 }
 
 impl Position {
     fn new(x: i64, y: i64) -> Self {
-        Self {
-            x,
-            y
-        }
+        Self { x, y }
     }
 }
 
@@ -307,7 +298,7 @@ impl Add<Position> for Position {
     fn add(self, rhs: Position) -> Self::Output {
         Self {
             x: self.x + rhs.x,
-            y: self.y + rhs.y
+            y: self.y + rhs.y,
         }
     }
 }
@@ -321,14 +312,14 @@ fn print_map(map: &HashMap<Position, i64>) {
     for x in min_x..=max_x {
         for y in min_y..=max_y {
             let v = if let Some(v) = map.get(&Position { x, y }) {
-                if x == 0 && y == 0{
+                if x == 0 && y == 0 {
                     "S"
                 } else {
                     match v {
                         0 => "▓",
                         1 => ".",
                         2 => "X",
-                        _ => unreachable!()
+                        _ => unreachable!(),
                     }
                 }
             } else {

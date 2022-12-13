@@ -2,21 +2,27 @@ use std::collections::HashMap;
 
 #[aoc_generator(day11)]
 pub fn generator(input: &str) -> Vec<i64> {
-    input.split(',')
-        .map(|x| x.parse().unwrap())
-        .collect()
+    input.split(',').map(|x| x.parse().unwrap()).collect()
 }
 
 #[aoc(day11, part1)]
 pub fn part1(mem: &[i64]) -> usize {
-    let memory: HashMap<i64, i64> = mem.iter().enumerate().map(|(i, e)| (i as i64, *e)).collect();
+    let memory: HashMap<i64, i64> = mem
+        .iter()
+        .enumerate()
+        .map(|(i, e)| (i as i64, *e))
+        .collect();
 
     IntCode::new(memory).run(0).unwrap().len() - 1
 }
 
 #[aoc(day11, part2)]
 pub fn part2(mem: &[i64]) -> usize {
-    let memory: HashMap<i64, i64> = mem.iter().enumerate().map(|(i, e)| (i as i64, *e)).collect();
+    let memory: HashMap<i64, i64> = mem
+        .iter()
+        .enumerate()
+        .map(|(i, e)| (i as i64, *e))
+        .collect();
     let result = IntCode::new(memory).run(1).unwrap();
 
     let min_x = &result.keys().min_by_key(|(x, _)| x).unwrap().0;
@@ -34,7 +40,7 @@ pub fn part2(mem: &[i64]) -> usize {
         for j in i {
             match j {
                 Color::Black => print!(" "),
-                Color::White => print!("▓")
+                Color::White => print!("▓"),
             }
         }
         println!();
@@ -141,9 +147,16 @@ impl IntCode {
     fn mem_get(&mut self, mode: Mode, address_offset: i64) -> i64 {
         let addr = match mode {
             Mode::Imm => self.address + address_offset,
-            Mode::Pos => *self.memory.entry(self.address + address_offset).or_insert(0),
+            Mode::Pos => *self
+                .memory
+                .entry(self.address + address_offset)
+                .or_insert(0),
             Mode::Rel => {
-                *self.memory.entry(self.address + address_offset).or_insert(0) + self.relative_base
+                *self
+                    .memory
+                    .entry(self.address + address_offset)
+                    .or_insert(0)
+                    + self.relative_base
             }
         };
 
@@ -152,25 +165,33 @@ impl IntCode {
 
     fn mem_set(&mut self, mode: Mode, address_offset: i64, v: i64) {
         let addr = match mode {
-            Mode::Pos => *self.memory.entry(self.address + address_offset).or_insert(0),
+            Mode::Pos => *self
+                .memory
+                .entry(self.address + address_offset)
+                .or_insert(0),
             Mode::Imm => self.address + address_offset,
-            Mode::Rel => *self.memory.entry(self.address + address_offset).or_insert(0) + self.relative_base,
+            Mode::Rel => {
+                *self
+                    .memory
+                    .entry(self.address + address_offset)
+                    .or_insert(0)
+                    + self.relative_base
+            }
         };
 
         self.memory.insert(addr, v);
     }
 }
 
-
 pub enum Direction {
     Up,
     Down,
     Left,
-    Right
+    Right,
 }
 
 impl Direction {
-    pub fn turn(direction: &Self, dir: i64) -> Self{
+    pub fn turn(direction: &Self, dir: i64) -> Self {
         match direction {
             Direction::Up => {
                 if dir == 0 {
@@ -178,21 +199,21 @@ impl Direction {
                 } else {
                     Direction::Right
                 }
-            },
+            }
             Direction::Left => {
                 if dir == 0 {
                     Direction::Down
                 } else {
                     Direction::Up
                 }
-            },
+            }
             Direction::Down => {
                 if dir == 0 {
                     Direction::Right
                 } else {
                     Direction::Left
                 }
-            },
+            }
             Direction::Right => {
                 if dir == 0 {
                     Direction::Up
@@ -208,25 +229,25 @@ impl Direction {
             Direction::Up => (0, -1),
             Direction::Down => (0, 1),
             Direction::Left => (-1, 0),
-            Direction::Right => (1, 0)
+            Direction::Right => (1, 0),
         }
     }
 }
 
-use std::convert::{TryFrom};
 use std::convert::From;
+use std::convert::TryFrom;
 
 #[derive(Clone)]
 pub enum Color {
     Black,
-    White
+    White,
 }
 
 impl From<Color> for i64 {
     fn from(value: Color) -> Self {
         match value {
             Color::Black => 0,
-            Color::White => 1
+            Color::White => 1,
         }
     }
 }
@@ -238,7 +259,7 @@ impl TryFrom<i64> for Color {
         match value {
             0 => Ok(Color::Black),
             1 => Ok(Color::White),
-            _ => Err(format!("Color not recognized: {}", value))
+            _ => Err(format!("Color not recognized: {}", value)),
         }
     }
 }

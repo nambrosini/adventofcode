@@ -1,8 +1,6 @@
 #[aoc_generator(day02)]
 pub fn generator(input: &str) -> Vec<i64> {
-    input.split(',')
-        .map(|x| x.parse().unwrap())
-        .collect()
+    input.split(',').map(|x| x.parse().unwrap()).collect()
 }
 
 #[aoc(day02, part1)]
@@ -14,7 +12,7 @@ pub fn part1(mem: &[i64]) -> i64 {
 #[aoc(day02, part2)]
 pub fn part2(mem: &[i64]) -> i64 {
     let mut pc = Intcode::new(mem);
-    
+
     for i in 0..99 {
         for j in 0..99 {
             let res = pc.run(i, j);
@@ -32,14 +30,14 @@ pub fn part2(mem: &[i64]) -> i64 {
 
 pub struct Intcode {
     mem: Vec<i64>,
-    pos: usize
+    pos: usize,
 }
 
 impl Intcode {
     fn new(mem: &[i64]) -> Self {
         Self {
             mem: mem.to_vec(),
-            pos: 0
+            pos: 0,
         }
     }
 
@@ -53,15 +51,15 @@ impl Intcode {
                 Opcode::Add => {
                     let v1 = self.get_mem(1);
                     let v2 = self.get_mem(2);
-    
+
                     self.set_mem(3, v1 + v2);
-                },
+                }
                 Opcode::Mul => {
                     let v1 = self.get_mem(1);
                     let v2 = self.get_mem(2);
-    
+
                     self.set_mem(3, v1 * v2);
-                },
+                }
                 Opcode::Exit => return self.mem[0],
             }
             self.pos += 4;
@@ -86,7 +84,7 @@ impl Intcode {
 enum Opcode {
     Add,
     Mul,
-    Exit
+    Exit,
 }
 
 impl From<i64> for Opcode {
@@ -95,7 +93,7 @@ impl From<i64> for Opcode {
             1 => Self::Add,
             2 => Self::Mul,
             99 => Self::Exit,
-            _ => unreachable!()
+            _ => unreachable!(),
         }
     }
 }
