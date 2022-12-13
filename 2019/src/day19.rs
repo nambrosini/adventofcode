@@ -1,5 +1,5 @@
-use std::collections::HashMap;
 use itertools::Itertools;
+use std::collections::HashMap;
 
 #[aoc_generator(day19)]
 pub fn generator(input: &str) -> Vec<i64> {
@@ -79,7 +79,7 @@ struct Computer {
     start_memory: HashMap<i64, i64>,
     memory: HashMap<i64, i64>,
     position: i64,
-    relative_base: i64
+    relative_base: i64,
 }
 
 impl Computer {
@@ -90,11 +90,11 @@ impl Computer {
             map.insert(i as i64, *e);
         }
 
-        Self { 
+        Self {
             start_memory: map.clone(),
-            memory: map, 
+            memory: map,
             position: 0,
-            relative_base: 0
+            relative_base: 0,
         }
     }
 
@@ -109,25 +109,25 @@ impl Computer {
                     let v2 = self.get_mem(2, m2);
                     self.set_mem(3, v1 + v2, m3);
                     self.position += 4;
-                },
+                }
                 Operation::Mul(m1, m2, m3) => {
                     let v1 = self.get_mem(1, m1);
                     let v2 = self.get_mem(2, m2);
                     self.set_mem(3, v1 * v2, m3);
                     self.position += 4;
-                },
+                }
                 Operation::Save(m1) => {
                     if !input.is_empty() {
                         let v = input.remove(0);
                         self.set_mem(1, v, m1);
                     }
                     self.position += 2;
-                },
+                }
                 Operation::Out(m1) => {
                     let output = self.get_mem(1, m1);
                     self.position += 2;
                     return output;
-                },
+                }
                 Operation::Jit(m1, m2) => {
                     let p1 = self.get_mem(1, m1);
                     let p2 = self.get_mem(2, m2);
@@ -137,7 +137,7 @@ impl Computer {
                     } else {
                         self.position += 3;
                     }
-                },
+                }
                 Operation::Jif(m1, m2) => {
                     let p1 = self.get_mem(1, m1);
                     let p2 = self.get_mem(2, m2);
@@ -147,7 +147,7 @@ impl Computer {
                     } else {
                         self.position += 3;
                     }
-                },
+                }
                 Operation::Lt(m1, m2, m3) => {
                     let p1 = self.get_mem(1, m1);
                     let p2 = self.get_mem(2, m2);
@@ -158,7 +158,7 @@ impl Computer {
                         self.set_mem(3, 0, m3);
                     }
                     self.position += 4;
-                },
+                }
                 Operation::Eq(m1, m2, m3) => {
                     let p1 = self.get_mem(1, m1);
                     let p2 = self.get_mem(2, m2);
@@ -169,7 +169,7 @@ impl Computer {
                         self.set_mem(3, 0, m3);
                     }
                     self.position += 4;
-                },
+                }
                 Operation::Rb(m1) => {
                     let p1 = self.get_mem(1, m1);
                     self.relative_base += p1;
@@ -177,7 +177,7 @@ impl Computer {
                 }
                 Operation::Exit => {
                     return 0;
-                },
+                }
             }
         }
     }
@@ -204,7 +204,7 @@ impl Computer {
         match mode {
             Mode::Position => self.memory[&(self.position + offset)],
             Mode::Immediate => self.position + offset,
-            Mode::Relative => self.memory[&(self.position + offset)] + self.relative_base
+            Mode::Relative => self.memory[&(self.position + offset)] + self.relative_base,
         }
     }
 }
@@ -220,14 +220,14 @@ enum Operation {
     Jif(Mode, Mode),
     Lt(Mode, Mode, Mode),
     Eq(Mode, Mode, Mode),
-    Rb(Mode)
+    Rb(Mode),
 }
 
 #[derive(Debug, Eq, PartialEq)]
 enum Mode {
     Position,
     Immediate,
-    Relative
+    Relative,
 }
 
 impl From<i64> for Operation {
@@ -248,7 +248,7 @@ impl From<i64> for Operation {
             8 => Self::Eq(m1.into(), m2.into(), m3.into()),
             9 => Self::Rb(m1.into()),
             99 => Self::Exit,
-            _ => unreachable!()
+            _ => unreachable!(),
         }
     }
 }
@@ -259,7 +259,7 @@ impl From<i64> for Mode {
             0 => Self::Position,
             1 => Self::Immediate,
             2 => Self::Relative,
-            _ => unreachable!()
+            _ => unreachable!(),
         }
     }
 }

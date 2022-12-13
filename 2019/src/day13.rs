@@ -1,15 +1,13 @@
 use std::cmp::Ordering;
-use std::convert::{TryFrom, TryInto};
 use std::collections::HashMap;
+use std::convert::{TryFrom, TryInto};
 
 type Pos = (i64, i64);
 type Tile = (TileId, Pos);
 
 #[aoc_generator(day13)]
 pub fn generator(input: &str) -> Vec<i64> {
-    input.split(',')
-        .map(|x| x.parse().unwrap())
-        .collect()
+    input.split(',').map(|x| x.parse().unwrap()).collect()
 }
 
 #[aoc(day13, part1)]
@@ -42,13 +40,15 @@ pub fn part2(memory: &[i64]) -> i64 {
             }
         }
 
-        let paddle_x = map.iter()
+        let paddle_x = map
+            .iter()
             .find(|(_, &t)| t == TileId::HPaddle)
             .map(|(p, _)| p)
             .unwrap_or(&(0, 0))
             .0;
 
-        let ball_x = map.iter()
+        let ball_x = map
+            .iter()
             .find(|(_, &t)| t == TileId::Ball)
             .map(|(p, _)| p)
             .unwrap_or(&(0, 0))
@@ -57,7 +57,7 @@ pub fn part2(memory: &[i64]) -> i64 {
         input = match ball_x.cmp(&paddle_x) {
             Ordering::Less => -1,
             Ordering::Greater => 1,
-            Ordering::Equal => 0
+            Ordering::Equal => 0,
         };
     }
 
@@ -238,13 +238,13 @@ impl TryFrom<i64> for OpCode {
 }
 
 struct Arcade {
-    int_code: IntCode
+    int_code: IntCode,
 }
 
 impl Arcade {
     fn new(memory: &[i64]) -> Self {
         Self {
-            int_code: IntCode::new(memory.to_vec())
+            int_code: IntCode::new(memory.to_vec()),
         }
     }
 
@@ -262,7 +262,7 @@ impl Arcade {
         let t = self.int_code.run(None).unwrap();
 
         if x == -1 && y == 0 {
-            Some(Res::Score(t)) 
+            Some(Res::Score(t))
         } else {
             Some(Res::PosTile((t.try_into().unwrap(), (x, y))))
         }
@@ -279,7 +279,7 @@ enum TileId {
     Wall,
     Block,
     HPaddle,
-    Ball
+    Ball,
 }
 
 impl TryFrom<i64> for TileId {
@@ -292,12 +292,12 @@ impl TryFrom<i64> for TileId {
             2 => Ok(Self::Block),
             3 => Ok(Self::HPaddle),
             4 => Ok(Self::Ball),
-            _ => Err(format!("Unknown value: {}", value))
+            _ => Err(format!("Unknown value: {}", value)),
         }
     }
 }
 
 enum Res {
     PosTile(Tile),
-    Score(i64)
+    Score(i64),
 }

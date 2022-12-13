@@ -1,5 +1,5 @@
-use std::collections::HashMap;
 use itertools::Itertools;
+use std::collections::HashMap;
 
 #[aoc_generator(day23)]
 pub fn generator(input: &str) -> Vec<i64> {
@@ -22,7 +22,10 @@ pub fn part1(input: &[i64]) -> i64 {
 
     loop {
         for pc in computers.iter_mut() {
-            let val = if let Some(pos) = network_queue.iter().position(|p| p.receiver == pc.id && p.complete) {
+            let val = if let Some(pos) = network_queue
+                .iter()
+                .position(|p| p.receiver == pc.id && p.complete)
+            {
                 let val = network_queue[pos].take_next();
                 if network_queue[pos].is_done() {
                     network_queue.remove(pos);
@@ -71,7 +74,10 @@ pub fn part2(input: &[i64]) -> i64 {
 
     loop {
         for pc in computers.iter_mut() {
-            let val = if let Some(pos) = network_queue.iter().position(|p| p.receiver == pc.id && p.complete) {
+            let val = if let Some(pos) = network_queue
+                .iter()
+                .position(|p| p.receiver == pc.id && p.complete)
+            {
                 let val = network_queue[pos].take_next();
                 if network_queue[pos].is_done() {
                     network_queue.remove(pos);
@@ -97,7 +103,10 @@ pub fn part2(input: &[i64]) -> i64 {
             }
         }
 
-        if let Some(pos) = network_queue.iter().position(|p| p.receiver == 255 && p.complete) {
+        if let Some(pos) = network_queue
+            .iter()
+            .position(|p| p.receiver == 255 && p.complete)
+        {
             let p = network_queue.remove(pos);
 
             nat.receive_new_packet(p);
@@ -112,7 +121,6 @@ pub fn part2(input: &[i64]) -> i64 {
                 network_queue.push(p);
             }
         }
-
     }
 }
 
@@ -122,9 +130,7 @@ struct Nat {
 
 impl Nat {
     fn new() -> Self {
-        Self {
-            last_packet: None
-        }
+        Self { last_packet: None }
     }
 
     fn receive_new_packet(&mut self, packet: Packet) {
@@ -132,13 +138,12 @@ impl Nat {
     }
 
     fn check_if_idle(&mut self, computers: &[Computer], network: &[Packet]) -> Option<Packet> {
-
         if !network.is_empty() {
             return None;
         }
 
         for pc in computers {
-            if !pc.incoming.is_empty()  {
+            if !pc.incoming.is_empty() {
                 return None;
             }
         }
@@ -148,8 +153,8 @@ impl Nat {
                 sender: 255,
                 receiver: 0,
                 x: p.x,
-                y: p.y, 
-                complete: true
+                y: p.y,
+                complete: true,
             };
             return Some(p);
         }
@@ -162,7 +167,7 @@ struct Computer {
     memory: HashMap<i64, i64>,
     position: i64,
     relative_base: i64,
-    id: i64, 
+    id: i64,
     incoming: Vec<i64>,
 }
 
@@ -175,7 +180,7 @@ impl Computer {
         }
 
         Self {
-            memory: map, 
+            memory: map,
             position: 0,
             relative_base: 0,
             id: -1,
@@ -194,13 +199,13 @@ impl Computer {
                 let v2 = self.get_mem(2, m2);
                 self.set_mem(3, v1 + v2, m3);
                 self.position += 4;
-            },
+            }
             Operation::Mul(m1, m2, m3) => {
                 let v1 = self.get_mem(1, m1);
                 let v2 = self.get_mem(2, m2);
                 self.set_mem(3, v1 * v2, m3);
                 self.position += 4;
-            },
+            }
             Operation::Save(m1) => {
                 let v = if !self.incoming.is_empty() {
                     self.incoming.remove(0)
@@ -212,12 +217,12 @@ impl Computer {
                 }
                 self.set_mem(1, v, m1);
                 self.position += 2;
-            },
+            }
             Operation::Out(m1) => {
                 let output = self.get_mem(1, m1);
                 self.position += 2;
                 return Some(output);
-            },
+            }
             Operation::Jit(m1, m2) => {
                 let p1 = self.get_mem(1, m1);
                 let p2 = self.get_mem(2, m2);
@@ -227,7 +232,7 @@ impl Computer {
                 } else {
                     self.position += 3;
                 }
-            },
+            }
             Operation::Jif(m1, m2) => {
                 let p1 = self.get_mem(1, m1);
                 let p2 = self.get_mem(2, m2);
@@ -237,7 +242,7 @@ impl Computer {
                 } else {
                     self.position += 3;
                 }
-            },
+            }
             Operation::Lt(m1, m2, m3) => {
                 let p1 = self.get_mem(1, m1);
                 let p2 = self.get_mem(2, m2);
@@ -248,7 +253,7 @@ impl Computer {
                     self.set_mem(3, 0, m3);
                 }
                 self.position += 4;
-            },
+            }
             Operation::Eq(m1, m2, m3) => {
                 let p1 = self.get_mem(1, m1);
                 let p2 = self.get_mem(2, m2);
@@ -259,7 +264,7 @@ impl Computer {
                     self.set_mem(3, 0, m3);
                 }
                 self.position += 4;
-            },
+            }
             Operation::Rb(m1) => {
                 let p1 = self.get_mem(1, m1);
                 self.relative_base += p1;
@@ -267,7 +272,7 @@ impl Computer {
             }
             Operation::Exit => {
                 self.position += 1;
-            },
+            }
         }
 
         None
@@ -289,7 +294,7 @@ impl Computer {
         match mode {
             Mode::Position => self.memory[&(self.position + offset)],
             Mode::Immediate => self.position + offset,
-            Mode::Relative => self.memory[&(self.position + offset)] + self.relative_base
+            Mode::Relative => self.memory[&(self.position + offset)] + self.relative_base,
         }
     }
 }
@@ -305,14 +310,14 @@ enum Operation {
     Jif(Mode, Mode),
     Lt(Mode, Mode, Mode),
     Eq(Mode, Mode, Mode),
-    Rb(Mode)
+    Rb(Mode),
 }
 
 #[derive(Debug, Eq, PartialEq)]
 enum Mode {
     Position,
     Immediate,
-    Relative
+    Relative,
 }
 
 impl From<i64> for Operation {
@@ -333,7 +338,7 @@ impl From<i64> for Operation {
             8 => Self::Eq(m1.into(), m2.into(), m3.into()),
             9 => Self::Rb(m1.into()),
             99 => Self::Exit,
-            _ => unreachable!()
+            _ => unreachable!(),
         }
     }
 }
@@ -344,7 +349,7 @@ impl From<i64> for Mode {
             0 => Self::Position,
             1 => Self::Immediate,
             2 => Self::Relative,
-            _ => unreachable!()
+            _ => unreachable!(),
         }
     }
 }
@@ -353,9 +358,9 @@ impl From<i64> for Mode {
 struct Packet {
     sender: i64,
     receiver: i64,
-    x: Option<i64>, 
+    x: Option<i64>,
     y: Option<i64>,
-    complete: bool
+    complete: bool,
 }
 
 impl Packet {
@@ -365,14 +370,14 @@ impl Packet {
             receiver,
             x: None,
             y: None,
-            complete: false
+            complete: false,
         }
     }
 
     fn take_next(&mut self) -> i64 {
         if let Some(x) = self.x.take() {
             return x;
-        } 
+        }
         if let Some(y) = self.y.take() {
             return y;
         }
@@ -389,7 +394,7 @@ impl Packet {
             self.x = Some(value);
             return;
         }
-        
+
         if self.y.is_none() {
             self.y = Some(value);
             self.complete = true;

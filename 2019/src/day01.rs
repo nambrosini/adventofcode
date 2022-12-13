@@ -2,15 +2,15 @@ use itertools::Itertools;
 
 #[aoc_generator(day01)]
 pub fn generator(input: &str) -> Vec<usize> {
-    input.lines()
+    input
+        .lines()
         .map(|line| line.parse().unwrap())
         .collect_vec()
 }
 
 #[aoc(day01, part1)]
 pub fn part1(input: &[usize]) -> usize {
-    input.iter()
-        .fold(0, |sum, x| sum + x / 3 - 2)
+    input.iter().fold(0, |sum, x| sum + x / 3 - 2)
 }
 
 #[aoc(day01, part2)]

@@ -2,9 +2,7 @@ use std::collections::HashMap;
 
 #[aoc_generator(day09)]
 pub fn generator(input: &str) -> Vec<i64> {
-    input.split(',')
-        .map(|x| x.parse().unwrap())
-        .collect()
+    input.split(',').map(|x| x.parse().unwrap()).collect()
 }
 
 #[aoc(day09, part1)]
@@ -20,7 +18,7 @@ pub fn part2(mem: &[i64]) -> i64 {
 pub struct Intcode {
     mem: HashMap<usize, i64>,
     pos: usize,
-    rel_base: usize
+    rel_base: usize,
 }
 
 impl Intcode {
@@ -28,7 +26,7 @@ impl Intcode {
         Self {
             mem: mem.iter().copied().enumerate().collect(),
             pos: 0,
-            rel_base: 0
+            rel_base: 0,
         }
     }
 
@@ -40,40 +38,40 @@ impl Intcode {
                 Opcode::Add(m1, m2, m3) => {
                     let v1 = self.get_mem(1, m1);
                     let v2 = self.get_mem(2, m2);
-    
+
                     self.set_mem(3, v1 + v2, m3);
                     self.pos += 4;
-                },
+                }
                 Opcode::Mul(m1, m2, m3) => {
                     let v1 = self.get_mem(1, m1);
                     let v2 = self.get_mem(2, m2);
-    
+
                     self.set_mem(3, v1 * v2, m3);
                     self.pos += 4;
-                },
+                }
                 Opcode::Save(m1) => {
                     self.set_mem(1, input, m1);
                     self.pos += 2;
-                },
+                }
                 Opcode::Out(m1) => {
                     res = self.get_mem(1, m1);
                     println!("{}", res);
                     self.pos += 2;
-                },
+                }
                 Opcode::Jit(m1, m2) => {
                     if self.get_mem(1, m1) != 0 {
                         self.pos = self.get_mem(2, m2) as usize;
                     } else {
                         self.pos += 3;
                     }
-                },
+                }
                 Opcode::Jif(m1, m2) => {
                     if self.get_mem(1, m1) == 0 {
                         self.pos = self.get_mem(2, m2) as usize;
                     } else {
                         self.pos += 3;
                     }
-                },
+                }
                 Opcode::Lt(m1, m2, m3) => {
                     let v = if self.get_mem(1, m1) < self.get_mem(2, m2) {
                         1
@@ -82,7 +80,7 @@ impl Intcode {
                     };
                     self.set_mem(3, v, m3);
                     self.pos += 4;
-                },
+                }
                 Opcode::Eq(m1, m2, m3) => {
                     let v = if self.get_mem(1, m1) == self.get_mem(2, m2) {
                         1
@@ -91,14 +89,12 @@ impl Intcode {
                     };
                     self.set_mem(3, v, m3);
                     self.pos += 4;
-                },
+                }
                 Opcode::Rb(m1) => {
                     self.rel_base += self.get_mem(1, m1) as usize;
                     self.pos += 2;
-                },
-                Opcode::Exit => {
-                    return res
                 }
+                Opcode::Exit => return res,
             }
         }
     }
@@ -127,7 +123,7 @@ impl Intcode {
 enum Mode {
     Pos,
     Imm,
-    Rel
+    Rel,
 }
 
 impl From<i64> for Mode {
@@ -136,7 +132,7 @@ impl From<i64> for Mode {
             0 => Self::Pos,
             1 => Self::Imm,
             2 => Self::Rel,
-            _ => unreachable!()
+            _ => unreachable!(),
         }
     }
 }
@@ -152,7 +148,7 @@ enum Opcode {
     Lt(Mode, Mode, Mode),
     Eq(Mode, Mode, Mode),
     Rb(Mode),
-    Exit
+    Exit,
 }
 
 impl From<i64> for Opcode {
@@ -173,14 +169,17 @@ impl From<i64> for Opcode {
             8 => Self::Eq(m1, m2, m3),
             9 => Self::Rb(m1),
             99 => Self::Exit,
-            _ => unreachable!()
+            _ => unreachable!(),
         }
     }
 }
 
 #[test]
 pub fn test() {
-    let s = std::fs::read_to_string("/Users/nambrosini/IdeaProjects/adventofcode/2019/input/2019/day9.txt").unwrap();
+    let s = std::fs::read_to_string(
+        "/Users/nambrosini/IdeaProjects/adventofcode/2019/input/2019/day9.txt",
+    )
+    .unwrap();
     let s = generator(&s);
 
     assert_eq!(3839402290, part1(&s));

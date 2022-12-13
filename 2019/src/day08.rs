@@ -2,7 +2,8 @@ const SIZE: usize = 25 * 6;
 
 #[aoc_generator(day08)]
 pub fn generator(input: &str) -> Vec<Vec<usize>> {
-    input.chars()
+    input
+        .chars()
         .map(|c| c.to_digit(10).unwrap() as usize)
         .collect::<Vec<usize>>()
         .chunks(SIZE)
@@ -12,7 +13,8 @@ pub fn generator(input: &str) -> Vec<Vec<usize>> {
 
 #[aoc(day08, part1)]
 pub fn part1(input: &[Vec<usize>]) -> usize {
-    let v = input.iter()
+    let v = input
+        .iter()
         .min_by_key(|v| v.iter().filter(|x| x == &&0).count())
         .unwrap();
 

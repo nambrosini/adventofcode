@@ -59,11 +59,7 @@ struct Map {
 
 impl Map {
     fn new(input: &[Point]) -> Self {
-        let max = input
-            .iter()
-            .map(|a| a.asteroids_seen(input))
-            .max()
-            .unwrap();
+        let max = input.iter().map(|a| a.asteroids_seen(input)).max().unwrap();
         let base_index = input
             .iter()
             .enumerate()
@@ -154,11 +150,7 @@ impl Point {
         let dist_x: f64 = self.x as f64 - center.x as f64;
         let dist_y: f64 = self.y as f64 - center.y as f64;
         let angle = dist_y.atan2(dist_x) + PI / 2.0;
-        let angle = if angle < 0.0 {
-            angle + 2.0 * PI
-        } else {
-            angle
-        };
+        let angle = if angle < 0.0 { angle + 2.0 * PI } else { angle };
 
         self.angle = Some((angle * 1_000_000.0) as i32);
         self.distance = Some(((dist_x.powi(2) + dist_y.powi(2)).sqrt() * 1_000_000.0) as i32);

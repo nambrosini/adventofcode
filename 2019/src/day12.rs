@@ -6,9 +6,7 @@ type Vector3 = [i64; 3];
 
 #[aoc_generator(day12)]
 pub fn generator(input: &str) -> Vec<Moon> {
-    input.lines()
-        .map(|l| l.into())
-        .collect()
+    input.lines().map(|l| l.into()).collect()
 }
 
 #[aoc(day12, part1)]
@@ -25,15 +23,13 @@ pub fn part1(input: &[Moon]) -> i64 {
                 input[i].apply_p(&p);
             }
         }
-        
+
         for e in &mut input {
             e.apply_v()
         }
     }
 
-    input.iter()
-        .map(|m| m.energy())
-        .sum::<i64>()
+    input.iter().map(|m| m.energy()).sum::<i64>()
 }
 
 #[aoc(day12, part2)]
@@ -44,10 +40,19 @@ pub fn part2(input: &[Moon]) -> usize {
     let (mut turn_x, mut turn_y, mut turn_z) = (None, None, None);
 
     for turn in 0_usize.. {
-        let state_x: Vec<_> = input.iter().map(|m| (m.position[0], m.velocity[0])).collect();
-        let state_y: Vec<_>  = input.iter().map(|m| (m.position[1], m.velocity[1])).collect();
-        let state_z: Vec<_>  = input.iter().map(|m| (m.position[2], m.velocity[2])).collect();
-        
+        let state_x: Vec<_> = input
+            .iter()
+            .map(|m| (m.position[0], m.velocity[0]))
+            .collect();
+        let state_y: Vec<_> = input
+            .iter()
+            .map(|m| (m.position[1], m.velocity[1]))
+            .collect();
+        let state_z: Vec<_> = input
+            .iter()
+            .map(|m| (m.position[2], m.velocity[2]))
+            .collect();
+
         if !past_x.insert(state_x) && turn_x.is_none() {
             turn_x = Some(turn);
         }
@@ -102,25 +107,21 @@ fn lcm(a: usize, b: usize) -> usize {
 #[derive(Clone)]
 pub struct Moon {
     position: Vector3,
-    velocity: Vector3
+    velocity: Vector3,
 }
 
 impl Moon {
     fn new(position: Vector3) -> Self {
         Self {
             position,
-            velocity: [0; 3]
+            velocity: [0; 3],
         }
     }
 
     fn apply_p(&mut self, other: &Vector3) {
         for (i, e) in self.velocity.iter_mut().enumerate() {
             let diff = other[i] - self.position[i];
-            *e += if diff == 0 {
-                0
-            } else {
-                diff / diff.abs()
-            };
+            *e += if diff == 0 { 0 } else { diff / diff.abs() };
         }
     }
 
@@ -131,20 +132,20 @@ impl Moon {
     }
 
     fn energy(&self) -> i64 {
-        self.position.iter().map(|x| i64::abs(*x)).sum::<i64>() * 
-        self.velocity.iter().map(|x| i64::abs(*x)).sum::<i64>()
+        self.position.iter().map(|x| i64::abs(*x)).sum::<i64>()
+            * self.velocity.iter().map(|x| i64::abs(*x)).sum::<i64>()
     }
 }
 
 impl From<&str> for Moon {
     fn from(s: &str) -> Self {
         let re = Regex::new(r"<x=(?P<x>-?\d+), y=(?P<y>-?\d+), z=(?P<z>-?\d+)>").unwrap();
-    
+
         let caps = re.captures(s).unwrap();
         let position: Vector3 = [
             caps["x"].parse().unwrap(),
             caps["y"].parse().unwrap(),
-            caps["z"].parse().unwrap()
+            caps["z"].parse().unwrap(),
         ];
 
         Self::new(position)

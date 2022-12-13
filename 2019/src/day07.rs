@@ -10,7 +10,7 @@ pub fn part1(input: &[i64]) -> i64 {
     let perms = (0..5).permutations(5).collect_vec();
 
     let mut max = i64::MIN;
-    
+
     for perm in perms {
         let mut output = 0;
 
@@ -51,7 +51,7 @@ pub fn part2(input: &[i64]) -> i64 {
 
         'outer: loop {
             for (i, pc) in computers.iter_mut().enumerate() {
-                if i == 4 { 
+                if i == 4 {
                     if let Some(out) = pc.run(Some(other_outputs)) {
                         output_last = out;
                         other_outputs = out;
@@ -79,14 +79,14 @@ pub fn part2(input: &[i64]) -> i64 {
 #[derive(Debug, Clone)]
 struct Computer {
     memory: Vec<i64>,
-    position: usize
+    position: usize,
 }
 
 impl Computer {
     fn new(memory: &[i64]) -> Computer {
-        Self { 
-            memory: memory.to_vec(), 
-            position: 0 
+        Self {
+            memory: memory.to_vec(),
+            position: 0,
         }
     }
 
@@ -100,13 +100,13 @@ impl Computer {
                     let v2 = self.get_mem(2, m2);
                     self.set_mem(3, v1 + v2, m3);
                     self.position += 4;
-                },
+                }
                 Operation::Mul(m1, m2, m3) => {
                     let v1 = self.get_mem(1, m1);
                     let v2 = self.get_mem(2, m2);
                     self.set_mem(3, v1 * v2, m3);
                     self.position += 4;
-                },
+                }
                 Operation::Save => {
                     if let Some(inp) = input.take() {
                         self.set_mem(1, inp, Mode::Position);
@@ -114,12 +114,12 @@ impl Computer {
                         return None;
                     }
                     self.position += 2;
-                },
+                }
                 Operation::Out(m1) => {
                     let output = self.get_mem(1, m1);
                     self.position += 2;
                     return Some(output);
-                },
+                }
                 Operation::Jit(m1, m2) => {
                     let p1 = self.get_mem(1, m1);
                     let p2 = self.get_mem(2, m2);
@@ -129,7 +129,7 @@ impl Computer {
                     } else {
                         self.position += 3;
                     }
-                },
+                }
                 Operation::Jif(m1, m2) => {
                     let p1 = self.get_mem(1, m1);
                     let p2 = self.get_mem(2, m2);
@@ -139,7 +139,7 @@ impl Computer {
                     } else {
                         self.position += 3;
                     }
-                },
+                }
                 Operation::Lt(m1, m2, m3) => {
                     let p1 = self.get_mem(1, m1);
                     let p2 = self.get_mem(2, m2);
@@ -150,7 +150,7 @@ impl Computer {
                         self.set_mem(3, 0, m3);
                     }
                     self.position += 4;
-                },
+                }
                 Operation::Eq(m1, m2, m3) => {
                     let p1 = self.get_mem(1, m1);
                     let p2 = self.get_mem(2, m2);
@@ -161,10 +161,10 @@ impl Computer {
                         self.set_mem(3, 0, m3);
                     }
                     self.position += 4;
-                },
+                }
                 Operation::Exit => {
                     return None;
-                },
+                }
             }
         }
     }
@@ -182,7 +182,7 @@ impl Computer {
     fn get_index(&self, offset: usize, mode: Mode) -> usize {
         match mode {
             Mode::Position => self.memory[self.position + offset] as usize,
-            Mode::Immediate => self.position + offset
+            Mode::Immediate => self.position + offset,
         }
     }
 }
@@ -197,13 +197,13 @@ enum Operation {
     Jit(Mode, Mode),
     Jif(Mode, Mode),
     Lt(Mode, Mode, Mode),
-    Eq(Mode, Mode, Mode)
+    Eq(Mode, Mode, Mode),
 }
 
 #[derive(Debug, Eq, PartialEq)]
 enum Mode {
     Position,
-    Immediate
+    Immediate,
 }
 
 impl From<i64> for Operation {
@@ -223,7 +223,7 @@ impl From<i64> for Operation {
             7 => Self::Lt(m1.into(), m2.into(), m3.into()),
             8 => Self::Eq(m1.into(), m2.into(), m3.into()),
             99 => Self::Exit,
-            _ => unreachable!()
+            _ => unreachable!(),
         }
     }
 }
@@ -233,7 +233,7 @@ impl From<i64> for Mode {
         match i {
             0 => Self::Position,
             1 => Self::Immediate,
-            _ => unreachable!()
+            _ => unreachable!(),
         }
     }
 }

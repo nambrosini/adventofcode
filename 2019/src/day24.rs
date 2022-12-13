@@ -1,6 +1,9 @@
 #[aoc_generator(day24)]
 pub fn generator(input: &str) -> Vec<Vec<Cell>> {
-    input.lines().map(|line| line.chars().map(|c| c.into()).collect()).collect()
+    input
+        .lines()
+        .map(|line| line.chars().map(|c| c.into()).collect())
+        .collect()
 }
 
 #[aoc(day24, part1)]
@@ -15,7 +18,7 @@ pub fn part1(input: &[Vec<Cell>]) -> usize {
         }
         history.push(score);
         input = simulate(&input);
-    } 
+    }
 }
 
 pub fn simulate(map: &[Vec<Cell>]) -> Vec<Vec<Cell>> {
@@ -30,7 +33,7 @@ pub fn simulate(map: &[Vec<Cell>]) -> Vec<Vec<Cell>> {
                     } else {
                         Cell::Dead
                     }
-                },
+                }
                 Cell::Dead => {
                     let count = count_neighbours(i, j, map);
                     if count == 1 || count == 2 {
@@ -48,7 +51,7 @@ pub fn simulate(map: &[Vec<Cell>]) -> Vec<Vec<Cell>> {
 
 fn count_neighbours(x: usize, y: usize, map: &[Vec<Cell>]) -> usize {
     let neighbours = [(-1, 0), (1, 0), (0, 1), (0, -1)];
-    
+
     let x = x as i32;
     let y = y as i32;
     let len = map.len() as i32;
@@ -71,14 +74,14 @@ fn count_neighbours(x: usize, y: usize, map: &[Vec<Cell>]) -> usize {
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Cell {
     Alive,
-    Dead
+    Dead,
 }
 
 impl Cell {
     fn get_value(&self) -> usize {
         match self {
             Self::Alive => 1,
-            Self::Dead => 0
+            Self::Dead => 0,
         }
     }
 }
@@ -88,13 +91,17 @@ impl From<char> for Cell {
         match c {
             '.' => Cell::Dead,
             '#' => Cell::Alive,
-            _ => unreachable!()
+            _ => unreachable!(),
         }
     }
 }
 
 fn calc_score(map: &[Vec<Cell>]) -> usize {
-    map.iter().flatten().enumerate().map(|(i, x)| x.get_value() * 2usize.pow(i as u32)).sum()
+    map.iter()
+        .flatten()
+        .enumerate()
+        .map(|(i, x)| x.get_value() * 2usize.pow(i as u32))
+        .sum()
 }
 
 #[test]

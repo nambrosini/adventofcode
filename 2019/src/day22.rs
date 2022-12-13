@@ -16,7 +16,7 @@ pub fn part1(input: &[Instruction]) -> usize {
 
 fn execute1(input: &[Instruction], deck: Vec<i32>) -> Vec<i32> {
     let mut deck = deck;
-    
+
     for i in input {
         deck = i.execute(&deck);
     }
@@ -27,7 +27,7 @@ fn execute1(input: &[Instruction], deck: Vec<i32>) -> Vec<i32> {
 pub enum Instruction {
     Deal,
     Cut(i32),
-    Inc(i32)
+    Inc(i32),
 }
 
 impl From<&str> for Instruction {
@@ -53,7 +53,7 @@ impl Instruction {
         match self {
             Self::Deal => deal(cards),
             Self::Cut(v) => cut(cards, *v),
-            Self::Inc(v) => inc(cards, *v)
+            Self::Inc(v) => inc(cards, *v),
         }
     }
 }
@@ -93,26 +93,38 @@ fn inc(cards: &[i32], v: i32) -> Vec<i32> {
 fn test_deal() {
     let s = "deal into new stack";
 
-    assert_eq!(execute1(&generator(s), (0..10).collect_vec()), vec![9,8,7,6,5,4,3,2,1,0]);
+    assert_eq!(
+        execute1(&generator(s), (0..10).collect_vec()),
+        vec![9, 8, 7, 6, 5, 4, 3, 2, 1, 0]
+    );
 }
 
 #[test]
 fn test_cut() {
     let s = "cut 3";
 
-    assert_eq!(execute1(&generator(s), (0..10).collect_vec()), vec![3,4,5,6,7,8,9,0,1,2]);
+    assert_eq!(
+        execute1(&generator(s), (0..10).collect_vec()),
+        vec![3, 4, 5, 6, 7, 8, 9, 0, 1, 2]
+    );
 }
 
 #[test]
 fn test_dealn() {
     let s = "deal with increment 3";
 
-    assert_eq!(execute1(&generator(s), (0..10).collect_vec()), vec![0,7,4,1,8,5,2,9,6,3]);
+    assert_eq!(
+        execute1(&generator(s), (0..10).collect_vec()),
+        vec![0, 7, 4, 1, 8, 5, 2, 9, 6, 3]
+    );
 }
 
 #[test]
 fn test_cunt() {
     let s = "cut -4";
 
-    assert_eq!(execute1(&generator(s), (0..10).collect_vec()), vec![6,7,8,9,0,1,2,3,4,5]);
+    assert_eq!(
+        execute1(&generator(s), (0..10).collect_vec()),
+        vec![6, 7, 8, 9, 0, 1, 2, 3, 4, 5]
+    );
 }
