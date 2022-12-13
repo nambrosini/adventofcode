@@ -1,0 +1,114 @@
+name: format
+on:
+  workflow_run:
+    workflows: ["test"]
+    types:
+      - completed
+env:
+  CARGO_TERM_COLOR: always
+jobs:
+  fmt/2015:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+      - name: format
+        run: cargo fmt
+        working-directory: "2015"
+      - uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: Apply cargo fmt changes
+  fmt/2016:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+      - name: format
+        run: cargo fmt
+        working-directory: "2016"
+      - uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: Apply cargo fmt changes
+  fmt/2017:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+      - name: format
+        run: cargo fmt
+        working-directory: "2017"
+      - uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: Apply cargo fmt changes
+  fmt/2018:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+      - name: format
+        run: cargo fmt
+        working-directory: "2018"
+      - uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: Apply cargo fmt changes
+  fmt/2019:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+      - name: format
+        run: cargo fmt
+        working-directory: "2019"
+      - uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: Apply cargo fmt changes
+  fmt/2020:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+      - name: format
+        run: cargo fmt
+        working-directory: "2020"
+      - uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: Apply cargo fmt changes
+  fmt/2021:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+      - name: format
+        run: cargo fmt
+        working-directory: "2021"
+      - uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: Apply cargo fmt changes
+  fmt/2022:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+      - name: format
+        run: cargo fmt
+        working-directory: "2022"
+      - uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: Apply cargo fmt changes
+
