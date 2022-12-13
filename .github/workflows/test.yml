@@ -6,17 +6,17 @@ on:
 env:
   CARGO_TERM_COLOR: always
 jobs:
-  test/2015:
+  test-2015:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actionscheckout@v2
       - uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
       - name: test
         run: cargo test
         working-directory: "2015"
-  test/2016:
+  test-2016:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -26,7 +26,7 @@ jobs:
       - name: test
         run: cargo test
         working-directory: "2016"
-  test/2017:
+  test-2017:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -36,7 +36,7 @@ jobs:
       - name: test
         run: cargo test
         working-directory: "2017"
-  test/2018:
+  test-2018:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -46,7 +46,7 @@ jobs:
       - name: test
         run: cargo test
         working-directory: "2018"
-  test/2019:
+  test-2019:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -56,7 +56,7 @@ jobs:
       - name: test
         run: cargo test
         working-directory: "2019"
-  test/2020:
+  test-2020:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -66,7 +66,7 @@ jobs:
       - name: test
         run: cargo test
         working-directory: "2020"
-  test/2021:
+  test-2021:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -76,7 +76,7 @@ jobs:
       - name: test
         run: cargo test
         working-directory: "2021"
-  test/2022:
+  test-2022:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
