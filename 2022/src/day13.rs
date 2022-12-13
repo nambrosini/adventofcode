@@ -1,19 +1,23 @@
-use std::cmp::Ordering;
-use std::vec;
 use nom::branch::alt;
 use nom::bytes::complete::tag;
 use nom::character::complete::i64;
 use nom::combinator::map;
-use nom::IResult;
 use nom::multi::separated_list0;
 use nom::sequence::delimited;
+use nom::IResult;
+use std::cmp::Ordering;
+use std::vec;
 
 #[aoc_generator(day13)]
 pub fn generator(input: &str) -> Vec<Packet> {
-    input.split("\n\n")
+    input
+        .split("\n\n")
         .flat_map(|l| {
             let mut split = l.lines();
-            vec![parse_packet(split.next().unwrap()).unwrap().1, parse_packet(split.next().unwrap()).unwrap().1]
+            vec![
+                parse_packet(split.next().unwrap()).unwrap().1,
+                parse_packet(split.next().unwrap()).unwrap().1,
+            ]
         })
         .collect()
 }
@@ -46,7 +50,7 @@ fn part2(input: &[Packet]) -> usize {
 #[derive(Debug, Clone)]
 pub enum Packet {
     Int(i64),
-    List(Vec<Packet>)
+    List(Vec<Packet>),
 }
 
 fn parse_packet(input: &str) -> IResult<&str, Packet> {
@@ -55,7 +59,7 @@ fn parse_packet(input: &str) -> IResult<&str, Packet> {
         map(
             delimited(tag("["), separated_list0(tag(","), parse_packet), tag("]")),
             Packet::List,
-        )
+        ),
     ))(input)
 }
 
@@ -65,15 +69,15 @@ impl PartialOrd for Packet {
             (Packet::Int(l), Packet::Int(r)) => l.partial_cmp(r),
             (Packet::List(_), Packet::Int(_)) => {
                 self.partial_cmp(&Packet::List(vec![other.clone()]))
-            },
+            }
             (Packet::Int(_), Packet::List(_)) => {
                 Packet::List(vec![self.clone()]).partial_cmp(other)
-            },
+            }
             (Packet::List(l), Packet::List(r)) => {
                 for (e1, e2) in l.iter().zip(r) {
                     if let Some(res) = e1.partial_cmp(e2) {
                         if res != Ordering::Equal {
-                            return Some(res)
+                            return Some(res);
                         }
                     }
                 }
