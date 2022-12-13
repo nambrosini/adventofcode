@@ -16,7 +16,10 @@ pub fn part1(input: &Grid<char>) -> usize {
     input[start.0 as usize][start.1 as usize] = 'a';
     input[end.0 as usize][end.1 as usize] = 'z';
 
-    a_star(&input, &start, &end, heuristics, neighbors).unwrap().len() - 1
+    a_star(&input, &start, &end, heuristics, neighbors)
+        .unwrap()
+        .len()
+        - 1
 }
 
 #[aoc(day12, part2)]
@@ -33,7 +36,7 @@ pub fn part2(input: &Grid<char>) -> usize {
 
     start
         .iter()
-        .map(|start|a_star(&input, start, &end, heuristics, neighbors).map(|path| path.len()))
+        .map(|start| a_star(&input, start, &end, heuristics, neighbors).map(|path| path.len()))
         .filter(|res| res.is_some())
         .min()
         .unwrap()
@@ -49,8 +52,13 @@ fn neighbors(grid: &Grid<char>, current: &Position) -> Vec<Position> {
     let v = [(0, 1), (0, -1), (1, 0), (-1, 0)];
     v.iter()
         .map(|p| (p.0 + current.0, p.1 + current.1))
-        .filter(|p| (0..grid.len() as i32).contains(&p.0) && (0..grid[0].len() as i32).contains(&p.1))
-        .filter(|p| grid[current.0 as usize][current.1 as usize] as u8 + 1 >= grid[p.0 as usize][p.1 as usize] as u8)
+        .filter(|p| {
+            (0..grid.len() as i32).contains(&p.0) && (0..grid[0].len() as i32).contains(&p.1)
+        })
+        .filter(|p| {
+            grid[current.0 as usize][current.1 as usize] as u8 + 1
+                >= grid[p.0 as usize][p.1 as usize] as u8
+        })
         .collect()
 }
 
@@ -87,7 +95,7 @@ impl Node {
             position,
             g: 0,
             h: 0,
-            f: 0
+            f: 0,
         }
     }
 }
@@ -156,11 +164,17 @@ pub fn a_star<T>(
             child.h = heuristics(&current.position, end);
             child.f = child.g + child.h;
 
-            if open.iter().any(|n| n.position == child.position && child.g > n.g) {
+            if open
+                .iter()
+                .any(|n| n.position == child.position && child.g > n.g)
+            {
                 continue;
             }
 
-            if let Some(n) = closed.iter_mut().find(|node| node.position == child.position) {
+            if let Some(n) = closed
+                .iter_mut()
+                .find(|node| node.position == child.position)
+            {
                 if &child < n {
                     n.parent = child.parent.clone();
                     n.g = child.g;
