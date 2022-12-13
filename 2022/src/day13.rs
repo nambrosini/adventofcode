@@ -1,66 +1,72 @@
+use std::cmp::Ordering;
+use itertools::Itertools;
 use nom::branch::alt;
 use nom::bytes::complete::tag;
-use nom::character::complete::i64;
+use nom::character::complete::i32;
 use nom::combinator::map;
+use nom::IResult;
 use nom::multi::separated_list0;
 use nom::sequence::delimited;
-use nom::IResult;
-use std::cmp::Ordering;
-use std::vec;
 
 #[aoc_generator(day13)]
 pub fn generator(input: &str) -> Vec<Packet> {
-    input
-        .split("\n\n")
-        .flat_map(|l| {
-            let mut split = l.lines();
-            vec![
-                parse_packet(split.next().unwrap()).unwrap().1,
-                parse_packet(split.next().unwrap()).unwrap().1,
-            ]
+    input.split("\n\n")
+        .flat_map(|s| {
+            let split: Vec<&str> = s.lines().collect();
+            vec![parse_packet(split[0]).unwrap().1, parse_packet(split[1]).unwrap().1]
         })
         .collect()
 }
 
 #[aoc(day13, part1)]
-fn part1(input: &[Packet]) -> usize {
-    let mut res = 0;
-    for i in (0..input.len()).step_by(2) {
-        if input[i] < input[i + 1] {
-            res += i / 2 + 1;
-        }
-    }
-    res
+pub fn part1(packets: &[Packet]) -> usize {
+    packets
+        .chunks(2)
+        .enumerate()
+        .filter(|(_, v)| v[0] < v[1])
+        .map(|(i, _)| i + 1)
+        .sum()
 }
 
 #[aoc(day13, part2)]
-fn part2(input: &[Packet]) -> usize {
-    let mut packets = input.to_vec();
+pub fn part2(packets: &[Packet]) -> usize {
+    let mut packets = packets.to_vec();
+
     let div1 = Packet::List(vec![Packet::List(vec![Packet::Int(2)])]);
     let div2 = Packet::List(vec![Packet::List(vec![Packet::Int(6)])]);
-    packets.push(div1.clone());
-    packets.push(div2.clone());
-    packets.sort();
 
-    let p1 = packets.iter().position(|e| e == &div1).unwrap() + 1;
-    let p2 = packets.iter().position(|e| e == &div2).unwrap() + 1;
-    p1 * p2
+    packets.extend_from_slice(&[div1.clone(), div2.clone()]);
+
+    packets.iter()
+        .sorted()
+        .enumerate()
+        .filter(|(_, p)| p == &&div1 || p == &&div2)
+        .map(|(i, _)| i + 1)
+        .product()
 }
 
 #[derive(Debug, Clone)]
 pub enum Packet {
-    Int(i64),
-    List(Vec<Packet>),
+    Int(i32),
+    List(Vec<Packet>)
 }
 
-fn parse_packet(input: &str) -> IResult<&str, Packet> {
+fn parse_packet(value: &str) -> IResult<&str, Packet> {
     alt((
-        map(i64, Packet::Int),
+        map(i32, Packet::Int),
         map(
             delimited(tag("["), separated_list0(tag(","), parse_packet), tag("]")),
             Packet::List,
         ),
-    ))(input)
+    ))(value)
+}
+
+impl Eq for Packet {}
+
+impl PartialEq<Self> for Packet {
+    fn eq(&self, other: &Self) -> bool {
+        self.partial_cmp(other).unwrap() == Ordering::Equal
+    }
 }
 
 impl PartialOrd for Packet {
@@ -92,14 +98,6 @@ impl Ord for Packet {
         self.partial_cmp(other).unwrap()
     }
 }
-
-impl PartialEq for Packet {
-    fn eq(&self, other: &Self) -> bool {
-        self.partial_cmp(other) == Some(Ordering::Equal)
-    }
-}
-
-impl Eq for Packet {}
 
 #[test]
 fn test() {
