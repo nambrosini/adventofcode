@@ -1,19 +1,23 @@
-use std::cmp::Ordering;
 use itertools::Itertools;
 use nom::branch::alt;
 use nom::bytes::complete::tag;
 use nom::character::complete::i32;
 use nom::combinator::map;
-use nom::IResult;
 use nom::multi::separated_list0;
 use nom::sequence::delimited;
+use nom::IResult;
+use std::cmp::Ordering;
 
 #[aoc_generator(day13)]
 pub fn generator(input: &str) -> Vec<Packet> {
-    input.split("\n\n")
+    input
+        .split("\n\n")
         .flat_map(|s| {
             let split: Vec<&str> = s.lines().collect();
-            vec![parse_packet(split[0]).unwrap().1, parse_packet(split[1]).unwrap().1]
+            vec![
+                parse_packet(split[0]).unwrap().1,
+                parse_packet(split[1]).unwrap().1,
+            ]
         })
         .collect()
 }
@@ -37,7 +41,8 @@ pub fn part2(packets: &[Packet]) -> usize {
 
     packets.extend_from_slice(&[div1.clone(), div2.clone()]);
 
-    packets.iter()
+    packets
+        .iter()
         .sorted()
         .enumerate()
         .filter(|(_, p)| p == &&div1 || p == &&div2)
@@ -48,7 +53,7 @@ pub fn part2(packets: &[Packet]) -> usize {
 #[derive(Debug, Clone)]
 pub enum Packet {
     Int(i32),
-    List(Vec<Packet>)
+    List(Vec<Packet>),
 }
 
 fn parse_packet(value: &str) -> IResult<&str, Packet> {
