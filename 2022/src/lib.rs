@@ -3,6 +3,7 @@ extern crate itertools;
 
 #[macro_use]
 extern crate aoc_runner_derive;
+extern crate core;
 
 pub mod day01;
 pub mod day02;
@@ -16,7 +17,7 @@ pub mod day09;
 pub mod day10;
 pub mod day11;
 pub mod day12;
-// pub mod day13;
+pub mod day13;
 // pub mod day14;
 // pub mod day15;
 // pub mod day16;
