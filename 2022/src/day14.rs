@@ -69,9 +69,8 @@ pub fn part2(cave: &Cave) -> usize {
     }
 }
 
-/// Check where the grain will go in the next step, it inserts it into the cave if it can't go further,
-/// or updates the position.
-/// Returns whether it inserted the grain in the cave or not.
+/// Return true and adds the grain to the cave if it cannot move further, updates it position if it
+/// can move.
 fn simulate_next(cave: &mut Cave, new_grain: &mut (usize, usize)) -> bool {
     let next = (new_grain.0, new_grain.1 + 1);
     if cave.contains_key(&(new_grain.0, new_grain.1 + 1)) {
