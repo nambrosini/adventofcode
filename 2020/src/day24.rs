@@ -96,9 +96,7 @@ impl TileFloor {
             .collect::<HashSet<_>>();
 
         for adjacent_coordinates in adjacent {
-            self.0
-                .entry(adjacent_coordinates)
-                .or_insert(White);
+            self.0.entry(adjacent_coordinates).or_insert(White);
         }
     }
 }
@@ -184,10 +182,7 @@ fn parse_tile_directions(tile_directions_str: &str) -> Vec<Direction> {
 
 #[aoc_generator(day24)]
 fn generator(input: &str) -> Vec<Vec<Direction>> {
-    input
-        .lines()
-        .map(parse_tile_directions)
-        .collect()
+    input.lines().map(parse_tile_directions).collect()
 }
 
 fn follow_directions(start: &CubeCoordinates, directions: &[Direction]) -> CubeCoordinates {
@@ -260,7 +255,8 @@ fn part2(tiles_directions: &[Vec<Direction>]) -> usize {
 
 #[test]
 fn sample1() {
-    let s = generator("sesenwnenenewseeswwswswwnenewsewsw
+    let s = generator(
+        "sesenwnenenewseeswwswswwnenewsewsw
 neeenesenwnwwswnenewnwwsewnenwseswesw
 seswneswswsenwwnwse
 nwnwneseeswswnenewneswwnewseswneseene
@@ -279,14 +275,16 @@ wnwnesenesenenwwnenwsewesewsesesew
 nenewswnwewswnenesenwnesewesw
 eneswnwswnwsenenwnwnwwseeswneewsenese
 neswnwewnwnwseenwseesewsenwsweewe
-wseweeenwnesenwwwswnew");
+wseweeenwnesenwwwswnew",
+    );
 
     assert_eq!(part1(&s), 10);
 }
 
 #[test]
 fn sample1_test2() {
-    let s = generator("sesenwnenenewseeswwswswwnenewsewsw
+    let s = generator(
+        "sesenwnenenewseeswwswswwnenewsewsw
 neeenesenwnwwswnenewnwwsewnenwseswesw
 seswneswswsenwwnwse
 nwnwneseeswswnenewneswwnewseswneseene
@@ -305,7 +303,8 @@ wnwnesenesenenwwnenwsewesewsesesew
 nenewswnwewswnenesenwnesewesw
 eneswnwswnwsenenwnwnwwseeswneewsenese
 neswnwewnwnwseenwseesewsenwsweewe
-wseweeenwnesenwwwswnew");
+wseweeenwnesenwwwswnew",
+    );
 
     assert_eq!(part2(&s), 2208);
 }

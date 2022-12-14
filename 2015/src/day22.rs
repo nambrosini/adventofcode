@@ -3,7 +3,10 @@ use std::cmp;
 
 #[aoc_generator(day22)]
 fn generator(input: &str) -> Vec<i16> {
-    let mut input = input.lines().map(|s| s[s.len() - 2..].parse().unwrap()).collect_vec();
+    let mut input = input
+        .lines()
+        .map(|s| s[s.len() - 2..].parse().unwrap())
+        .collect_vec();
     input.push(0);
     input
 }
@@ -13,7 +16,7 @@ fn part1(input: &[i16]) -> i16 {
     // 0: heath, 1: mana, 2: armor, 3: turns shield is active, and 4: turns recharge is active
     let player_start: Vec<i16> = vec![50, 500, 0, 0, 0];
 
-    // 0: health, 1: damage, 2: turns poison is active, 
+    // 0: health, 1: damage, 2: turns poison is active,
     let boss_start: Vec<i16> = input.to_vec();
 
     let mut queue = vec![(player_start, boss_start, 0, true)];
@@ -78,7 +81,7 @@ fn part1(input: &[i16]) -> i16 {
                     queue.push((player_copy, boss_copy, new_mana_used, false));
                 }
             }
-            
+
             // cast drain
             if player[1] >= 73 {
                 let mut player_copy = player.clone();
@@ -86,7 +89,7 @@ fn part1(input: &[i16]) -> i16 {
 
                 player_copy[0] += 2;
                 boss_copy[0] -= 2;
-                
+
                 let new_mana_used = mana_used + 73;
                 if boss_copy[0] <= 0 {
                     if new_mana_used < least_mana_used {
@@ -97,17 +100,17 @@ fn part1(input: &[i16]) -> i16 {
                     queue.push((player_copy, boss_copy, new_mana_used, false));
                 }
             }
-            
+
             // cast shield
             if player[1] >= 113 && player[3] == 0 {
                 let mut player_copy = player.clone();
 
                 player_copy[1] -= 113;
                 player_copy[3] = 6;
-                
+
                 queue.push((player_copy, boss.clone(), mana_used + 113, false));
             }
-            
+
             // cast recharge
             if player[1] >= 229 && player[4] == 0 {
                 let mut player_copy = player.clone();
@@ -119,7 +122,7 @@ fn part1(input: &[i16]) -> i16 {
             }
 
             // cast poison
-            if player[1] >= 173 && boss[2] == 0{
+            if player[1] >= 173 && boss[2] == 0 {
                 let mut player_copy = player.clone();
                 let mut boss_copy = boss.clone();
 
@@ -128,7 +131,6 @@ fn part1(input: &[i16]) -> i16 {
 
                 queue.push((player_copy, boss_copy, mana_used + 173, false));
             }
-
         } else {
             player[0] -= cmp::max(1, boss[1] - player[2]);
             if player[0] <= 0 {
@@ -147,7 +149,7 @@ fn part2(input: &[i16]) -> i16 {
     // 0: heath, 1: mana, 2: armor, 3: turns shield is active, and 4: turns recharge is active
     let player_start: Vec<i16> = vec![50, 500, 0, 0, 0];
 
-    // 0: health, 1: damage, 2: turns poison is active, 
+    // 0: health, 1: damage, 2: turns poison is active,
     let boss_start: Vec<i16> = input.to_vec();
 
     let mut queue = vec![(player_start, boss_start, 0, true)];
@@ -218,7 +220,7 @@ fn part2(input: &[i16]) -> i16 {
                     queue.push((player_copy, boss_copy, new_mana_used, false));
                 }
             }
-            
+
             // cast drain
             if player[1] >= 73 {
                 let mut player_copy = player.clone();
@@ -226,7 +228,7 @@ fn part2(input: &[i16]) -> i16 {
 
                 player_copy[0] += 2;
                 boss_copy[0] -= 2;
-                
+
                 let new_mana_used = mana_used + 73;
                 if boss_copy[0] <= 0 {
                     if new_mana_used < least_mana_used {
@@ -237,17 +239,17 @@ fn part2(input: &[i16]) -> i16 {
                     queue.push((player_copy, boss_copy, new_mana_used, false));
                 }
             }
-            
+
             // cast shield
             if player[1] >= 113 && player[3] == 0 {
                 let mut player_copy = player.clone();
 
                 player_copy[1] -= 113;
                 player_copy[3] = 6;
-                
+
                 queue.push((player_copy, boss.clone(), mana_used + 113, false));
             }
-            
+
             // cast recharge
             if player[1] >= 229 && player[4] == 0 {
                 let mut player_copy = player.clone();
@@ -259,7 +261,7 @@ fn part2(input: &[i16]) -> i16 {
             }
 
             // cast poison
-            if player[1] >= 173 && boss[2] == 0{
+            if player[1] >= 173 && boss[2] == 0 {
                 let mut player_copy = player.clone();
                 let mut boss_copy = boss.clone();
 
@@ -268,7 +270,6 @@ fn part2(input: &[i16]) -> i16 {
 
                 queue.push((player_copy, boss_copy, mana_used + 173, false));
             }
-
         } else {
             player[0] -= cmp::max(1, boss[1] - player[2]);
             if player[0] <= 0 {

@@ -126,7 +126,6 @@ pub fn part2(input: &Input) -> usize {
             }
             d if d > 1 => {
                 let mut v = vec![];
-                
 
                 for f in fields[index].clone() {
                     if !keys.values().cloned().any(|x| x == f) {
@@ -153,8 +152,7 @@ pub fn part2(input: &Input) -> usize {
 }
 
 fn get_ranges(p0: &HashMap<String, Vec<(usize, usize)>>) -> Vec<usize> {
-    p0
-        .values()
+    p0.values()
         .flat_map(|x| x.iter().flat_map(|y| (y.0..=y.1).collect::<Vec<usize>>()))
         .collect()
 }

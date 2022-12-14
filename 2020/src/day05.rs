@@ -55,7 +55,6 @@ pub fn part2(input: &[usize]) -> usize {
     (*min..=*max).find(|x| !input.contains(x)).unwrap()
 }
 
-
 #[test]
 fn sample1_part1() {
     let s = generator("FBFBBFFRLR\nBFFFBBFRRR\nFFFBBBFRRR\nBBFFBBFRLL");

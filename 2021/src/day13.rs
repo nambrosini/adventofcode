@@ -5,18 +5,20 @@ use std::collections::HashSet;
 pub fn generator(input: &str) -> (HashSet<Point>, Vec<Fold>) {
     let split = input.split("\n\n").collect_vec();
 
-    let coords: HashSet<Point> = split[0].lines()
+    let coords: HashSet<Point> = split[0]
+        .lines()
         .map(|l| l.split(',').collect::<Vec<&str>>())
         .map(|l| (l[0].parse().unwrap(), l[1].parse().unwrap()))
         .collect();
 
-    let folds = split[1].lines()
+    let folds = split[1]
+        .lines()
         .map(|l| {
             let s: Vec<&str> = l.split(' ').last().unwrap().split('=').collect();
             let axis = match s[0] {
                 "x" => Axis::X,
                 "y" => Axis::Y,
-                _ => unreachable!()
+                _ => unreachable!(),
             };
             let val = s[1].parse().unwrap();
 
@@ -55,27 +57,21 @@ fn fold(map: &HashSet<Point>, fold: &Fold) -> HashSet<Point> {
 
             for p in map {
                 if p.0 > line {
-                    let new_p = (
-                        line - (p.0 - line), 
-                        p.1
-                    );
+                    let new_p = (line - (p.0 - line), p.1);
                     new_map.insert(new_p);
                 } else {
                     new_map.insert(*p);
                 }
             }
             new_map
-        },
+        }
         Axis::Y => {
             let line = fold.1;
             let mut new_map = HashSet::new();
 
             for p in map {
                 if p.1 > line {
-                    let new_p = (
-                        p.0,
-                        line - (p.1 - line),
-                    );
+                    let new_p = (p.0, line - (p.1 - line));
                     new_map.insert(new_p);
                 } else {
                     new_map.insert(*p);
@@ -91,7 +87,7 @@ type Fold = (Axis, usize);
 
 pub enum Axis {
     X,
-    Y
+    Y,
 }
 
 fn print(coords: &HashSet<Point>) -> String {
@@ -110,7 +106,7 @@ fn print(coords: &HashSet<Point>) -> String {
         }
         s.push('\n');
     }
-    
+
     s
 }
 

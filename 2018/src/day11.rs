@@ -8,7 +8,7 @@ pub fn part1(serial: &i64) -> String {
     let grid = calc_grid(serial);
     let mut max_power = 0;
     let mut max_cell = (0, 0);
-    
+
     for x in 1..=300 - 3 {
         for y in 1..=300 - 3 {
             let val = calc_square_power(&x, &y, 3, &grid);
@@ -29,12 +29,12 @@ pub fn part2(serial: &i64) -> String {
 
     let mut max_power = 0;
     let mut max_cell = (0, 0, 0);
-    
+
     for size in 1..=300 {
         for x in 1..=300 - (size) {
             for y in 1..=300 - (size) {
                 let val = calc_square_power(&x, &y, size, &grid);
-    
+
                 if val > max_power {
                     max_power = val;
                     max_cell = (x + 1, y + 1, size);

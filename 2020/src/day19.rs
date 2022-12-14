@@ -100,10 +100,10 @@ pub fn part2((raw_rules, samples): &(HashMap<usize, String>, Vec<String>)) -> us
         .count()
 }
 
-
 #[test]
 fn sample1_test1() {
-    let s = generator("0: 4 1 5
+    let s = generator(
+        "0: 4 1 5
 1: 2 3 | 3 2
 2: 4 4 | 5 5
 3: 4 5 | 5 4
@@ -114,14 +114,16 @@ ababbb
 bababa
 abbbab
 aaabbb
-aaaabbb");
+aaaabbb",
+    );
 
     assert_eq!(part1(&s), 2);
 }
 
 #[test]
 fn sample2_test2() {
-    let s = generator("42: 9 14 | 10 1
+    let s = generator(
+        "42: 9 14 | 10 1
 9: 14 27 | 1 26
 10: 23 14 | 28 1
 1: \"a\"
@@ -167,7 +169,8 @@ aaaaabbaabaaaaababaa
 aaaabbaaaabbaaa
 aaaabbaabbaaaaaaabbbabbbaaabbaabaaa
 babaaabbbaaabaababbaabababaaab
-aabbbbbaabbbaaaaaabbbbbababaaaaabbaaabba");
+aabbbbbaabbbaaaaaabbbbbababaaaaabbaaabba",
+    );
 
     assert_eq!(part2(&s), 12);
 }

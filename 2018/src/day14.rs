@@ -14,7 +14,8 @@ pub fn part1(count: &usize) -> i64 {
         let new_recipe: i64 = recipes[first_elf] + recipes[second_elf];
         let new_recipe_count = (new_recipe as f32).log10() as i64 + 1;
         if i == count + 10 {
-            return recipes[*count..*count + 10].iter()
+            return recipes[*count..*count + 10]
+                .iter()
                 .enumerate()
                 .map(|(i, r)| *r * 10i64.pow(9 - i as u32))
                 .sum::<i64>();
@@ -41,9 +42,10 @@ pub fn part2(count: &usize) -> usize {
         let new_recipe: i64 = recipes[first_elf] + recipes[second_elf];
         let new_recipe_count = (new_recipe as f32).log10() as i64 + 1;
         if recipes.len() >= count_len {
-            let last_five = recipes[recipes.len() - count_len..].iter()
+            let last_five = recipes[recipes.len() - count_len..]
+                .iter()
                 .enumerate()
-                .map(|(i, r)| *r as usize * 10usize.pow( count_len as u32 - 1 - i as u32))
+                .map(|(i, r)| *r as usize * 10usize.pow(count_len as u32 - 1 - i as u32))
                 .sum::<usize>();
             if count == &last_five {
                 return recipes.len() - count_len;
@@ -59,7 +61,6 @@ pub fn part2(count: &usize) -> usize {
 
     unreachable!()
 }
-
 
 #[test]
 fn test() {

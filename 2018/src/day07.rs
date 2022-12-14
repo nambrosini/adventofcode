@@ -5,7 +5,7 @@ const WORKERS_NUM: usize = 5;
 #[aoc_generator(day07)]
 pub fn generator(input: &str) -> HashMap<String, Vec<String>> {
     let mut map = HashMap::new();
-    
+
     for l in input.lines() {
         let split: Vec<&str> = l.split_whitespace().collect();
 
@@ -78,7 +78,10 @@ fn part2(map: &HashMap<String, Vec<String>>) -> usize {
 
         while workers.len() < WORKERS_NUM {
             if let Some(x) = queue.pop() {
-                if done.contains(&x) || map.values().flatten().any(|v| v == &x) || workers.iter().map(|w| w.letter.clone()).any(|l| l == x) {
+                if done.contains(&x)
+                    || map.values().flatten().any(|v| v == &x)
+                    || workers.iter().map(|w| w.letter.clone()).any(|l| l == x)
+                {
                     continue;
                 }
                 workers.push(Worker::new(x));
@@ -91,7 +94,10 @@ fn part2(map: &HashMap<String, Vec<String>>) -> usize {
         println!("Queue: {:?}", queue);
         println!("Done: {:?}", done);
         println!("Keys: {:?}", map.keys().collect::<Vec<&String>>());
-        println!("Values: {:?}", map.values().flatten().collect::<Vec<&String>>());
+        println!(
+            "Values: {:?}",
+            map.values().flatten().collect::<Vec<&String>>()
+        );
         ticks += 1;
     }
 
@@ -102,7 +108,7 @@ fn part2(map: &HashMap<String, Vec<String>>) -> usize {
 struct Worker {
     letter: String,
     max_time: usize,
-    tick: usize
+    tick: usize,
 }
 
 impl Worker {
@@ -111,7 +117,7 @@ impl Worker {
         Self {
             letter,
             max_time,
-            tick: 0
+            tick: 0,
         }
     }
 

@@ -5,25 +5,39 @@ type Check = (Vec<usize>, Vec<usize>, Vec<usize>);
 #[aoc_generator(day16)]
 pub fn generator(input: &str) -> (Vec<Check>, Vec<Vec<usize>>) {
     let split: Vec<&str> = input.split("\n\n\n\n").collect();
-    let first = split[0].split("\n\n")
+    let first = split[0]
+        .split("\n\n")
         .map(|ins| {
             let vec: Vec<&str> = ins.lines().collect();
-            let before: Vec<usize> = vec[0][9..19].split(", ").map(|x| x.parse().unwrap()).collect();
+            let before: Vec<usize> = vec[0][9..19]
+                .split(", ")
+                .map(|x| x.parse().unwrap())
+                .collect();
             let instruction: Vec<usize> = vec[1].split(' ').map(|x| x.parse().unwrap()).collect();
-            let after: Vec<usize> = vec[2][9..19].split(", ").map(|x| x.parse().unwrap()).collect();
+            let after: Vec<usize> = vec[2][9..19]
+                .split(", ")
+                .map(|x| x.parse().unwrap())
+                .collect();
             (instruction, before, after)
         })
         .collect();
-    let second = split[1].lines()
-        .map(|ins| ins.split_whitespace().map(|x| x.parse::<usize>().unwrap()).collect())
+    let second = split[1]
+        .lines()
+        .map(|ins| {
+            ins.split_whitespace()
+                .map(|x| x.parse::<usize>().unwrap())
+                .collect()
+        })
         .collect();
-    
+
     (first, second)
 }
 
 #[aoc(day16, part1)]
 pub fn part1(input: &(Vec<Check>, Vec<Vec<usize>>)) -> usize {
-    input.0.iter()
+    input
+        .0
+        .iter()
         .filter(|x| get_matching(&x.0, &x.1, &x.2).len() >= 3)
         .count()
 }
@@ -71,7 +85,7 @@ pub fn part2(input: &(Vec<Check>, Vec<Vec<usize>>)) -> usize {
 }
 
 struct Device {
-    regs: Vec<usize>
+    regs: Vec<usize>,
 }
 
 impl Device {
@@ -81,91 +95,106 @@ impl Device {
                 let a = self.regs[instruction[1]];
                 let b = self.regs[instruction[2]];
                 self.regs[instruction[3]] = a + b;
-            },
+            }
             OpCode::Addi => {
                 let a = self.regs[instruction[1]];
                 let b = instruction[2];
                 self.regs[instruction[3]] = a + b;
-            },
+            }
             OpCode::Mulr => {
                 let a = self.regs[instruction[1]];
                 let b = self.regs[instruction[2]];
                 self.regs[instruction[3]] = a * b;
-            },
+            }
             OpCode::Muli => {
                 let a = self.regs[instruction[1]];
                 let b = instruction[2];
                 self.regs[instruction[3]] = a * b;
-            },
+            }
             OpCode::Banr => {
                 let a = self.regs[instruction[1]];
                 let b = self.regs[instruction[2]];
                 self.regs[instruction[3]] = a & b;
-            },
+            }
             OpCode::Bani => {
                 let a = self.regs[instruction[1]];
                 let b = instruction[2];
                 self.regs[instruction[3]] = a & b;
-            },
+            }
             OpCode::Borr => {
                 let a = self.regs[instruction[1]];
                 let b = self.regs[instruction[2]];
                 self.regs[instruction[3]] = a | b;
-            },
+            }
             OpCode::Bori => {
                 let a = self.regs[instruction[1]];
                 let b = instruction[2];
                 self.regs[instruction[3]] = a | b;
-            },
+            }
             OpCode::Setr => {
                 let a = self.regs[instruction[1]];
                 self.regs[instruction[3]] = a;
-            },
+            }
             OpCode::Seti => {
                 let a = instruction[1];
                 self.regs[instruction[3]] = a;
-            },
+            }
             OpCode::Gtir => {
                 let a = instruction[1];
                 let b = self.regs[instruction[2]];
                 self.regs[instruction[3]] = (a > b) as usize;
-            },
+            }
             OpCode::Gtri => {
                 let a = self.regs[instruction[1]];
                 let b = instruction[2];
                 self.regs[instruction[3]] = (a > b) as usize;
-            },
+            }
             OpCode::Gtrr => {
                 let a = self.regs[instruction[1]];
                 let b = self.regs[instruction[2]];
                 self.regs[instruction[3]] = (a > b) as usize;
-            },
+            }
             OpCode::Eqir => {
                 let a = instruction[1];
                 let b = self.regs[instruction[2]];
                 self.regs[instruction[3]] = (a == b) as usize;
-            },
+            }
             OpCode::Eqri => {
                 let a = self.regs[instruction[1]];
                 let b = instruction[2];
                 self.regs[instruction[3]] = (a == b) as usize;
-            },
+            }
             OpCode::Eqrr => {
                 let a = self.regs[instruction[1]];
                 let b = self.regs[instruction[2]];
                 self.regs[instruction[3]] = (a == b) as usize;
-            },
+            }
         }
     }
 }
 
 #[derive(Debug, PartialEq, Eq, Clone, Copy, Hash)]
 pub enum OpCode {
-    Addr, Addi, Mulr, Muli, Banr, Bani, Borr, Bori, Setr, Seti, Gtir, Gtri, Gtrr, Eqir, Eqri, Eqrr
+    Addr,
+    Addi,
+    Mulr,
+    Muli,
+    Banr,
+    Bani,
+    Borr,
+    Bori,
+    Setr,
+    Seti,
+    Gtir,
+    Gtri,
+    Gtrr,
+    Eqir,
+    Eqri,
+    Eqrr,
 }
 
 impl OpCode {
-    fn execute(&self,instruction: &[usize], before: &[usize], after: &[usize]) -> bool {
+    fn execute(&self, instruction: &[usize], before: &[usize], after: &[usize]) -> bool {
         let mut res = before.to_vec();
 
         match self {
@@ -173,80 +202,80 @@ impl OpCode {
                 let a = before[instruction[1]];
                 let b = before[instruction[2]];
                 res[instruction[3]] = a + b;
-            },
+            }
             OpCode::Addi => {
                 let a = before[instruction[1]];
                 let b = instruction[2];
                 res[instruction[3]] = a + b;
-            },
+            }
             OpCode::Mulr => {
                 let a = before[instruction[1]];
                 let b = before[instruction[2]];
                 res[instruction[3]] = a * b;
-            },
+            }
             OpCode::Muli => {
                 let a = before[instruction[1]];
                 let b = instruction[2];
                 res[instruction[3]] = a * b;
-            },
+            }
             OpCode::Banr => {
                 let a = before[instruction[1]];
                 let b = before[instruction[2]];
                 res[instruction[3]] = a & b;
-            },
+            }
             OpCode::Bani => {
                 let a = before[instruction[1]];
                 let b = instruction[2];
                 res[instruction[3]] = a & b;
-            },
+            }
             OpCode::Borr => {
                 let a = before[instruction[1]];
                 let b = before[instruction[2]];
                 res[instruction[3]] = a | b;
-            },
+            }
             OpCode::Bori => {
                 let a = before[instruction[1]];
                 let b = instruction[2];
                 res[instruction[3]] = a | b;
-            },
+            }
             OpCode::Setr => {
                 let a = before[instruction[1]];
                 res[instruction[3]] = a;
-            },
+            }
             OpCode::Seti => {
                 let a = instruction[1];
                 res[instruction[3]] = a;
-            },
+            }
             OpCode::Gtir => {
                 let a = instruction[1];
                 let b = before[instruction[2]];
                 res[instruction[3]] = (a > b) as usize;
-            },
+            }
             OpCode::Gtri => {
                 let a = before[instruction[1]];
                 let b = instruction[2];
                 res[instruction[3]] = (a > b) as usize;
-            },
+            }
             OpCode::Gtrr => {
                 let a = before[instruction[1]];
                 let b = before[instruction[2]];
                 res[instruction[3]] = (a > b) as usize;
-            },
+            }
             OpCode::Eqir => {
                 let a = instruction[1];
                 let b = before[instruction[2]];
                 res[instruction[3]] = (a == b) as usize;
-            },
+            }
             OpCode::Eqri => {
                 let a = before[instruction[1]];
                 let b = instruction[2];
                 res[instruction[3]] = (a == b) as usize;
-            },
+            }
             OpCode::Eqrr => {
                 let a = before[instruction[1]];
                 let b = before[instruction[2]];
                 res[instruction[3]] = (a == b) as usize;
-            },
+            }
         }
         for (i, e) in res.iter().enumerate() {
             if e != &after[i] {
@@ -260,7 +289,24 @@ impl OpCode {
 
 fn get_matching(instruction: &[usize], before: &[usize], after: &[usize]) -> HashSet<OpCode> {
     let mut codes = HashSet::new();
-    let enums = [OpCode::Addr, OpCode::Addi, OpCode::Mulr, OpCode::Muli, OpCode::Banr, OpCode::Bani, OpCode::Borr, OpCode::Bori, OpCode::Setr, OpCode::Seti, OpCode::Gtir, OpCode::Gtri, OpCode::Gtrr, OpCode::Eqir, OpCode::Eqri, OpCode::Eqrr];
+    let enums = [
+        OpCode::Addr,
+        OpCode::Addi,
+        OpCode::Mulr,
+        OpCode::Muli,
+        OpCode::Banr,
+        OpCode::Bani,
+        OpCode::Borr,
+        OpCode::Bori,
+        OpCode::Setr,
+        OpCode::Seti,
+        OpCode::Gtir,
+        OpCode::Gtri,
+        OpCode::Gtrr,
+        OpCode::Eqir,
+        OpCode::Eqri,
+        OpCode::Eqrr,
+    ];
 
     for e in enums {
         if e.execute(instruction, before, after) {

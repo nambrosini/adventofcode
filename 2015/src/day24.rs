@@ -3,9 +3,7 @@ use std::cmp;
 
 #[aoc_generator(day24)]
 pub fn generator(input: &str) -> Vec<usize> {
-    input.lines()
-        .map(|x| x.parse().unwrap())
-        .collect()
+    input.lines().map(|x| x.parse().unwrap()).collect()
 }
 
 #[aoc(day24, part1)]
@@ -28,7 +26,7 @@ pub fn get_lowest_quantum(weights: &[usize], n: usize) -> usize {
             println!("group_weights: {:?}", group_weights);
             if group_weights.iter().copied().sum::<usize>() == expected_weight {
                 should_break = true;
-    
+
                 let quantum = group_weights.iter().copied().product();
                 min = cmp::min(min, quantum);
             }

@@ -7,21 +7,22 @@ pub fn generator(input: &str) -> HashMap<(usize, usize), char> {
 
     for l in input.lines() {
         let split: Vec<&str> = l.split(", ").collect();
-        let (x_min, x_max, y_min, y_max): (usize, usize, usize, usize) = if split[0].starts_with('x') {
-            let x = split[0].split('=').last().unwrap().parse().unwrap();
+        let (x_min, x_max, y_min, y_max): (usize, usize, usize, usize) =
+            if split[0].starts_with('x') {
+                let x = split[0].split('=').last().unwrap().parse().unwrap();
 
-            let y = split[1].split('=').last().unwrap();
-            let y: Vec<&str> = y.split("..").collect();
+                let y = split[1].split('=').last().unwrap();
+                let y: Vec<&str> = y.split("..").collect();
 
-            (x, x, y[0].parse().unwrap(), y[1].parse().unwrap())
-        } else {
-            let y = split[0].split('=').last().unwrap().parse().unwrap();
+                (x, x, y[0].parse().unwrap(), y[1].parse().unwrap())
+            } else {
+                let y = split[0].split('=').last().unwrap().parse().unwrap();
 
-            let x = split[1].split('=').last().unwrap();
-            let x: Vec<&str> = x.split("..").collect();
+                let x = split[1].split('=').last().unwrap();
+                let x: Vec<&str> = x.split("..").collect();
 
-            (x[0].parse().unwrap(), x[1].parse().unwrap(), y, y)
-        };
+                (x[0].parse().unwrap(), x[1].parse().unwrap(), y, y)
+            };
 
         for x in x_min..=x_max {
             for y in y_min..=y_max {
@@ -84,7 +85,7 @@ fn print_map(map: &HashMap<(usize, usize), char>) {
 
     for y in min_y..=max_y {
         for x in min_x..=max_x {
-            let v = if let Some(v) = map.get( &(x, y)) {
+            let v = if let Some(v) = map.get(&(x, y)) {
                 *v
             } else {
                 '.'
@@ -95,7 +96,6 @@ fn print_map(map: &HashMap<(usize, usize), char>) {
     }
     println!()
 }
-
 
 #[test]
 pub fn test() {

@@ -237,7 +237,8 @@ pub fn part2(input: &WaitingHall) -> usize {
 
 #[test]
 fn sample1_part1() {
-    let one = generator("L.LL.LL.LL
+    let one = generator(
+        "L.LL.LL.LL
 LLLLLLL.LL
 L.L.L..L..
 LLLL.LL.LL
@@ -246,14 +247,16 @@ L.LLLLL.LL
 ..L.L.....
 LLLLLLLLLL
 L.LLLLLL.L
-L.LLLLL.LL");
+L.LLLLL.LL",
+    );
 
     assert_eq!(part1(&one), 37);
 }
 
 #[test]
 fn sample1_part2() {
-    let one = generator("L.LL.LL.LL
+    let one = generator(
+        "L.LL.LL.LL
 LLLLLLL.LL
 L.L.L..L..
 LLLL.LL.LL
@@ -262,7 +265,8 @@ L.LLLLL.LL
 ..L.L.....
 LLLLLLLLLL
 L.LLLLLL.L
-L.LLLLL.LL");
+L.LLLLL.LL",
+    );
 
     assert_eq!(part2(&one), 26);
 }

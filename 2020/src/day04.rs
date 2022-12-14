@@ -88,7 +88,8 @@ impl Passport {
             return false;
         }
 
-        if unit == "in" && !(59..=76).contains(&val) || unit == "cm" && !(150..=193).contains(&val) {
+        if unit == "in" && !(59..=76).contains(&val) || unit == "cm" && !(150..=193).contains(&val)
+        {
             return false;
         }
 

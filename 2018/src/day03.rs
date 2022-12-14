@@ -33,7 +33,9 @@ pub fn part2(input: &[Square]) -> usize {
     for s in input {
         for i in 0..s.width {
             for j in 0..s.height {
-                let e = map.entry((s.x + i, s.y + j)).or_insert_with(|| ".".to_string());
+                let e = map
+                    .entry((s.x + i, s.y + j))
+                    .or_insert_with(|| ".".to_string());
                 if e == "." {
                     *e = format!("{}", s.id);
                 } else if e == "X" {

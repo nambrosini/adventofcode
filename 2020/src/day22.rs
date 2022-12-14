@@ -111,10 +111,10 @@ fn recursive_cards(p1: &mut Vec<usize>, p2: &mut Vec<usize>) -> Player {
     }
 }
 
-
 #[test]
 fn sample1() {
-    let s = generator("Player 1:
+    let s = generator(
+        "Player 1:
 9
 2
 6
@@ -126,14 +126,16 @@ Player 2:
 8
 4
 7
-10");
+10",
+    );
 
     assert_eq!(part1(&s), 306);
 }
 
 #[test]
 fn sample1_test2() {
-    let s = generator("Player 1:
+    let s = generator(
+        "Player 1:
 9
 2
 6
@@ -145,7 +147,8 @@ Player 2:
 8
 4
 7
-10");
+10",
+    );
 
     assert_eq!(part2(&s), 291);
 }

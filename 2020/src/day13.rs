@@ -85,24 +85,30 @@ pub fn part2(input: &[(i128, i128)]) -> i128 {
 
 #[test]
 fn sample1() {
-    let s = generator_part1("939
-7,13,x,x,59,x,31,19");
+    let s = generator_part1(
+        "939
+7,13,x,x,59,x,31,19",
+    );
 
     assert_eq!(part1(&s), 295);
 }
 
 #[test]
 fn sample2() {
-    let s = generator_part2("939
-17,x,13,19");
+    let s = generator_part2(
+        "939
+17,x,13,19",
+    );
 
     assert_eq!(part2(&s), 3417);
 }
 
 #[test]
 fn sample3() {
-    let s = generator_part2("939
-67,7,59,61");
+    let s = generator_part2(
+        "939
+67,7,59,61",
+    );
 
     assert_eq!(part2(&s), 754018);
 }
