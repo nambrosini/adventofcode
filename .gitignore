@@ -23,3 +23,5 @@
 adventofcode.iml
 
 **/*/*.iml
+target/
+.DS_Store
