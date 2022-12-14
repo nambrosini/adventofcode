@@ -12,7 +12,11 @@ pub fn part1(input: &[Instruction]) -> String {
 
 #[aoc(day21, part2)]
 pub fn part2(input: &[Instruction]) -> String {
-    let permutations = "abcdefgh".chars().permutations(8).map(|p| p.iter().collect::<String>()).collect_vec();
+    let permutations = "abcdefgh"
+        .chars()
+        .permutations(8)
+        .map(|p| p.iter().collect::<String>())
+        .collect_vec();
     let goal = "fbgdceah";
 
     for p in permutations.iter() {
@@ -35,7 +39,7 @@ pub fn solve(input: &str, instructions: &[Instruction]) -> String {
             Instruction::Rotate(dir, p) => chars = rotate(&chars, dir, *p),
             Instruction::RotateBased(c) => chars = rotate_based(&chars, *c, Direction::Right),
             Instruction::Reverse(p1, p2) => chars = reverse(&chars, *p1, *p2),
-            Instruction::Move(p1, p2) => chars = move_letter(&chars, *p1, *p2)
+            Instruction::Move(p1, p2) => chars = move_letter(&chars, *p1, *p2),
         }
     }
 
@@ -47,17 +51,17 @@ pub enum Instruction {
     Rotate(Direction, usize),
     RotateBased(char),
     Reverse(usize, usize),
-    Move(usize, usize)
+    Move(usize, usize),
 }
 
 pub enum Param {
     Position(usize),
-    Letter(char)
+    Letter(char),
 }
 
 pub enum Direction {
     Left,
-    Right
+    Right,
 }
 
 impl From<&str> for Direction {
@@ -65,7 +69,7 @@ impl From<&str> for Direction {
         match s {
             "left" => Direction::Left,
             "right" => Direction::Right,
-            _ => unreachable!()
+            _ => unreachable!(),
         }
     }
 }
@@ -85,48 +89,38 @@ impl From<&str> for Instruction {
                     let letter2 = split[5].chars().next().unwrap();
                     Self::Swap(Param::Letter(letter1), Param::Letter(letter2))
                 }
-            },
+            }
             "rotate" => {
                 if split[1] == "based" {
                     Self::RotateBased(split[6].chars().next().unwrap())
                 } else {
                     Self::Rotate(split[1].into(), split[2].parse().unwrap())
                 }
-            },
-            "reverse" => {
-                Self::Reverse(
-                    split[2].parse().unwrap(),
-                    split[4].parse().unwrap(),
-                )
-            },
-            "move" => {
-                Self::Move(
-                    split[2].parse().unwrap(),
-                    split[5].parse().unwrap()
-                )
-            },
-            _ => unreachable!()
+            }
+            "reverse" => Self::Reverse(split[2].parse().unwrap(), split[4].parse().unwrap()),
+            "move" => Self::Move(split[2].parse().unwrap(), split[5].parse().unwrap()),
+            _ => unreachable!(),
         }
     }
 }
 
-fn swap(chars: &[char], a: &Param, b: &Param) -> Vec<char>{
+fn swap(chars: &[char], a: &Param, b: &Param) -> Vec<char> {
     let mut chars = chars.to_vec();
     match a {
         Param::Position(p1) => match b {
             Param::Position(p2) => {
                 chars.swap(*p1, *p2);
-            },
-            _ => unreachable!()
+            }
+            _ => unreachable!(),
         },
         Param::Letter(l1) => match b {
             Param::Letter(l2) => {
                 let p1 = chars.iter().position(|c| c == l1).unwrap();
                 let p2 = chars.iter().position(|c| c == l2).unwrap();
                 chars.swap(p1, p2);
-            },
-            _ => unreachable!()
-        }
+            }
+            _ => unreachable!(),
+        },
     }
 
     chars
@@ -139,13 +133,13 @@ fn rotate(chars: &[char], direction: &Direction, steps: usize) -> Vec<char> {
         Direction::Left => {
             new_chars.extend(&chars[steps..]);
             new_chars.extend(&chars[0..steps]);
-        },
+        }
         Direction::Right => {
             new_chars.extend(&chars[chars.len() - steps..]);
             new_chars.extend(&chars[..chars.len() - steps]);
         }
     }
-    
+
     new_chars
 }
 

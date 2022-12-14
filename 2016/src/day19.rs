@@ -42,7 +42,6 @@ fn winner(elves: usize) -> usize {
     }
 }
 
-
 #[test]
 fn test() {
     assert_eq!(part1(&5), 3);

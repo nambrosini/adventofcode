@@ -140,6 +140,5 @@ totally-real-room-200[decoy]";
 fn test2() {
     let room: Room = "qzmt-zixmtkozy-ivhz-343".into();
 
-
     assert_eq!(&room.decrypt(), "very encrypted name");
 }

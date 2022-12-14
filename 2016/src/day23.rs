@@ -14,7 +14,7 @@ pub fn part1(input: &[Instruction]) -> i32 {
     memory.insert('a', 7);
     let mut computer = Computer {
         position: 0,
-        memory
+        memory,
     };
 
     computer.run(input)
@@ -26,7 +26,7 @@ pub fn part2(input: &[Instruction]) -> i32 {
     memory.insert('a', 12);
     let mut computer = Computer {
         position: 0,
-        memory
+        memory,
     };
 
     computer.run(input)
@@ -47,13 +47,13 @@ impl Computer {
                     if let Operator::Register(v2) = v2 {
                         let v1 = match v1 {
                             Operator::Register(k) => self.memory[k],
-                            Operator::Value(v) => *v
+                            Operator::Value(v) => *v,
                         };
 
                         let r = self.memory.entry(*v2).or_insert(0);
                         *r = v1;
                     }
-                },
+                }
                 Instruction::Inc(k) => {
                     if let Operator::Register(k) = k {
                         let r = self.memory.entry(*k).or_insert(0);
@@ -69,29 +69,30 @@ impl Computer {
                 Instruction::Jnz(x, y) => {
                     let x = match x {
                         Operator::Register(k) => self.memory[k],
-                        Operator::Value(v) => *v
+                        Operator::Value(v) => *v,
                     };
                     let y = match y {
                         Operator::Register(k) => self.memory[k],
-                        Operator::Value(v) => *v
+                        Operator::Value(v) => *v,
                     };
                     self.position += if x != 0 { y as usize - 1 } else { 0 };
-                },
+                }
                 Instruction::Tgl(v) => {
-                    let position: usize = self.position + match v {
-                        Operator::Value(v) => *v,
-                        Operator::Register(v) => self.memory[v]
-                    } as usize;
+                    let position: usize = self.position
+                        + match v {
+                            Operator::Value(v) => *v,
+                            Operator::Register(v) => self.memory[v],
+                        } as usize;
 
                     if (0..instructions.len()).contains(&position) {
                         let ins = instructions[position];
 
                         let new_instruction = match ins {
-                            Instruction::Inc(v) => Instruction::Dec(v), 
+                            Instruction::Inc(v) => Instruction::Dec(v),
                             Instruction::Dec(v) => Instruction::Inc(v),
                             Instruction::Tgl(v) => Instruction::Inc(v),
                             Instruction::Jnz(v1, v2) => Instruction::Cpy(v1, v2),
-                            Instruction::Cpy(v1, v2) => Instruction::Jnz(v1, v2)
+                            Instruction::Cpy(v1, v2) => Instruction::Jnz(v1, v2),
                         };
 
                         instructions[position] = new_instruction;
@@ -111,7 +112,7 @@ pub enum Instruction {
     Inc(Operator),
     Dec(Operator),
     Jnz(Operator, Operator),
-    Tgl(Operator)
+    Tgl(Operator),
 }
 
 #[derive(Debug, Clone, Copy)]
@@ -146,8 +147,6 @@ impl From<&str> for Operator {
         }
     }
 }
-
-
 
 #[test]
 fn test1() {

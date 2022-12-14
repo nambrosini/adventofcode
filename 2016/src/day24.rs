@@ -1,12 +1,9 @@
-use std::collections::HashMap;
 use itertools::Itertools;
-
+use std::collections::HashMap;
 
 #[aoc_generator(day24)]
 pub fn generator(input: &str) -> Vec<Vec<char>> {
-    input.lines()
-        .map(|l| l.chars().collect_vec())
-        .collect_vec()
+    input.lines().map(|l| l.chars().collect_vec()).collect_vec()
 }
 
 #[aoc(day24, part1)]
@@ -16,19 +13,27 @@ pub fn part1(map: &[Vec<char>]) -> usize {
     let mut routes: HashMap<(char, char), usize> = HashMap::new();
 
     for i in 0..keys.len() {
-        for j in i+1..keys.len() {
+        for j in i + 1..keys.len() {
             let len = check_nodes(&keys[i].1, &keys[j].1, map);
             routes.insert((keys[i].0, keys[j].0), len);
             routes.insert((keys[j].0, keys[i].0), len);
         }
     }
 
-    let keys = keys.iter().filter(|(k, _)| k != &'0').map(|(k, _)| k).collect::<Vec<_>>();
+    let keys = keys
+        .iter()
+        .filter(|(k, _)| k != &'0')
+        .map(|(k, _)| k)
+        .collect::<Vec<_>>();
 
     let mut min = usize::MAX;
 
     for k in keys.iter() {
-        let new_keys = keys.iter().filter(|&x| x != k).map(|&x| *x).collect::<Vec<char>>();
+        let new_keys = keys
+            .iter()
+            .filter(|&x| x != k)
+            .map(|&x| *x)
+            .collect::<Vec<char>>();
 
         min = min.min(find_min_route(&'0', k, &routes, &new_keys));
     }
@@ -43,19 +48,27 @@ pub fn part2(map: &[Vec<char>]) -> usize {
     let mut routes: HashMap<(char, char), usize> = HashMap::new();
 
     for i in 0..keys.len() {
-        for j in i+1..keys.len() {
+        for j in i + 1..keys.len() {
             let len = check_nodes(&keys[i].1, &keys[j].1, map);
             routes.insert((keys[i].0, keys[j].0), len);
             routes.insert((keys[j].0, keys[i].0), len);
         }
     }
 
-    let keys = keys.iter().filter(|(k, _)| k != &'0').map(|(k, _)| k).collect::<Vec<_>>();
+    let keys = keys
+        .iter()
+        .filter(|(k, _)| k != &'0')
+        .map(|(k, _)| k)
+        .collect::<Vec<_>>();
 
     let mut min = usize::MAX;
 
     for k in keys.iter() {
-        let new_keys = keys.iter().filter(|&x| x != k).map(|&x| *x).collect::<Vec<char>>();
+        let new_keys = keys
+            .iter()
+            .filter(|&x| x != k)
+            .map(|&x| *x)
+            .collect::<Vec<char>>();
 
         min = min.min(find_min_route2(&'0', k, &routes, &new_keys));
     }
@@ -63,19 +76,32 @@ pub fn part2(map: &[Vec<char>]) -> usize {
     min
 }
 
-fn find_min_route(start: &char, end: &char, map: &HashMap<(char, char), usize>, keys: &[char]) -> usize {
+fn find_min_route(
+    start: &char,
+    end: &char,
+    map: &HashMap<(char, char), usize>,
+    keys: &[char],
+) -> usize {
     let len = map[&(*start, *end)];
 
     if keys.is_empty() {
         return len;
     }
 
-    let keys = keys.iter().filter(|&x| x != end).copied().collect::<Vec<char>>();
+    let keys = keys
+        .iter()
+        .filter(|&x| x != end)
+        .copied()
+        .collect::<Vec<char>>();
 
     let mut min = usize::MAX;
 
     for k in keys.iter() {
-        let new_keys = keys.iter().filter(|&x| x != k).copied().collect::<Vec<char>>();
+        let new_keys = keys
+            .iter()
+            .filter(|&x| x != k)
+            .copied()
+            .collect::<Vec<char>>();
 
         let route = find_min_route(end, k, map, &new_keys);
 
@@ -85,19 +111,32 @@ fn find_min_route(start: &char, end: &char, map: &HashMap<(char, char), usize>, 
     min + len
 }
 
-fn find_min_route2(start: &char, end: &char, map: &HashMap<(char, char), usize>, keys: &[char]) -> usize {
+fn find_min_route2(
+    start: &char,
+    end: &char,
+    map: &HashMap<(char, char), usize>,
+    keys: &[char],
+) -> usize {
     let len = map[&(*start, *end)];
 
     if keys.is_empty() {
         return len + map[&(*end, '0')];
     }
 
-    let keys = keys.iter().filter(|&x| x != end).copied().collect::<Vec<char>>();
+    let keys = keys
+        .iter()
+        .filter(|&x| x != end)
+        .copied()
+        .collect::<Vec<char>>();
 
     let mut min = usize::MAX;
 
     for k in keys.iter() {
-        let new_keys = keys.iter().filter(|&x| x != k).copied().collect::<Vec<char>>();
+        let new_keys = keys
+            .iter()
+            .filter(|&x| x != k)
+            .copied()
+            .collect::<Vec<char>>();
 
         let route = find_min_route2(end, k, map, &new_keys);
 
@@ -112,7 +151,7 @@ fn find_keys(map: &[Vec<char>]) -> Vec<(char, (i32, i32))> {
 
     for (i, r) in map.iter().enumerate() {
         for (j, &c) in r.iter().enumerate() {
-            if c != '.' && c != '#' { 
+            if c != '.' && c != '#' {
                 vec.push((c, (i as i32, j as i32)));
             }
         }
@@ -124,9 +163,9 @@ fn find_keys(map: &[Vec<char>]) -> Vec<(char, (i32, i32))> {
 type Point = (i32, i32);
 
 fn is_open((x, y): &(i32, i32), map: &[Vec<char>]) -> bool {
-    (0..map.len() as i32).contains(x) &&
-        (0..map[0].len()  as i32).contains(y) &&
-        map[*x as usize][*y as usize] != '#'
+    (0..map.len() as i32).contains(x)
+        && (0..map[0].len() as i32).contains(y)
+        && map[*x as usize][*y as usize] != '#'
 }
 
 fn check_nodes(start: &Point, end: &Point, map: &[Vec<char>]) -> usize {
@@ -179,7 +218,7 @@ fn get_neighbours(current: &Point, map: &[Vec<char>]) -> Vec<Point> {
 
     neighbours
         .iter()
-        .map(|&p| {(current.0 + p.0, current.1 + p.1)})
+        .map(|&p| (current.0 + p.0, current.1 + p.1))
         .filter(|x| is_open(x, map))
         .collect_vec()
 }

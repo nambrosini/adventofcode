@@ -2,7 +2,8 @@ use itertools::Itertools;
 
 #[aoc_generator(day20)]
 fn generator(input: &str) -> Vec<(usize, usize)> {
-    input.lines()
+    input
+        .lines()
         .map(|line| line.split('-').collect_vec())
         .map(|l| (l[0].parse().unwrap(), l[1].parse().unwrap()))
         .collect_vec()
@@ -39,7 +40,7 @@ fn count_allowed_ips(ranges: &[(usize, usize)], max: usize) -> usize {
     input.sort_unstable();
 
     let mut input_iter = input.iter();
-    
+
     let mut count = 0;
     let mut index = 0;
     let mut next = input_iter.next();
@@ -72,9 +73,11 @@ fn test() {
 
 #[test]
 fn test2() {
-    let s = generator("5-8
+    let s = generator(
+        "5-8
 0-2
-4-7");
+4-7",
+    );
 
     assert_eq!(count_allowed_ips(&s, 9), 2);
 }

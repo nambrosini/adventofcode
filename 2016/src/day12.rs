@@ -62,10 +62,10 @@ impl Computer {
                 Instruction::Jnz(x, y) => {
                     let x = match x {
                         Operator::Register(k) => self.memory[k],
-                        Operator::Value(v) => *v
+                        Operator::Value(v) => *v,
                     };
                     self.position += if x != 0 { *y as usize - 1 } else { 0 };
-                },
+                }
             }
 
             self.position += 1;

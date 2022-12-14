@@ -1,12 +1,13 @@
+use itertools::Itertools;
 use regex::Regex;
 use std::collections::BTreeMap;
 use std::collections::BTreeSet;
-use itertools::Itertools;
 
 #[aoc_generator(day22)]
 pub fn generator(input: &str) -> Vec<Node> {
     let re = Regex::new(r"x(\d+)-y(\d+).+?(\d+).+?(\d+).+?(\d+).+?(\d+)").unwrap();
-    input.lines()
+    input
+        .lines()
         .filter_map(|line| {
             re.captures(line).map(|cap| Node {
                 coords: Coords::new(
@@ -60,7 +61,7 @@ pub fn part2(nodes: &[Node]) -> u32 {
     find_path_to(
         &params,
         empty.coords,
-        Coords::new(goal.coords.x - 1, goal.coords.y)
+        Coords::new(goal.coords.x - 1, goal.coords.y),
     )
     .unwrap()
         + (goal.coords.x as u32 - 1) * 5

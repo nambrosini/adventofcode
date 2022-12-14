@@ -21,14 +21,14 @@ pub fn part1(input: &[Instruction]) -> i32 {
             memory,
         };
         output = computer.run(input);
-        counter +=1;
+        counter += 1;
     }
 
     counter - 1
 }
 
 fn is_ok(out: &[i32]) -> bool {
-    for i in 0..out.len() - 1 { 
+    for i in 0..out.len() - 1 {
         if out[i] == out[i + 1] {
             return false;
         }
@@ -50,12 +50,12 @@ impl Computer {
                 Instruction::Cpy(v1, v2) => {
                     let v1 = match v1 {
                         Operator::Register(k) => self.memory[k],
-                        Operator::Value(v) => *v
+                        Operator::Value(v) => *v,
                     };
 
                     let r = self.memory.entry(*v2).or_insert(0);
                     *r = v1;
-                },
+                }
                 Instruction::Inc(k) => {
                     let r = self.memory.entry(*k).or_insert(0);
                     *r += 1;
@@ -67,14 +67,14 @@ impl Computer {
                 Instruction::Jnz(x, y) => {
                     let x = match x {
                         Operator::Register(k) => self.memory[k],
-                        Operator::Value(v) => *v
+                        Operator::Value(v) => *v,
                     };
                     self.position += if x != 0 { *y as usize - 1 } else { 0 };
-                },
+                }
                 Instruction::Out(x) => {
                     let x = match x {
                         Operator::Register(k) => self.memory[k],
-                        Operator::Value(v) => *v
+                        Operator::Value(v) => *v,
                     };
                     output.push(x);
                 }
@@ -92,7 +92,7 @@ pub enum Instruction {
     Inc(char),
     Dec(char),
     Jnz(Operator, i32),
-    Out(Operator)
+    Out(Operator),
 }
 
 pub enum Operator {
