@@ -8,10 +8,12 @@ pub fn generator(input: &str) -> Cave {
     let mut cave = HashMap::new();
 
     for line in input.lines() {
-        let split: Vec<(usize, usize)> = line.split(" -> ").map(|c| {
-            let split: Vec<&str> = c.split(',').collect();
-            (split[0].parse().unwrap(), split[1].parse().unwrap())
-        }).collect();
+        let split: Vec<(usize, usize)> = line
+            .split(" -> ")
+            .map(|c| {
+                let split: Vec<&str> = c.split(',').collect();
+                (split[0].parse().unwrap(), split[1].parse().unwrap())
+            }).collect();
         for i in 0..split.len() - 1 {
             let min_x = split[i].0.min(split[i + 1].0);
             let min_y = split[i].1.min(split[i + 1].1);
