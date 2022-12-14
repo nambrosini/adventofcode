@@ -1,24 +1,51 @@
 use itertools::Itertools;
+use std::fmt::{Display, Formatter};
+
+type Monkeys = Vec<Monkey>;
 
 #[aoc_generator(day11)]
 pub fn generator(input: &str) -> Monkeys {
-    input.split("\r\n\r\n").map(|m| m.into()).collect()
+    input.split("\n\n").map(|m| m.into()).collect()
 }
 
 #[aoc(day11, part1)]
 pub fn part1(monkeys: &Monkeys) -> usize {
-    let mut monkeys = monkeys.clone();
-    monkeys.simulate(3, 20, &Operator::Division)
+    simulate(monkeys, 3, 20, "/")
 }
 
 #[aoc(day11, part2)]
 pub fn part2(monkeys: &Monkeys) -> usize {
     let div = monkeys.iter().map(|m| m.test).product();
-    let mut monkeys = monkeys.clone();
-    monkeys.simulate(div, 10_000, &Operator::Modulo)
+    simulate(monkeys, div, 10_000, "%")
 }
 
-type Monkeys = Vec<Monkey>;
+fn simulate(monkeys: &Monkeys, div: usize, cycles: usize, operation: &str) -> usize {
+    let mut monkeys = monkeys.to_vec();
+    let mut counts = vec![0; monkeys.len()];
+
+    for _ in 0..cycles {
+        for i in 0..monkeys.len() {
+            let mut monkey = monkeys[i].clone();
+            while !monkey.items.is_empty() {
+                counts[i] += 1;
+                let item = monkey.items.remove(0);
+                let item = if operation == "/" {
+                    Monkey::calc(item, &monkey.operation) / div
+                } else {
+                    Monkey::calc(item, &monkey.operation) % div
+                };
+                if item % monkey.test == 0 {
+                    monkeys[monkey.t].items.push(item);
+                } else {
+                    monkeys[monkey.f].items.push(item);
+                }
+            }
+            monkeys[i] = monkey;
+        }
+    }
+
+    counts.iter().sorted().rev().take(2).product()
+}
 
 #[derive(Clone)]
 pub struct Monkey {
@@ -27,35 +54,6 @@ pub struct Monkey {
     test: usize,
     t: usize,
     f: usize,
-    count: usize,
-}
-
-enum Operator {
-    Division,
-    Modulo,
-}
-
-trait Simulate {
-    fn simulate(&mut self, div: usize, cycles: usize, operator: &Operator) -> usize;
-}
-
-impl Simulate for Monkeys {
-    fn simulate(&mut self, div: usize, cycles: usize, operation: &Operator) -> usize {
-        for _ in 0..cycles {
-            for i in 0..self.len() {
-                let mut monkey = self[i].clone();
-                monkey.simulate(operation, div, self);
-                self[i] = monkey;
-            }
-        }
-
-        self.iter()
-            .map(|m| m.count)
-            .sorted()
-            .rev()
-            .take(2)
-            .product()
-    }
 }
 
 impl Monkey {
@@ -66,11 +64,16 @@ impl Monkey {
             test,
             t,
             f,
-            count: 0,
         }
     }
 
     fn calc(item: usize, operation: &str) -> usize {
+        // Expr::new(operation)
+        //     .value("old", item)
+        //     .exec()
+        //     .unwrap()
+        //     .as_i64()
+        //     .unwrap() as usize
         let operation: Vec<&str> = operation.split_whitespace().collect();
         let first = if let Ok(val) = operation[0].parse() {
             val
@@ -88,22 +91,11 @@ impl Monkey {
             _ => unreachable!(),
         }
     }
+}
 
-    fn simulate(&mut self, operation: &Operator, div: usize, monkeys: &mut [Monkey]) {
-        self.count += self.items.len();
-        while !self.items.is_empty() {
-            let item = self.items.remove(0);
-            let item = match operation {
-                Operator::Division => Monkey::calc(item, &self.operation) / div,
-                Operator::Modulo => Monkey::calc(item, &self.operation) % div,
-            };
-            let destination_monkey_index = if item % self.test == 0 {
-                self.t
-            } else {
-                self.f
-            };
-            monkeys[destination_monkey_index].items.push(item);
-        }
+impl Display for Monkey {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{:?}", self.items)
     }
 }
 
