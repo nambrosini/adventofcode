@@ -58,7 +58,13 @@ pub fn part2(input: &[(String, String)]) -> usize {
     *map.get("a").unwrap()
 }
 
-fn match_length(map: &mut HashMap<String, usize>, new_input: &mut Vec<(String, String)>, next: &(String, String), key: String, value: Vec<&str>) {
+fn match_length(
+    map: &mut HashMap<String, usize>,
+    new_input: &mut Vec<(String, String)>,
+    next: &(String, String),
+    key: String,
+    value: Vec<&str>,
+) {
     match value.len() {
         1 => {
             if let Ok(v) = value[0].parse() {
