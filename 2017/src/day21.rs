@@ -147,8 +147,8 @@ impl Rule {
     fn check_pattern(&self, pattern: &[Vec<char>]) -> Option<Vec<Vec<char>>> {
         println!("From: {:?}", self.from);
         println!("To: {:?}", self.to);
-        println!("Pattern: {:?}", Self::to_string(pattern));
-        if self.from == Self::to_string(pattern) {
+        println!("Pattern: {:?}", Self::string(pattern));
+        if self.from == Self::string(pattern) {
             return Some(string_to_vec(&self.to));
         }
 
@@ -160,13 +160,13 @@ impl Rule {
         let r180 = Self::rotate(&r90);
         let r270 = Self::rotate(&r180);
 
-        if self.from == Self::to_string(&r0h)
-            || self.from == Self::to_string(&r0v)
-            || self.from == Self::to_string(&r90)
-            || self.from == Self::to_string(&r90h)
-            || self.from == Self::to_string(&r90v)
-            || self.from == Self::to_string(&r180)
-            || self.from == Self::to_string(&r270)
+        if self.from == Self::string(&r0h)
+            || self.from == Self::string(&r0v)
+            || self.from == Self::string(&r90)
+            || self.from == Self::string(&r90h)
+            || self.from == Self::string(&r90v)
+            || self.from == Self::string(&r180)
+            || self.from == Self::string(&r270)
         {
             return Some(string_to_vec(&self.to));
         }
@@ -213,7 +213,7 @@ impl Rule {
         ret
     }
 
-    fn to_string(chars: &[Vec<char>]) -> String {
+    fn string(chars: &[Vec<char>]) -> String {
         let mut s = String::new();
 
         for (i, r) in chars.iter().enumerate() {
@@ -225,48 +225,4 @@ impl Rule {
 
         s
     }
-}
-
-#[test]
-fn test() {
-    let s = vec![vec!['.', '.'], vec!['.', '.']];
-    let rules = vec![Rule {
-        from: "../..".to_owned(),
-        to: "###/.../#..".to_owned(),
-    }];
-
-    assert_eq!(&Rule::to_string(&take2(&s, &rules)), "###/.../#..");
-}
-
-#[test]
-fn test2() {
-    let s = ".../.../...";
-    let rules = vec![Rule {
-        from: ".../.../...".to_owned(),
-        to: "#.##/#.../..##/.##.".to_owned(),
-    }];
-
-    assert_eq!(
-        &Rule::to_string(&take3(&string_to_vec(s), &rules)),
-        "#.##/#.../..##/.##."
-    );
-}
-
-#[test]
-fn test3() {
-    let s = ".#./..#/###";
-    let rules: Vec<Rule> = vec![
-        "../.# => ##./#../...".into(),
-        ".#./..#/### => #..#/..../..../#..#".into(),
-    ];
-
-    assert_eq!(
-        &Rule::to_string(&take3(&string_to_vec(s), &rules)),
-        "#..#/..../..../#..#"
-    );
-    let s = "#..#/..../..../#..#";
-    assert_eq!(
-        &Rule::to_string(&take2(&string_to_vec(s), &rules)),
-        "##.##./#..#../....../##.##./#..#../......"
-    );
 }

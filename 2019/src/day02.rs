@@ -97,10 +97,3 @@ impl From<i64> for Opcode {
         }
     }
 }
-
-#[test]
-pub fn test() {
-    let s = "1,9,10,3,2,3,11,0,99,30,40,50";
-
-    assert_eq!(3500, part1(&generator(s)));
-}

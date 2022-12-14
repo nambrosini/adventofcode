@@ -103,13 +103,6 @@ fn test() {
 }
 
 #[test]
-fn test_two() {
-    let res = part2("abc");
-
-    assert_eq!(res, 22551);
-}
-
-#[test]
 fn test_three() {
     let s = "nasdlfansdcccasdf";
 

@@ -171,5 +171,5 @@ fn test() {
 #..
 ...";
 
-    assert_eq!(part2(&generator(s)), 26);
+    assert_eq!(part1(&generator(s)), 5587);
 }

@@ -151,13 +151,3 @@ impl From<&str> for Moon {
         Self::new(position)
     }
 }
-
-#[test]
-fn test1() {
-    let s = "<x=-1, y=0, z=2>
-<x=2, y=-10, z=-7>
-<x=4, y=-8, z=8>
-<x=3, y=5, z=-1>";
-
-    assert_eq!(179, part1(&generator(s)));
-}

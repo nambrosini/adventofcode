@@ -165,14 +165,3 @@ impl From<i64> for Opcode {
         }
     }
 }
-
-#[test]
-pub fn test() {
-    let s = std::fs::read_to_string(
-        "/Users/nambrosini/IdeaProjects/adventofcode/2019/input/2019/day9.txt",
-    )
-    .unwrap();
-    let s = generator(&s);
-
-    assert_eq!(3839402290, part1(&s));
-}

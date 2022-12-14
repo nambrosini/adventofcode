@@ -212,14 +212,3 @@ seti 9 0 5";
 
     assert_eq!(want, got);
 }
-
-#[test]
-fn test_input() {
-    let s = std::fs::read_to_string("input/2018/day19.txt").unwrap();
-    println!("{}", s);
-
-    let want = 0;
-    let got = part1(&generator(&s));
-
-    assert_eq!(want, got);
-}

@@ -89,15 +89,6 @@ fn part2(map: &HashMap<String, Vec<String>>) -> usize {
                 break;
             }
         }
-        println!("Ticks: {}", ticks);
-        println!("Workers: {:?}", workers);
-        println!("Queue: {:?}", queue);
-        println!("Done: {:?}", done);
-        println!("Keys: {:?}", map.keys().collect::<Vec<&String>>());
-        println!(
-            "Values: {:?}",
-            map.values().flatten().collect::<Vec<&String>>()
-        );
         ticks += 1;
     }
 
@@ -156,13 +147,6 @@ Step F must be finished before step E can begin.";
 }
 
 #[test]
-pub fn test1() {
-    let s = std::fs::read_to_string("input/2018/day7.txt").unwrap();
-
-    assert_eq!("CGKMUWXFAIHSYDNLJQTREOPZBV", &part1(&generator(&s)));
-}
-
-#[test]
 pub fn test2() {
     let s = "Step C must be finished before step A can begin.
 Step C must be finished before step F can begin.
@@ -171,11 +155,5 @@ Step A must be finished before step D can begin.
 Step B must be finished before step E can begin.
 Step D must be finished before step E can begin.
 Step F must be finished before step E can begin.";
-    assert_eq!(15, part2(&generator(s)));
-}
-
-#[test]
-fn test3() {
-    let w = Worker::new("A".to_string());
-    assert_eq!(61, w.max_time);
+    assert_eq!(253, part2(&generator(s)));
 }
