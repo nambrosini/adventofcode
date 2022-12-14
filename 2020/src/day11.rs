@@ -21,7 +21,7 @@ impl fmt::Display for Status {
             Status::Floor => '.',
         };
 
-        write!(f, "{}", res)
+        write!(f, "{res}")
     }
 }
 
@@ -80,8 +80,8 @@ impl WaitingHall {
     pub fn count_occupied_part1(&self, x: usize, y: usize) -> usize {
         let mut occupied = 0;
 
-        let start_x = if x.checked_sub(1) == None { 0 } else { x - 1 };
-        let start_y = if y.checked_sub(1) == None { 0 } else { y - 1 };
+        let start_x = if x.checked_sub(1).is_none() { 0 } else { x - 1 };
+        let start_y = if y.checked_sub(1).is_none() { 0 } else { y - 1 };
         let end_x = if x + 1 >= self.seats.len() {
             self.seats.len() - 1
         } else {
@@ -190,7 +190,7 @@ impl fmt::Display for WaitingHall {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         for line in &self.seats {
             for seat in line {
-                write!(f, "{}", seat)?;
+                write!(f, "{seat}")?;
             }
             writeln!(f)?;
         }

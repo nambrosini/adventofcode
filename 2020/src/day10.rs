@@ -15,8 +15,8 @@ pub fn part1(input: &[u32]) -> u32 {
     let diff3: u32 = differences.iter().filter(|&&x| x == 3u32).count() as u32;
 
     match input[0] {
-        1 => ((diff1 + 1) * (diff3 + 1)),
-        3 => (diff1 * (diff3 + 2)),
+        1 => (diff1 + 1) * (diff3 + 1),
+        3 => diff1 * (diff3 + 2),
         _ => panic!(),
     }
 }

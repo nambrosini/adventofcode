@@ -165,8 +165,8 @@ pub enum OpCode {
 }
 
 impl OpCode {
-    fn execute(&self, instruction: &Vec<usize>, before: &Vec<usize>, after: &Vec<usize>) -> bool {
-        let mut res = before.clone();
+    fn execute(&self,instruction: &[usize], before: &[usize], after: &[usize]) -> bool {
+        let mut res = before.to_vec();
 
         match self {
             OpCode::Addr => {
@@ -258,7 +258,7 @@ impl OpCode {
     }
 }
 
-fn get_matching(instruction: &Vec<usize>, before: &Vec<usize>, after: &Vec<usize>) -> HashSet<OpCode> {
+fn get_matching(instruction: &[usize], before: &[usize], after: &[usize]) -> HashSet<OpCode> {
     let mut codes = HashSet::new();
     let enums = [OpCode::Addr, OpCode::Addi, OpCode::Mulr, OpCode::Muli, OpCode::Banr, OpCode::Bani, OpCode::Borr, OpCode::Bori, OpCode::Setr, OpCode::Seti, OpCode::Gtir, OpCode::Gtri, OpCode::Gtrr, OpCode::Eqir, OpCode::Eqri, OpCode::Eqrr];
 
@@ -274,7 +274,7 @@ fn get_matching(instruction: &Vec<usize>, before: &Vec<usize>, after: &Vec<usize
 #[test]
 fn test() {
     let expected = vec![OpCode::Mulr, OpCode::Addi, OpCode::Seti];
-    let got = get_matching(&vec![9, 2, 1, 2], &vec![3, 2, 1, 1], &vec![3, 2, 2, 1]);
+    let got = get_matching(&[9, 2, 1, 2], &[3, 2, 1, 1], &[3, 2, 2, 1]);
 
     for e in expected.iter() {
         assert!(got.iter().any(|x| x == e))

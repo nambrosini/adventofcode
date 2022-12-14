@@ -84,20 +84,12 @@ impl Intcode {
                     }
                 }
                 Opcode::Lt(m1, m2, m3) => {
-                    let v = if self.get_mem(1, m1) < self.get_mem(2, m2) {
-                        1
-                    } else {
-                        0
-                    };
+                    let v = i64::from(self.get_mem(1, m1) < self.get_mem(2, m2));
                     self.set_mem(3, v, m3);
                     self.pos += 4;
                 }
                 Opcode::Eq(m1, m2, m3) => {
-                    let v = if self.get_mem(1, m1) == self.get_mem(2, m2) {
-                        1
-                    } else {
-                        0
-                    };
+                    let v = i64::from(self.get_mem(1, m1) == self.get_mem(2, m2));
                     self.set_mem(3, v, m3);
                     self.pos += 4;
                 }

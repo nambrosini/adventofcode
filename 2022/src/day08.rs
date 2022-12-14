@@ -66,8 +66,8 @@ pub fn part2(input: &[Vec<usize>]) -> usize {
             total *= c;
             c = 0;
 
-            for i in x + 1..input.len() {
-                if &input[i][y] < cell {
+            for row in input.iter().skip(x + 1) {
+                if &row[y] < cell {
                     c += 1;
                 } else {
                     c += 1;

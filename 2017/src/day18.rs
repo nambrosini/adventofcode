@@ -12,7 +12,7 @@ pub fn part1(input: &[Instruction]) -> i64 {
     let mut duet = Duet::new(input.to_vec());
     let mut res = None;
 
-    while res == None {
+    while res.is_none() {
         res = duet.run();
     }
 

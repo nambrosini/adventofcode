@@ -98,7 +98,7 @@ impl From<&str> for Room {
                 is_hash = false;
             } else if is_hash {
                 hash.push(c);
-            } else if c.is_digit(10) {
+            } else if c.is_ascii_digit() {
                 id.push(c);
             } else if c != '-' {
                 let e = map.entry(c).or_insert(0);
@@ -109,7 +109,7 @@ impl From<&str> for Room {
         let mut name = String::new();
 
         for c in s.chars() {
-            if c.is_digit(10) {
+            if c.is_ascii_digit() {
                 break;
             } else {
                 name.push(c);

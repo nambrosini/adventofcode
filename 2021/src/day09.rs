@@ -87,7 +87,7 @@ fn get_neighbours(x: usize, y: usize, map: &[Vec<u32>]) -> Vec<(usize, usize)> {
     v
 }
 
-fn find_basin(map: &mut Vec<Vec<u32>>, x: usize, y: usize) -> usize {
+fn find_basin(map: &mut [Vec<u32>], x: usize, y: usize) -> usize {
     let mut open_nodes = vec![(x, y)];
     let mut visited_nodes = vec![];
 

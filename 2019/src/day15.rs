@@ -38,7 +38,7 @@ pub fn fill_oxygen(map: &HashMap<Position, i64>, start: &Position) -> i64 {
 
     while let Some(p) = queue.pop() {
         for i in 1..=4 {
-            let new_pos = p.0 + <i64 as std::convert::Into<Direction>>::into(i).into();
+            let new_pos = p.0 + <i64 as Into<Direction>>::into(i).into();
             if map.contains_key(&new_pos) && !set.iter().any(|(p, _)| p == &new_pos) {
                 let v = map[&new_pos];
                 if v != 0 {
@@ -62,7 +62,7 @@ pub fn search(map: &HashMap<Position, i64>, start: &Position) -> i64 {
         }
 
         for i in 1..=4 {
-            let new_pos = p.0 + <i64 as std::convert::Into<Direction>>::into(i).into();
+            let new_pos = p.0 + <i64 as Into<Direction>>::into(i).into();
             if map.contains_key(&new_pos) && !set.contains(&new_pos) {
                 let v = map[&new_pos];
                 if v != 0 {
@@ -78,7 +78,7 @@ pub fn search(map: &HashMap<Position, i64>, start: &Position) -> i64 {
 
 pub fn move_robot(map: &mut HashMap<Position, i64>, pc: &Intcode, pos: &Position) {
     for i in 1..=4i64 {
-        let new_pos = *pos + (<i64 as std::convert::Into<Direction>>::into(i).into());
+        let new_pos = *pos + (<i64 as Into<Direction>>::into(i).into());
         if !map.keys().any(|p| p == &new_pos) {
             let mut pc_clone = pc.clone();
             let ret = pc_clone.run(i).unwrap();
@@ -149,20 +149,12 @@ impl Intcode {
                     }
                 }
                 Opcode::Lt(m1, m2, m3) => {
-                    let v = if self.get_mem(1, m1) < self.get_mem(2, m2) {
-                        1
-                    } else {
-                        0
-                    };
+                    let v = i64::from(self.get_mem(1, m1) < self.get_mem(2, m2));
                     self.set_mem(3, v, m3);
                     self.pos += 4;
                 }
                 Opcode::Eq(m1, m2, m3) => {
-                    let v = if self.get_mem(1, m1) == self.get_mem(2, m2) {
-                        1
-                    } else {
-                        0
-                    };
+                    let v = i64::from(self.get_mem(1, m1) == self.get_mem(2, m2));
                     self.set_mem(3, v, m3);
                     self.pos += 4;
                 }

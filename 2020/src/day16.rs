@@ -50,11 +50,7 @@ pub fn generator(input: &str) -> Input {
 
 #[aoc(day16, part1)]
 pub fn part1(input: &Input) -> usize {
-    let ranges: Vec<usize> = input
-        .0
-        .values()
-        .flat_map(|x| x.iter().flat_map(|y| (y.0..=y.1).collect::<Vec<usize>>()))
-        .collect();
+    let ranges = get_ranges(&input.0);
 
     input
         .2
@@ -66,11 +62,7 @@ pub fn part1(input: &Input) -> usize {
 
 #[aoc(day16, part2)]
 pub fn part2(input: &Input) -> usize {
-    let ranges: Vec<usize> = input
-        .0
-        .values()
-        .flat_map(|x| x.iter().flat_map(|y| (y.0..=y.1).collect::<Vec<usize>>()))
-        .collect();
+    let ranges: Vec<usize> = get_ranges(&input.0);
 
     let tickets: Vec<Vec<usize>> = input
         .2
@@ -158,11 +150,13 @@ pub fn part2(input: &Input) -> usize {
     }
 
     res
-    // fields.iter()
-    //     .enumerate()
-    //     .filter(|(_, x)| x.contains(&"departure".to_owned()))
-    //     .map(|(i, _)| input.1[i])
-    //     .fold(1, |res, x| res * x)
+}
+
+fn get_ranges(p0: &HashMap<String, Vec<(usize, usize)>>) -> Vec<usize> {
+    p0
+        .values()
+        .flat_map(|x| x.iter().flat_map(|y| (y.0..=y.1).collect::<Vec<usize>>()))
+        .collect()
 }
 
 #[test]

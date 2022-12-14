@@ -40,7 +40,7 @@ pub fn generator(input: &str) -> MapType {
     let mut map: MapType = MapType::new();
 
     for l in input.lines() {
-        let l = l.replace(":", "").replace(",", "");
+        let l = l.replace([':', ','], "");
         let split = l.split(' ').collect_vec();
         let id = split[1].parse().unwrap();
 

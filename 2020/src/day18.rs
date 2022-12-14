@@ -64,7 +64,7 @@ pub fn part2(input: &[String]) -> i64 {
 }
 
 pub fn eval(expr: String) -> i64 {
-    let expr = expr.replace("(", "").replace(")", "");
+    let expr = expr.replace(['(', ')'], "");
     let mut split: Vec<String> = expr.split(' ').map(|s| s.to_owned()).collect();
 
     while split.len() != 1 {
@@ -81,7 +81,7 @@ pub fn eval(expr: String) -> i64 {
 }
 
 pub fn eval_part2(expr: String) -> i64 {
-    let expr = expr.replace("(", "").replace(")", "");
+    let expr = expr.replace(['(', ')'], "");
     let mut split: Vec<String> = expr.split(' ').map(|s| s.to_owned()).collect();
 
     while split.len() != 1 {

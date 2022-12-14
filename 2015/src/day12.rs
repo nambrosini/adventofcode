@@ -10,8 +10,8 @@ pub fn calc1(input: &Value) -> i64 {
     let mut sum: i64 = 0;
     match input {
         Value::Number(number) => sum += number.as_i64().unwrap(),
-        Value::Array(array) => sum += array.iter().map(|value| calc1(value)).sum::<i64>(),
-        Value::Object(object) => sum += object.values().map(|value| calc1(value)).sum::<i64>(),
+        Value::Array(array) => sum += array.iter().map(calc1).sum::<i64>(),
+        Value::Object(object) => sum += object.values().map(calc1).sum::<i64>(),
         _ => (),
     }
 
@@ -29,7 +29,7 @@ fn calc2(input: &Value) -> i64 {
 
     match input {
         Value::Number(number) => sum += number.as_i64().unwrap(),
-        Value::Array(array) => sum += array.iter().map(|value| calc2(value)).sum::<i64>(),
+        Value::Array(array) => sum += array.iter().map(calc2).sum::<i64>(),
         Value::Object(object) => {
             let red_param_detected = object.values().any(|value| {
                 if let Value::String(s) = value {
@@ -38,7 +38,7 @@ fn calc2(input: &Value) -> i64 {
                 false
             });
             if !red_param_detected {
-                sum += object.values().map(|value| calc2(value)).sum::<i64>();
+                sum += object.values().map(calc2).sum::<i64>();
             }
         }
         _ => (),

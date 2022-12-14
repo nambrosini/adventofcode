@@ -79,7 +79,7 @@ pub fn part2((raw_rules, samples): &(HashMap<usize, String>, Vec<String>)) -> us
     let r42 = memo[42].as_ref().unwrap();
     let r31 = memo[31].as_ref().unwrap();
 
-    let r0 = format!("^({}+)({}+)$", r42, r31);
+    let r0 = format!("^({r42}+)({r31}+)$");
 
     let r0 = Regex::new(&r0).unwrap();
     let r42 = Regex::new(r42).unwrap();

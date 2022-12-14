@@ -16,7 +16,7 @@ pub fn generator(input: &str) -> MapType {
             "lose" => -1,
             _ => unreachable!(),
         } * split[3].parse::<i32>().unwrap();
-        let neighbour = split.iter().last().unwrap().replace(".", "");
+        let neighbour = split.iter().last().unwrap().replace('.', "");
 
         let entry = map.entry(name.to_owned()).or_default();
         entry.insert(neighbour, points);

@@ -7,9 +7,9 @@ pub fn generator(input: &str) -> Vec<char> {
 
 #[aoc(day3, part1)]
 pub fn part1(input: &[char]) -> usize {
-    let mut pos = (0usize, 0usize);
+    let mut pos = (0, 0);
 
-    let mut visited: HashSet<(usize, usize)> = input
+    let mut visited: HashSet<(i32, i32)> = input
         .iter()
         .map(|next| {
             pos = match next {

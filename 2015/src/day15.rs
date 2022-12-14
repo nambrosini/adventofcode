@@ -64,10 +64,10 @@ impl TryFrom<&str> for Ingredient {
     fn try_from(value: &str) -> Result<Self, Self::Error> {
         let split = value.split(' ').collect_vec();
 
-        let capacity = split[2].replace(",", "").parse().unwrap();
-        let durability = split[4].replace(",", "").parse().unwrap();
-        let flavor = split[6].replace(",", "").parse().unwrap();
-        let texture = split[8].replace(",", "").parse().unwrap();
+        let capacity = split[2].replace(',', "").parse().unwrap();
+        let durability = split[4].replace(',', "").parse().unwrap();
+        let flavor = split[6].replace(',', "").parse().unwrap();
+        let texture = split[8].replace(',', "").parse().unwrap();
         let calories = split[10].parse().unwrap();
 
         Ok(Self {

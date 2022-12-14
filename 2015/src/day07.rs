@@ -1,144 +1,143 @@
-use itertools::Itertools as _;
 use std::collections::HashMap;
 
-#[aoc_generator(day7)]
-pub fn generator(input: &str) -> Vec<(String, String)> {
-    input
-        .lines()
-        .map(|x| x.split(" -> ").collect::<Vec<&str>>())
-        .map(|l| (l[0].to_owned(), l[1].to_owned()))
+#[aoc_generator(day07)]
+pub fn generator(input: &str) -> Vec<Instruction> {
+    input.lines()
+        .map(|l| l.into())
         .collect()
 }
 
-#[aoc(day7, part1)]
-pub fn part1(input: &[(String, String)]) -> usize {
-    let mut map: HashMap<String, usize> = HashMap::new();
-    let mut input = input.to_vec();
+#[aoc(day07, part1)]
+pub fn part1(instructions: &[Instruction]) -> u16 {
+    let mut instructions = instructions.to_vec();
+    println!("{:?}", instructions.len());
+    let mut map: HashMap<String, u16> = HashMap::new();
 
-    while !input.is_empty() {
-        let mut new_input: Vec<(String, String)> = vec![];
-        let iter = input.iter();
+    while !instructions.is_empty() {
+        let instruction = instructions.remove(0);
+        let mut executed = false;
 
-        for next in iter {
-            let key = next.1.clone();
-            let value = next.0.split_whitespace().collect_vec();
-            match value.len() {
-                1 => {
-                    if let Ok(v) = value[0].parse() {
-                        map.insert(key, v);
-                    } else {
-                        let a = map.get(value[0]).cloned();
-                        if let Some(a) = a {
-                            map.insert(key, a);
-                        } else {
-                            new_input.push(next.clone());
-                        }
+        match &instruction {
+            Instruction::Direct(p, r) => {
+                if let Some(p1) = p.get_value(&map) {
+                    if p1 == 1674 {
+                        println!("{}", instructions.len());
                     }
+                    map.insert(r.clone(), p1);
+                    executed = true;
                 }
-                2 => {
-                    let a = map.get(value[1]).cloned();
-                    if let Some(a) = a {
-                        map.insert(key, !a);
-                    } else {
-                        new_input.push(next.clone());
-                    }
+            }
+            Instruction::And(p1, p2, r) => {
+                if let (Some(p1), Some(p2)) = (p1.get_value(&map), p2.get_value(&map)) {
+                    map.insert(r.clone(), p1 & p2);
+                    executed = true;
                 }
-                3 => {
-                    let a = value[0].parse::<usize>();
-                    let b = map.get(value[2]).cloned();
-
-                    if let Some(b) = b {
-                        if let Ok(a) = a {
-                            map.insert(key, calc_val(a, b, value[1]));
-                        } else if let Some(a) = map.get(value[0]).cloned() {
-                            map.insert(key, calc_val(a, b, value[1]));
-                        } else {
-                            new_input.push(next.clone());
-                        }
-                    } else {
-                        new_input.push(next.clone());
-                    }
+            }
+            Instruction::Lshift(p1, p2, r) => {
+                if let (Some(p1), Some(p2)) = (p1.get_value(&map), p2.get_value(&map)) {
+                    map.insert(r.clone(), p1 << p2);
+                    executed = true;
                 }
-                _ => unreachable!(),
+            }
+            Instruction::Not(p1, r) => {
+                if let Some(p1) = p1.get_value(&map) {
+                    map.insert(r.clone(), !p1);
+                    executed = true;
+                }
+            }
+            Instruction::Or(p1, p2, r) => {
+                if let (Some(p1), Some(p2)) = (p1.get_value(&map), p2.get_value(&map)) {
+                    map.insert(r.clone(), p1 | p2);
+                    executed = true;
+                }
+            }
+            Instruction::Rshift(p1, p2, r) => {
+                if let (Some(p1), Some(p2)) = (p1.get_value(&map), p2.get_value(&map)) {
+                    map.insert(r.clone(), p1 >> p2);
+                    executed = true;
+                }
             }
         }
 
-        input = new_input;
-    }
-
-    *map.get("a").unwrap()
-}
-
-#[aoc(day7, part2)]
-pub fn part2(input: &[(String, String)]) -> usize {
-    let mut map: HashMap<String, usize> = HashMap::new();
-    let mut input = input.to_vec();
-
-    while !input.is_empty() {
-        let mut new_input: Vec<(String, String)> = vec![];
-        let iter = input.iter();
-
-        for next in iter {
-            let key = next.1.clone();
-            let value = if &key == "b" {
-                vec!["46065"]
-            } else {
-                next.0.split_whitespace().collect_vec()
-            };
-
-            match value.len() {
-                1 => {
-                    if let Ok(v) = value[0].parse() {
-                        map.insert(key, v);
-                    } else {
-                        let a = map.get(value[0]).cloned();
-                        if let Some(a) = a {
-                            map.insert(key, a);
-                        } else {
-                            new_input.push(next.clone());
-                        }
-                    }
-                }
-                2 => {
-                    let a = map.get(value[1]).cloned();
-                    if let Some(a) = a {
-                        map.insert(key, !a);
-                    } else {
-                        new_input.push(next.clone());
-                    }
-                }
-                3 => {
-                    let a = value[0].parse::<usize>();
-                    let b = map.get(value[2]).cloned();
-
-                    if let Some(b) = b {
-                        if let Ok(a) = a {
-                            map.insert(key, calc_val(a, b, value[1]));
-                        } else if let Some(a) = map.get(value[0]).cloned() {
-                            map.insert(key, calc_val(a, b, value[1]));
-                        } else {
-                            new_input.push(next.clone());
-                        }
-                    } else {
-                        new_input.push(next.clone());
-                    }
-                }
-                _ => unreachable!(),
-            }
+        if !executed {
+            instructions.push(instruction);
         }
-
-        input = new_input;
     }
 
-    *map.get("a").unwrap()
+    println!("{:?}", map);
+    map["a"]
+}
+//
+// #[aoc(day07, part2)]
+// pub fn part2(instructions: &[Instruction]) -> usize {
+//     0
+// }
+
+#[derive(Debug, Clone)]
+pub enum Instruction {
+    Direct(Signal, String),
+    And(Signal, Signal, String),
+    Lshift(Signal, Signal, String),
+    Not(Signal, String),
+    Or(Signal, Signal, String),
+    Rshift(Signal, Signal, String)
 }
 
-fn calc_val(a: usize, b: usize, ops: &str) -> usize {
-    match ops {
-        "AND" => a & b,
-        "OR" => a | b,
-        "LSHIFT" => a << b,
-        "RSHIFT" => a >> b,
-        _ => unreachable!(),
+impl From<&str> for Instruction {
+    fn from(value: &str) -> Self {
+        let split: Vec<&str> = value.split_whitespace().collect();
+        match split.len() {
+            3 => {
+                Self::Direct(split[0].into(), split[2].into())
+            },
+            4 => {
+                Self::Not(split[1].into(), split[3].into())
+            },
+            5 => {
+                match split[1] {
+                    "AND" => Self::And(split[0].into(), split[2].into(), split[4].into()),
+                    "OR" => Self::Or(split[0].into(), split[2].into(), split[4].into()),
+                    "LSHIFT" => Self::Lshift(split[0].into(), split[2].into(), split[4].into()),
+                    "RSHIFT" => Self::And(split[0].into(), split[2].into(), split[4].into()),
+                    _ => unreachable!()
+                }
+            },
+            _ => unreachable!()
+        }
     }
+}
+
+#[derive(Debug, Clone)]
+pub enum Signal {
+    Value(u16), Wire(String)
+}
+
+impl Signal {
+    fn get_value(&self, map: &HashMap<String, u16>) -> Option<u16> {
+        match self {
+            Signal::Value(v) => Some(*v),
+            Signal::Wire(s) => map.get(s).copied()
+        }
+    }
+}
+
+impl From<&str> for Signal {
+    fn from(value: &str) -> Self {
+        if let Ok(v) = value.parse() {
+            Self::Value(v)
+        } else {
+            Self::Wire(value.to_string())
+        }
+    }
+}
+
+
+#[test]
+fn test1() {
+    let s = "123 -> a
+a AND 10 -> a
+a LSHIFT 1 -> a
+NOT a -> a";
+
+    assert_eq!(20, part1(&generator(s)))
 }

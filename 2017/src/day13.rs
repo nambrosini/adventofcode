@@ -27,7 +27,7 @@ pub fn part2(input: &Firewall) -> usize {
     while sum > 0 {
         sum = input
             .iter()
-            .fold(0, |acc, x| acc + if x.1.caught(delay) { 1 } else { 0 });
+            .fold(0, |acc, x| acc + usize::from(x.1.caught(delay)));
 
         delay += 1;
     }

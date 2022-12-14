@@ -145,7 +145,7 @@ fn rotate(chars: &[char], direction: &Direction, steps: usize) -> Vec<char> {
 
 fn rotate_based(chars: &[char], c: char, dir: Direction) -> Vec<char> {
     let p = chars.iter().position(|&x| x == c).unwrap();
-    let count = 1 + p + if p >= 4 { 1 } else { 0 };
+    let count = 1 + p + usize::from(p >= 4);
     rotate(chars, &dir, count)
 }
 

@@ -42,7 +42,7 @@ pub fn part2(input: &[usize]) -> usize {
     while counter < 30000000 {
         let last = map[&last_number];
 
-        if last.0 == None {
+        if last.0.is_none() {
             let new = map.entry(0).or_insert((None, counter));
             *new = (Some(new.1), counter);
             last_number = 0;

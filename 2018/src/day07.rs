@@ -12,7 +12,7 @@ pub fn generator(input: &str) -> HashMap<String, Vec<String>> {
         let first = split[1].to_string();
         let second = split[7].to_string();
 
-        let entry = map.entry(first).or_insert(vec![]);
+        let entry: &mut Vec<String> = map.entry(first).or_default();
         entry.push(second);
     }
 

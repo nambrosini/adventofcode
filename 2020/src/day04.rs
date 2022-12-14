@@ -19,7 +19,7 @@ impl TryFrom<&str> for Passport {
     type Error = String;
 
     fn try_from(val: &str) -> Result<Self, Self::Error> {
-        let re = Regex::new(r"(\w+):([^\s]+)\s*").unwrap();
+        let re = Regex::new(r"(\w+):(\S+)\s*").unwrap();
 
         let mut map = HashMap::new();
         re.captures_iter(val).fold((), |_, v| {

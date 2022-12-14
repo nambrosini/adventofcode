@@ -120,7 +120,7 @@ pub fn astar(start: &Point, end: &Point, favorite: &i32) -> Vec<Point> {
         }
     }
 
-    return vec![];
+    vec![]
 }
 
 #[derive(Debug, Clone, Copy, Eq)]

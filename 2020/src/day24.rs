@@ -92,14 +92,13 @@ impl TileFloor {
             .0
             .iter()
             .filter(|(_, color)| **color == Black)
-            .map(|(coordinates, _)| coordinates.adjacent_coordinates())
-            .flatten()
+            .flat_map(|(coordinates, _)| coordinates.adjacent_coordinates())
             .collect::<HashSet<_>>();
 
         for adjacent_coordinates in adjacent {
             self.0
                 .entry(adjacent_coordinates)
-                .or_insert(TileColor::White);
+                .or_insert(White);
         }
     }
 }
@@ -187,7 +186,7 @@ fn parse_tile_directions(tile_directions_str: &str) -> Vec<Direction> {
 fn generator(input: &str) -> Vec<Vec<Direction>> {
     input
         .lines()
-        .map(|line| parse_tile_directions(line))
+        .map(parse_tile_directions)
         .collect()
 }
 

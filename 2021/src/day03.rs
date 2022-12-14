@@ -42,9 +42,9 @@ pub fn part2(input: &[Vec<u32>]) -> usize {
 
         if o_two.len() > 1 {
             if o_two.len() - o_ones <= o_ones && o_two.len() > 1 {
-                o_two = o_two.iter().filter(|&x| x[i] == 1).cloned().collect();
+                o_two.retain(|x| x[i] == 1);
             } else {
-                o_two = o_two.iter().filter(|&x| x[i] == 0).cloned().collect();
+                o_two.retain(|x| x[i] == 0);
             }
         }
 
@@ -53,9 +53,9 @@ pub fn part2(input: &[Vec<u32>]) -> usize {
         }
 
         if co_two.len() - co_ones <= co_ones {
-            co_two = co_two.iter().filter(|&x| x[i] == 0).cloned().collect();
+            co_two.retain(|x| x[i] == 0);
         } else {
-            co_two = co_two.iter().filter(|&x| x[i] == 1).cloned().collect();
+            co_two.retain(|x| x[i] == 1);
         }
     }
 

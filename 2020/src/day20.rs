@@ -140,34 +140,34 @@ fn part2(tiles: &[Tile]) -> usize {
         })
         .unwrap();
     let mut placed = Matrix::square_from_vec(vec![0; tiles.len() / 8]).unwrap();
-    placed[&(0, 0)] = topleft_index;
+    placed[(0, 0)] = topleft_index;
     let mut seen = HashSet::new();
     seen.insert(topleft);
     for col in 1..placed.columns {
-        let east_match = tiles[placed[&(0, col - 1)]].matching(1);
+        let east_match = tiles[placed[(0, col - 1)]].matching(1);
         let next = tiles
             .iter()
             .enumerate()
             .find(|(_, t)| !seen.contains(&t.index) && t.nesw[3] == east_match)
             .unwrap()
             .0;
-        placed[&(0, col)] = next;
+        placed[(0, col)] = next;
         seen.insert(tiles[next].index);
     }
     for row in 1..placed.rows {
         for col in 0..placed.columns {
-            let south_match = tiles[placed[&(row - 1, col)]].matching(2);
+            let south_match = tiles[placed[(row - 1, col)]].matching(2);
             let next = tiles
                 .iter()
                 .enumerate()
                 .find(|(_, t)| !seen.contains(&t.index) && t.nesw[0] == south_match)
                 .unwrap()
                 .0;
-            placed[&(row, col)] = next;
+            placed[(row, col)] = next;
             seen.insert(tiles[next].index);
             if col > 0 {
                 assert_eq!(
-                    tiles[placed[&(row, col - 1)]].matching(1),
+                    tiles[placed[(row, col - 1)]].matching(1),
                     tiles[next].nesw[3]
                 );
             }
@@ -178,8 +178,8 @@ fn part2(tiles: &[Tile]) -> usize {
     for row in 0..placed.rows {
         for col in 0..placed.columns {
             assembled.set_slice(
-                &(row * (tile_side - 2), col * (tile_side - 2)),
-                &tiles[placed[&(row, col)]]
+                (row * (tile_side - 2), col * (tile_side - 2)),
+                &tiles[placed[(row, col)]]
                     .data
                     .slice(1..tile_side - 1, 1..tile_side - 1)
                     .unwrap(),
@@ -214,7 +214,7 @@ fn part2(tiles: &[Tile]) -> usize {
             (0..t.rows - 2)
                 .map(|r| {
                     (0..t.columns - 19)
-                        .filter(|c| monster_pos.all(|(or, oc)| t[&(r + or, c + oc)]))
+                        .filter(|c| monster_pos.all(|(or, oc)| t[(r + or, c + oc)]))
                         .count()
                 })
                 .sum::<usize>()

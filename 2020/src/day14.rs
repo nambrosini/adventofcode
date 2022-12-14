@@ -73,7 +73,7 @@ fn get_addresses(mask: &str, value: i64) -> Vec<i64> {
             let v = (i >> j) & 1;
             let v = if v == 0 { '0' } else { '1' };
 
-            b[bits_x_pos[j as usize] as usize] = v;
+            b[bits_x_pos[j]] = v;
         }
 
         bits_results.push(b.clone());
