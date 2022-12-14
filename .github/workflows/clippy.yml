@@ -7,8 +7,8 @@ on:
 env:
   CARGO_TERM_COLOR: always
 jobs:
-  clippy/2015:
-    name: Run rust-clippy analyzing
+  clippy-2015:
+    name: Run 2015 rust-clippy analyzing
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -28,9 +28,10 @@ jobs:
         run: cargo install clippy-sarif sarif-fmt
       - name: Run rust-clippy
         run:
-          cargo clippy
-          --all-features
-          --message-format=json | clippy-sarif | tee ../rust-clippy-results.sarif | sarif-fmt
+          cargo clippy 
+          --all-targets 
+          --all-features 
+          --message-format=json | clippy-sarif | sed -e 's/src\//2015\/src\//g' | tee ../rust-clippy-results.sarif | sarif-fmt
         continue-on-error: true
         working-directory: "2015"
       - name: Upload analysis results to GitHub
@@ -38,8 +39,8 @@ jobs:
         with:
           sarif_file: rust-clippy-results.sarif
           wait-for-processing: true
-  clippy/2016:
-    name: Run rust-clippy analyzing
+  clippy-2016:
+    name: Run 2016 rust-clippy analyzing
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -59,9 +60,10 @@ jobs:
         run: cargo install clippy-sarif sarif-fmt
       - name: Run rust-clippy
         run:
-          cargo clippy
-          --all-features
-          --message-format=json | clippy-sarif | tee ../rust-clippy-results.sarif | sarif-fmt
+          cargo clippy 
+          --all-targets 
+          --all-features 
+          --message-format=json | clippy-sarif | sed -e 's/src\//2016\/src\//g' | tee ../rust-clippy-results.sarif | sarif-fmt
         continue-on-error: true
         working-directory: "2016"
       - name: Upload analysis results to GitHub
@@ -69,8 +71,8 @@ jobs:
         with:
           sarif_file: rust-clippy-results.sarif
           wait-for-processing: true
-  clippy/2017:
-    name: Run rust-clippy analyzing
+  clippy-2017:
+    name: Run 2017 rust-clippy analyzing
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -90,9 +92,10 @@ jobs:
         run: cargo install clippy-sarif sarif-fmt
       - name: Run rust-clippy
         run:
-          cargo clippy
-          --all-features
-          --message-format=json | clippy-sarif | tee ../rust-clippy-results.sarif | sarif-fmt
+          cargo clippy 
+          --all-targets 
+          --all-features 
+          --message-format=json | clippy-sarif | sed -e 's/src\//2017\/src\//g' | tee ../rust-clippy-results.sarif | sarif-fmt
         continue-on-error: true
         working-directory: "2017"
       - name: Upload analysis results to GitHub
@@ -100,8 +103,8 @@ jobs:
         with:
           sarif_file: rust-clippy-results.sarif
           wait-for-processing: true
-  clippy/2018:
-    name: Run rust-clippy analyzing
+  clippy-2018:
+    name: Run 2018 rust-clippy analyzing
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -121,9 +124,10 @@ jobs:
         run: cargo install clippy-sarif sarif-fmt
       - name: Run rust-clippy
         run:
-          cargo clippy
-          --all-features
-          --message-format=json | clippy-sarif | tee ../rust-clippy-results.sarif | sarif-fmt
+          cargo clippy 
+          --all-targets 
+          --all-features 
+          --message-format=json | clippy-sarif | sed -e 's/src\//2018\/src\//g' | tee ../rust-clippy-results.sarif | sarif-fmt
         continue-on-error: true
         working-directory: "2018"
       - name: Upload analysis results to GitHub
@@ -131,8 +135,8 @@ jobs:
         with:
           sarif_file: rust-clippy-results.sarif
           wait-for-processing: true
-  clippy/2019:
-    name: Run rust-clippy analyzing
+  clippy-2019:
+    name: Run 2019 rust-clippy analyzing
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -152,9 +156,10 @@ jobs:
         run: cargo install clippy-sarif sarif-fmt
       - name: Run rust-clippy
         run:
-          cargo clippy
-          --all-features
-          --message-format=json | clippy-sarif | tee ../rust-clippy-results.sarif | sarif-fmt
+          cargo clippy 
+          --all-targets 
+          --all-features 
+          --message-format=json | clippy-sarif | sed -e 's/src\//2019\/src\//g' | tee ../rust-clippy-results.sarif | sarif-fmt
         continue-on-error: true
         working-directory: "2019"
       - name: Upload analysis results to GitHub
@@ -162,8 +167,8 @@ jobs:
         with:
           sarif_file: rust-clippy-results.sarif
           wait-for-processing: true
-  clippy/2020:
-    name: Run rust-clippy analyzing
+  clippy-2020:
+    name: Run 2020 rust-clippy analyzing
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -183,9 +188,10 @@ jobs:
         run: cargo install clippy-sarif sarif-fmt
       - name: Run rust-clippy
         run:
-          cargo clippy
-          --all-features
-          --message-format=json | clippy-sarif | tee ../rust-clippy-results.sarif | sarif-fmt
+          cargo clippy 
+          --all-targets 
+          --all-features 
+          --message-format=json | clippy-sarif | sed -e 's/src\//2020\/src\//g' | tee ../rust-clippy-results.sarif | sarif-fmt
         continue-on-error: true
         working-directory: "2020"
       - name: Upload analysis results to GitHub
@@ -193,8 +199,8 @@ jobs:
         with:
           sarif_file: rust-clippy-results.sarif
           wait-for-processing: true
-  clippy/2021:
-    name: Run rust-clippy analyzing
+  clippy-2021:
+    name: Run 2021 rust-clippy analyzing
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -214,9 +220,10 @@ jobs:
         run: cargo install clippy-sarif sarif-fmt
       - name: Run rust-clippy
         run:
-          cargo clippy
-          --all-features
-          --message-format=json | clippy-sarif | tee ../rust-clippy-results.sarif | sarif-fmt
+          cargo clippy 
+          --all-targets 
+          --all-features 
+          --message-format=json | clippy-sarif | sed -e 's/src\//2021\/src\//g' | tee ../rust-clippy-results.sarif | sarif-fmt
         continue-on-error: true
         working-directory: "2021"
       - name: Upload analysis results to GitHub
@@ -224,8 +231,8 @@ jobs:
         with:
           sarif_file: rust-clippy-results.sarif
           wait-for-processing: true
-  clippy/2022:
-    name: Run rust-clippy analyzing
+  clippy-2022:
+    name: Run 2022 rust-clippy analyzing
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -245,9 +252,10 @@ jobs:
         run: cargo install clippy-sarif sarif-fmt
       - name: Run rust-clippy
         run:
-          cargo clippy
-          --all-features
-          --message-format=json | clippy-sarif | tee ../rust-clippy-results.sarif | sarif-fmt
+          cargo clippy 
+          --all-targets 
+          --all-features 
+          --message-format=json | clippy-sarif | sed -e 's/src\//2022\/src\//g' | tee ../rust-clippy-results.sarif | sarif-fmtt
         continue-on-error: true
         working-directory: "2022"
       - name: Upload analysis results to GitHub
