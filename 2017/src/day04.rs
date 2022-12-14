@@ -17,9 +17,7 @@ pub fn part1(input: &[Vec<String>]) -> i32 {
         .map(|l| l.len() - l.iter().cloned().collect::<HashSet<String>>().len())
         .collect_vec();
 
-    count
-        .iter()
-        .fold(0, |sum, c| sum + i32::from(*c == 0usize))
+    count.iter().fold(0, |sum, c| sum + i32::from(*c == 0usize))
 }
 
 #[aoc(day4, part2)]
@@ -39,7 +37,5 @@ pub fn part2(input: &[Vec<String>]) -> i32 {
         .map(|l| l.len() - l.iter().cloned().collect::<HashSet<String>>().len())
         .collect_vec();
 
-    count
-        .iter()
-        .fold(0, |sum, c| sum + i32::from(*c == 0usize))
+    count.iter().fold(0, |sum, c| sum + i32::from(*c == 0usize))
 }

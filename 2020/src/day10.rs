@@ -38,10 +38,10 @@ pub fn part2(input: &[u32]) -> u64 {
     combinations[0]
 }
 
-
 #[test]
 fn test1() {
-    let one = input_generator("16
+    let one = input_generator(
+        "16
 10
 15
 5
@@ -51,14 +51,16 @@ fn test1() {
 19
 6
 12
-4");
+4",
+    );
 
     assert_eq!(part1(&one), 35);
 }
 
 #[test]
 fn test2() {
-    let one = input_generator("16
+    let one = input_generator(
+        "16
 10
 15
 5
@@ -68,7 +70,8 @@ fn test2() {
 19
 6
 12
-4");
+4",
+    );
 
     assert_eq!(part2(&one), 8);
 }

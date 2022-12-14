@@ -1,12 +1,10 @@
-use std::convert::{From, Into};
 use itertools::Itertools;
+use std::convert::{From, Into};
 use std::fmt;
 
 #[aoc_generator(day23)]
 pub fn generator(input: &str) -> Vec<Instruction> {
-    input.lines()
-        .map(|l| l.into())
-        .collect_vec()
+    input.lines().map(|l| l.into()).collect_vec()
 }
 
 #[aoc(day23, part1)]
@@ -52,24 +50,52 @@ impl From<&str> for Instruction {
         let other = &s[4..];
 
         match instruction {
-            "hlf" => Instruction::Hlf(if other == "a" { 0 } else if other == "b" { 1 } else { unreachable!() }),
-            "tpl" => Instruction::Tpl(if other == "a" { 0 } else if other == "b" { 1 } else { unreachable!() }),
-            "inc" => Instruction::Inc(if other == "a" { 0 } else if other == "b" { 1 } else { unreachable!() }),
-            "jmp" => {
-                Instruction::Jmp(other.parse().unwrap())
-            },
+            "hlf" => Instruction::Hlf(if other == "a" {
+                0
+            } else if other == "b" {
+                1
+            } else {
+                unreachable!()
+            }),
+            "tpl" => Instruction::Tpl(if other == "a" {
+                0
+            } else if other == "b" {
+                1
+            } else {
+                unreachable!()
+            }),
+            "inc" => Instruction::Inc(if other == "a" {
+                0
+            } else if other == "b" {
+                1
+            } else {
+                unreachable!()
+            }),
+            "jmp" => Instruction::Jmp(other.parse().unwrap()),
             "jie" => {
                 let split: Vec<&str> = other.split(", ").collect();
-                let register = if split[0] == "a" { 0 } else if other == "b" { 1 } else { unreachable!() };
+                let register = if split[0] == "a" {
+                    0
+                } else if other == "b" {
+                    1
+                } else {
+                    unreachable!()
+                };
                 let offset = split[1].parse().unwrap();
                 Instruction::Jie(register, offset)
-            },
+            }
             "jio" => {
                 let split: Vec<&str> = other.split(", ").collect();
-                let register = if split[0] == "a" { 0 } else if other == "b" { 1 } else { unreachable!() };
+                let register = if split[0] == "a" {
+                    0
+                } else if other == "b" {
+                    1
+                } else {
+                    unreachable!()
+                };
                 let offset = split[1].parse().unwrap();
                 Instruction::Jio(register, offset)
-            },
+            }
             _ => unreachable!(),
         }
     }
@@ -77,14 +103,14 @@ impl From<&str> for Instruction {
 
 struct Processor {
     registers: [i128; 2],
-    instructions: Vec<Instruction>
+    instructions: Vec<Instruction>,
 }
 
 impl Processor {
     fn new(registers: [i128; 2], instructions: &[Instruction]) -> Self {
         Self {
             registers,
-            instructions: instructions.to_vec()
+            instructions: instructions.to_vec(),
         }
     }
 
@@ -96,34 +122,33 @@ impl Processor {
                 Instruction::Hlf(r) => {
                     self.registers[r] /= 2;
                     position += 1;
-                },
+                }
                 Instruction::Tpl(r) => {
                     self.registers[r] *= 3;
                     position += 1;
-                },
+                }
                 Instruction::Inc(r) => {
                     self.registers[r] += 1;
                     position += 1;
-                },
+                }
                 Instruction::Jmp(o) => {
                     position += o;
-                },
+                }
                 Instruction::Jie(r, o) => {
                     if self.registers[r] % 2 == 0 {
                         position += o;
                     } else {
                         position += 1;
                     }
-                },
+                }
                 Instruction::Jio(r, o) => {
                     if self.registers[r] == 1 {
                         position += o;
-                    } else { 
+                    } else {
                         position += 1;
                     }
-                },
+                }
             }
-            
         }
     }
 }

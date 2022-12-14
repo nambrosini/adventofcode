@@ -1,16 +1,15 @@
 #[aoc_generator(day25)]
 pub fn generator(input: &str) -> Vec<Point> {
-    input.lines()
-        .map(|l| l.into())
-        .collect()
+    input.lines().map(|l| l.into()).collect()
 }
 
 #[aoc(day25, part1)]
 pub fn part1(input: &[Point]) -> usize {
     let mut constellations: Vec<Vec<Point>> = vec![];
-    
+
     for point in input {
-        let indexes: Vec<usize> = constellations.iter()
+        let indexes: Vec<usize> = constellations
+            .iter()
             .enumerate()
             .filter(|(_, e)| e.iter().any(|p| point.calc_manhattan(p) <= 3))
             .map(|(i, _)| i)
@@ -36,7 +35,7 @@ pub fn part1(input: &[Point]) -> usize {
 
 #[derive(Debug, Clone)]
 pub struct Point {
-    coord: Vec<i32>
+    coord: Vec<i32>,
 }
 
 impl Point {
@@ -51,16 +50,11 @@ impl Point {
 
 impl From<&str> for Point {
     fn from(s: &str) -> Self {
-        let coord = s.split(',')
-            .map(|x| x.parse::<i32>().unwrap())
-            .collect();
+        let coord = s.split(',').map(|x| x.parse::<i32>().unwrap()).collect();
 
-        Self {
-            coord
-        }
+        Self { coord }
     }
 }
-
 
 #[test]
 fn test1() {

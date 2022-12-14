@@ -1,12 +1,13 @@
-use std::{fmt::Display, ops::{Add, AddAssign}};
+use std::{
+    fmt::Display,
+    ops::{Add, AddAssign},
+};
 
 use regex::Regex;
 
 #[aoc_generator(day10)]
 pub fn generator(input: &str) -> Map {
-    let points: Vec<Point> = input.lines()
-        .map(|l| l.into())
-        .collect();
+    let points: Vec<Point> = input.lines().map(|l| l.into()).collect();
 
     Map::new(points)
 }
@@ -40,32 +41,52 @@ pub fn part2(map: &Map) -> usize {
 
 #[derive(Clone)]
 pub struct Map {
-    points: Vec<Point>
+    points: Vec<Point>,
 }
 
 impl Map {
     fn new(points: Vec<Point>) -> Self {
-        Self {
-            points
-        }
+        Self { points }
     }
 
     fn simulate(&mut self) {
-        self.points
-            .iter_mut()
-            .for_each(|p| p.tick())
+        self.points.iter_mut().for_each(|p| p.tick())
     }
 
     fn get_width(&self) -> i64 {
-        let min_x = self.points.iter().min_by_key(|p| p.position.x).unwrap().position.x;
-        let max_x = self.points.iter().max_by_key(|p| p.position.x).unwrap().position.x;
+        let min_x = self
+            .points
+            .iter()
+            .min_by_key(|p| p.position.x)
+            .unwrap()
+            .position
+            .x;
+        let max_x = self
+            .points
+            .iter()
+            .max_by_key(|p| p.position.x)
+            .unwrap()
+            .position
+            .x;
 
         max_x - min_x
     }
 
     fn get_height(&self) -> i64 {
-        let min_y = self.points.iter().min_by_key(|p| p.position.y).unwrap().position.y;
-        let max_y = self.points.iter().max_by_key(|p| p.position.y).unwrap().position.y;
+        let min_y = self
+            .points
+            .iter()
+            .min_by_key(|p| p.position.y)
+            .unwrap()
+            .position
+            .y;
+        let max_y = self
+            .points
+            .iter()
+            .max_by_key(|p| p.position.y)
+            .unwrap()
+            .position
+            .y;
 
         max_y - min_y
     }
@@ -73,11 +94,34 @@ impl Map {
 
 impl Display for Map {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let min_x = self.points.iter().min_by_key(|p| p.position.x).unwrap().position.x;
-        let max_x = self.points.iter().max_by_key(|p| p.position.x).unwrap().position.x;
-        let min_y = self.points.iter().min_by_key(|p| p.position.y).unwrap().position.y;
-        let max_y = self.points.iter().max_by_key(|p| p.position.y).unwrap().position.y;
-
+        let min_x = self
+            .points
+            .iter()
+            .min_by_key(|p| p.position.x)
+            .unwrap()
+            .position
+            .x;
+        let max_x = self
+            .points
+            .iter()
+            .max_by_key(|p| p.position.x)
+            .unwrap()
+            .position
+            .x;
+        let min_y = self
+            .points
+            .iter()
+            .min_by_key(|p| p.position.y)
+            .unwrap()
+            .position
+            .y;
+        let max_y = self
+            .points
+            .iter()
+            .max_by_key(|p| p.position.y)
+            .unwrap()
+            .position
+            .y;
 
         for y in min_y..=max_y {
             for x in min_x..=max_x {
@@ -98,24 +142,21 @@ impl Display for Map {
 #[derive(Eq, PartialEq, Clone, Copy)]
 struct Vec2<T> {
     x: T,
-    y: T
+    y: T,
 }
 
 impl<T> Vec2<T> {
     fn new(x: T, y: T) -> Self {
-        Self {
-            x,
-            y
-        }
+        Self { x, y }
     }
 }
 
-impl<T: std::ops::Add<Output=T>> Add for Vec2<T> {
+impl<T: std::ops::Add<Output = T>> Add for Vec2<T> {
     type Output = Self;
     fn add(self, rhs: Self) -> Self::Output {
         Self {
             x: self.x + rhs.x,
-            y: self.y + rhs.y
+            y: self.y + rhs.y,
         }
     }
 }
@@ -130,7 +171,7 @@ impl<T: std::ops::AddAssign> AddAssign for Vec2<T> {
 #[derive(Clone, Copy)]
 pub struct Point {
     position: Vec2<i64>,
-    velocity: Vec2<i64>
+    velocity: Vec2<i64>,
 }
 
 impl Point {
@@ -139,19 +180,18 @@ impl Point {
     }
 }
 
-impl From <&str> for Point {
+impl From<&str> for Point {
     fn from(s: &str) -> Self {
         let re = Regex::new(r"position=<\s*(?P<p_x>-?\d+),\s*(?P<p_y>-?\d+)> velocity=<\s*(?P<v_x>-?\d+),\s*(?P<v_y>-?\d+)>").unwrap();
 
         let caps = re.captures(s).unwrap();
 
-        let position: Vec2<i64> = Vec2::new(caps["p_x"].parse().unwrap(), caps["p_y"].parse().unwrap());
-        let velocity: Vec2<i64> = Vec2::new(caps["v_x"].parse().unwrap(), caps["v_y"].parse().unwrap());
+        let position: Vec2<i64> =
+            Vec2::new(caps["p_x"].parse().unwrap(), caps["p_y"].parse().unwrap());
+        let velocity: Vec2<i64> =
+            Vec2::new(caps["v_x"].parse().unwrap(), caps["v_y"].parse().unwrap());
 
-        Self {
-            position,
-            velocity
-        }
+        Self { position, velocity }
     }
 }
 

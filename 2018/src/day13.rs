@@ -3,34 +3,35 @@ use std::fmt::Formatter;
 
 #[aoc_generator(day13)]
 pub fn generator(input: &str) -> Map {
-    let mut tracks: Vec<Vec<char>> = input.lines()
-        .map(|l| l.chars().collect())
-        .collect();
+    let mut tracks: Vec<Vec<char>> = input.lines().map(|l| l.chars().collect()).collect();
 
     let mut carts: Vec<Cart> = vec![];
 
     for (i, r) in tracks.iter_mut().enumerate() {
         for (j, e) in r.iter_mut().enumerate() {
             let pos = Vec2::new(i as i32, j as i32);
-            let cart = Cart::new(pos, match e {
-                '^' => {
-                    *e = '|';
-                    Direction::Up
+            let cart = Cart::new(
+                pos,
+                match e {
+                    '^' => {
+                        *e = '|';
+                        Direction::Up
+                    }
+                    '>' => {
+                        *e = '-';
+                        Direction::Right
+                    }
+                    '<' => {
+                        *e = '-';
+                        Direction::Left
+                    }
+                    'v' => {
+                        *e = '|';
+                        Direction::Down
+                    }
+                    _ => continue,
                 },
-                '>' => {
-                    *e = '-';
-                    Direction::Right
-                },
-                '<' => {
-                    *e = '-';
-                    Direction::Left
-                },
-                'v' => {
-                    *e = '|';
-                    Direction::Down
-                },
-                _ => continue
-            });
+            );
             carts.push(cart);
         }
     }
@@ -67,15 +68,12 @@ pub fn part2(input: &Map) -> String {
 #[derive(Clone)]
 pub struct Map {
     carts: Vec<Cart>,
-    tracks: Vec<Vec<char>>
+    tracks: Vec<Vec<char>>,
 }
 
 impl Map {
     fn new(carts: Vec<Cart>, tracks: Vec<Vec<char>>) -> Self {
-        Self {
-            carts,
-            tracks
-        }
+        Self { carts, tracks }
     }
 
     fn simulate(&mut self) {
@@ -90,14 +88,14 @@ impl Map {
                     Direction::Up => Direction::Right,
                     Direction::Down => Direction::Left,
                     Direction::Left => Direction::Down,
-                    Direction::Right => Direction::Up
+                    Direction::Right => Direction::Up,
                 };
             } else if track == '\\' {
                 cart.dir = match cart.dir {
                     Direction::Up => Direction::Left,
                     Direction::Down => Direction::Right,
                     Direction::Left => Direction::Up,
-                    Direction::Right => Direction::Down
+                    Direction::Right => Direction::Down,
                 };
             }
             cart.pos = pos;
@@ -106,10 +104,12 @@ impl Map {
 
     fn did_crash(&self) -> Option<Vec2<i32>> {
         for (i, cart) in self.carts.iter().enumerate() {
-            if self.carts
+            if self
+                .carts
                 .iter()
                 .enumerate()
-                .any(|(j, c)| c.pos == cart.pos && i != j) {
+                .any(|(j, c)| c.pos == cart.pos && i != j)
+            {
                 return Some(cart.pos);
             }
         }
@@ -120,10 +120,12 @@ impl Map {
     fn remove_crashed(&mut self) {
         let mut pos_to_remove: HashSet<Vec2<i32>> = HashSet::new();
         for (i, cart) in self.carts.iter().enumerate() {
-            if self.carts
+            if self
+                .carts
                 .iter()
                 .enumerate()
-                .any(|(j, c)| c.pos == cart.pos && i != j) {
+                .any(|(j, c)| c.pos == cart.pos && i != j)
+            {
                 pos_to_remove.insert(cart.pos);
             }
         }
@@ -142,13 +144,16 @@ impl std::fmt::Display for Map {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         for (i, r) in self.tracks.iter().enumerate() {
             for (j, e) in r.iter().enumerate() {
-                let c = if let Some(cart) = self.carts.iter()
-                    .find(|c| c.pos.x == i as i32 && c.pos.y == j as i32) {
+                let c = if let Some(cart) = self
+                    .carts
+                    .iter()
+                    .find(|c| c.pos.x == i as i32 && c.pos.y == j as i32)
+                {
                     match cart.dir {
                         Direction::Up => '^',
                         Direction::Down => 'v',
                         Direction::Left => '<',
-                        Direction::Right => '>'
+                        Direction::Right => '>',
                     }
                 } else {
                     *e
@@ -166,7 +171,7 @@ impl std::fmt::Display for Map {
 struct Cart {
     pos: Vec2<i32>,
     dir: Direction,
-    next_turn: Direction
+    next_turn: Direction,
 }
 
 impl Cart {
@@ -174,7 +179,7 @@ impl Cart {
         Self {
             pos,
             dir,
-            next_turn: Direction::Left
+            next_turn: Direction::Left,
         }
     }
 
@@ -183,7 +188,7 @@ impl Cart {
             Direction::Up => Direction::Right,
             Direction::Left => Direction::Up,
             Direction::Right => Direction::Left,
-            _ => unreachable!()
+            _ => unreachable!(),
         };
     }
 }
@@ -191,24 +196,21 @@ impl Cart {
 #[derive(Debug, Eq, PartialEq, Clone, Copy, Hash)]
 struct Vec2<T> {
     x: T,
-    y: T
+    y: T,
 }
 
 impl<T> Vec2<T> {
     fn new(x: T, y: T) -> Self {
-        Self {
-            x,
-            y
-        }
+        Self { x, y }
     }
 }
 
-impl<T: std::ops::Add<Output=T>> std::ops::Add for Vec2<T> {
+impl<T: std::ops::Add<Output = T>> std::ops::Add for Vec2<T> {
     type Output = Self;
     fn add(self, rhs: Self) -> Self::Output {
         Self {
             x: self.x + rhs.x,
-            y: self.y + rhs.y
+            y: self.y + rhs.y,
         }
     }
 }
@@ -226,7 +228,7 @@ impl From<Direction> for Vec2<i32> {
             Direction::Up => Vec2::new(-1, 0),
             Direction::Down => Vec2::new(1, 0),
             Direction::Left => Vec2::new(0, -1),
-            Direction::Right => Vec2::new(0, 1)
+            Direction::Right => Vec2::new(0, 1),
         }
     }
 }
@@ -236,7 +238,7 @@ pub enum Direction {
     Up = 1,
     Down = 2,
     Left = 3,
-    Right = 4
+    Right = 4,
 }
 
 impl From<i64> for Direction {
@@ -246,7 +248,7 @@ impl From<i64> for Direction {
             2 => Direction::Down,
             3 => Direction::Left,
             4 => Direction::Right,
-            _ => unreachable!()
+            _ => unreachable!(),
         }
     }
 }
@@ -258,16 +260,16 @@ impl Direction {
                 Direction::Up => Direction::Left,
                 Direction::Down => Direction::Right,
                 Direction::Left => Direction::Down,
-                Direction::Right => Direction::Up
+                Direction::Right => Direction::Up,
             },
             Direction::Right => match self {
                 Direction::Up => Direction::Right,
                 Direction::Down => Direction::Left,
                 Direction::Left => Direction::Up,
-                Direction::Right => Direction::Down
+                Direction::Right => Direction::Down,
             },
             Direction::Up => self.clone(),
-            _ => unreachable!()
+            _ => unreachable!(),
         }
     }
 }

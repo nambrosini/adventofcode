@@ -116,7 +116,6 @@ pub fn part2(game: &Game) -> usize {
     game.get_score()
 }
 
-
 #[test]
 fn sample1() {
     let s = generator_part1("389125467");

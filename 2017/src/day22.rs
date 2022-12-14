@@ -3,7 +3,8 @@ use std::collections::HashMap;
 
 #[aoc_generator(day22)]
 pub fn generator(input: &str) -> Robot {
-    let grid = input.lines()
+    let grid = input
+        .lines()
         .map(|line| line.chars().map(|c| c.into()).collect_vec())
         .collect_vec();
 
@@ -27,8 +28,8 @@ pub fn part2(input: &Robot) -> usize {
 #[derive(Debug, Clone)]
 pub struct Robot {
     grid: HashMap<(i32, i32), Cell>,
-    position: (i32, i32), 
-    direction: Direction
+    position: (i32, i32),
+    direction: Direction,
 }
 
 impl Robot {
@@ -43,10 +44,10 @@ impl Robot {
             }
         }
 
-        Self { 
+        Self {
             grid: map,
             position: starting_position,
-            direction: Direction::Up
+            direction: Direction::Up,
         }
     }
 
@@ -79,15 +80,15 @@ impl Robot {
                 Cell::Clean => {
                     self.direction = self.direction.rotate_left();
                     *entry = Cell::Weakened;
-                },
+                }
                 Cell::Weakened => {
                     *entry = Cell::Infected;
                     total_infected += 1;
-                },
+                }
                 Cell::Infected => {
                     self.direction = self.direction.rotate_right();
                     *entry = Cell::Flagged;
-                },
+                }
                 Cell::Flagged => {
                     self.direction = self.direction.reverse();
                     *entry = Cell::Clean;
@@ -104,7 +105,7 @@ impl Robot {
             Direction::Up => self.position.0 -= 1,
             Direction::Down => self.position.0 += 1,
             Direction::Right => self.position.1 += 1,
-            Direction::Left => self.position.1 -= 1
+            Direction::Left => self.position.1 -= 1,
         }
     }
 }
@@ -114,7 +115,7 @@ enum Direction {
     Up,
     Down,
     Right,
-    Left
+    Left,
 }
 
 impl Direction {
@@ -123,7 +124,7 @@ impl Direction {
             Self::Up => Self::Right,
             Self::Right => Self::Down,
             Self::Down => Self::Left,
-            Self::Left => Self::Up
+            Self::Left => Self::Up,
         }
     }
 
@@ -132,7 +133,7 @@ impl Direction {
             Self::Up => Self::Left,
             Self::Right => Self::Up,
             Self::Down => Self::Right,
-            Self::Left => Self::Down
+            Self::Left => Self::Down,
         }
     }
 
@@ -141,7 +142,7 @@ impl Direction {
             Self::Up => Self::Down,
             Self::Right => Self::Left,
             Self::Down => Self::Up,
-            Self::Left => Self::Right
+            Self::Left => Self::Right,
         }
     }
 }
@@ -151,7 +152,7 @@ enum Cell {
     Clean,
     Infected,
     Weakened,
-    Flagged
+    Flagged,
 }
 
 impl From<char> for Cell {
@@ -159,7 +160,7 @@ impl From<char> for Cell {
         match c {
             '.' => Cell::Clean,
             '#' => Cell::Infected,
-            _ => unreachable!()
+            _ => unreachable!(),
         }
     }
 }

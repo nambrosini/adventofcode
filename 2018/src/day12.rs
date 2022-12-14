@@ -12,7 +12,11 @@ pub fn part1(pots: &Pots) -> i64 {
         pots.simulate();
     }
 
-    pots.pots.iter().filter(|(_, c)| c == &&'#').map(|(i, _)| i).sum()
+    pots.pots
+        .iter()
+        .filter(|(_, c)| c == &&'#')
+        .map(|(i, _)| i)
+        .sum()
 }
 
 #[aoc(day12, part2)]
@@ -24,7 +28,11 @@ fn run(pots: &mut Pots, cycles: usize) -> i64 {
     for i in 0..cycles {
         pots.simulate();
         if i == 5 || i == 50 || i == 500 || i == 5000 || i == 50000 {
-            println!("\nsum of pots with plants after {} generations: {}", i, pots.calc());
+            println!(
+                "\nsum of pots with plants after {} generations: {}",
+                i,
+                pots.calc()
+            );
         }
         print!("\r{}", i);
     }
@@ -35,7 +43,7 @@ fn run(pots: &mut Pots, cycles: usize) -> i64 {
 #[derive(Clone)]
 pub struct Pots {
     pots: HashMap<i64, char>,
-    states: Vec<State>
+    states: Vec<State>,
 }
 
 impl Pots {
@@ -44,10 +52,10 @@ impl Pots {
 
         let min = *self.pots.keys().min().unwrap();
         let max = *self.pots.keys().max().unwrap();
-        
+
         for i in min - 2..=max + 2 {
             let mut string = String::new();
-            for j in i-2..=i+2 {
+            for j in i - 2..=i + 2 {
                 if let Some(c) = self.pots.get(&j) {
                     string.push(*c);
                 } else {
@@ -65,9 +73,7 @@ impl Pots {
     }
 
     fn get_pot_from_states(&self, string: String) -> char {
-        if let Some(x) = self.states
-            .iter()
-            .find(|state| state.left == string) {
+        if let Some(x) = self.states.iter().find(|state| state.left == string) {
             x.right
         } else {
             '.'
@@ -75,7 +81,11 @@ impl Pots {
     }
 
     fn calc(&self) -> i64 {
-        self.pots.iter().filter(|(_, c)| c == &&'#').map(|(i, _)| i).sum()
+        self.pots
+            .iter()
+            .filter(|(_, c)| c == &&'#')
+            .map(|(i, _)| i)
+            .sum()
     }
 }
 
@@ -83,15 +93,17 @@ impl From<&str> for Pots {
     fn from(s: &str) -> Self {
         let split: Vec<&str> = s.split("\n\n").collect();
 
-        let pots = split[0].split_whitespace().last().unwrap().chars().enumerate().map(|(i, e)| (i as i64, e)).collect();
-        let states = split[1].lines()
-            .map(|l| l.into())
+        let pots = split[0]
+            .split_whitespace()
+            .last()
+            .unwrap()
+            .chars()
+            .enumerate()
+            .map(|(i, e)| (i as i64, e))
             .collect();
+        let states = split[1].lines().map(|l| l.into()).collect();
 
-        Self {
-            pots,
-            states
-        }
+        Self { pots, states }
     }
 }
 
@@ -110,7 +122,7 @@ impl Display for Pots {
 #[derive(Clone)]
 struct State {
     left: String,
-    right: char
+    right: char,
 }
 
 impl From<&str> for State {
@@ -119,10 +131,7 @@ impl From<&str> for State {
         let left = split[0].to_string();
         let right = split[1].chars().next().unwrap();
 
-        Self {
-            left,
-            right
-        }
+        Self { left, right }
     }
 }
 

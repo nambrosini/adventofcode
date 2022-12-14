@@ -2,9 +2,7 @@ use std::collections::HashMap;
 
 #[aoc_generator(day07)]
 pub fn generator(input: &str) -> Vec<Instruction> {
-    input.lines()
-        .map(|l| l.into())
-        .collect()
+    input.lines().map(|l| l.into()).collect()
 }
 
 #[aoc(day07, part1)]
@@ -80,43 +78,38 @@ pub enum Instruction {
     Lshift(Signal, Signal, String),
     Not(Signal, String),
     Or(Signal, Signal, String),
-    Rshift(Signal, Signal, String)
+    Rshift(Signal, Signal, String),
 }
 
 impl From<&str> for Instruction {
     fn from(value: &str) -> Self {
         let split: Vec<&str> = value.split_whitespace().collect();
         match split.len() {
-            3 => {
-                Self::Direct(split[0].into(), split[2].into())
+            3 => Self::Direct(split[0].into(), split[2].into()),
+            4 => Self::Not(split[1].into(), split[3].into()),
+            5 => match split[1] {
+                "AND" => Self::And(split[0].into(), split[2].into(), split[4].into()),
+                "OR" => Self::Or(split[0].into(), split[2].into(), split[4].into()),
+                "LSHIFT" => Self::Lshift(split[0].into(), split[2].into(), split[4].into()),
+                "RSHIFT" => Self::And(split[0].into(), split[2].into(), split[4].into()),
+                _ => unreachable!(),
             },
-            4 => {
-                Self::Not(split[1].into(), split[3].into())
-            },
-            5 => {
-                match split[1] {
-                    "AND" => Self::And(split[0].into(), split[2].into(), split[4].into()),
-                    "OR" => Self::Or(split[0].into(), split[2].into(), split[4].into()),
-                    "LSHIFT" => Self::Lshift(split[0].into(), split[2].into(), split[4].into()),
-                    "RSHIFT" => Self::And(split[0].into(), split[2].into(), split[4].into()),
-                    _ => unreachable!()
-                }
-            },
-            _ => unreachable!()
+            _ => unreachable!(),
         }
     }
 }
 
 #[derive(Debug, Clone)]
 pub enum Signal {
-    Value(u16), Wire(String)
+    Value(u16),
+    Wire(String),
 }
 
 impl Signal {
     fn get_value(&self, map: &HashMap<String, u16>) -> Option<u16> {
         match self {
             Signal::Value(v) => Some(*v),
-            Signal::Wire(s) => map.get(s).copied()
+            Signal::Wire(s) => map.get(s).copied(),
         }
     }
 }
@@ -130,7 +123,6 @@ impl From<&str> for Signal {
         }
     }
 }
-
 
 #[test]
 fn test1() {

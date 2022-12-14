@@ -73,7 +73,7 @@ fn get_value(node: &Node) -> usize {
 pub struct Node {
     header: (usize, usize),
     children: Vec<Node>,
-    metadata: Vec<usize>
+    metadata: Vec<usize>,
 }
 
 impl Node {
@@ -92,7 +92,6 @@ fn test() {
 
     assert_eq!(part1(&s), 138);
 }
-
 
 #[test]
 fn test2() {

@@ -1,5 +1,5 @@
-use std::collections::HashMap;
 use std::collections::hash_map::DefaultHasher;
+use std::collections::HashMap;
 use std::hash::{Hash, Hasher};
 
 #[aoc_generator(day18)]
@@ -27,9 +27,7 @@ pub fn part2(input: &Grid) -> usize {
         grid.hash(&mut hasher);
         let hash = hasher.finish();
 
-        let entry = history
-            .entry(hash)
-            .or_insert_with(Vec::new);
+        let entry = history.entry(hash).or_insert_with(Vec::new);
         entry.push(minute);
 
         if entry.len() == 5 {
@@ -38,7 +36,7 @@ pub fn part2(input: &Grid) -> usize {
             for _ in 0..remaining % period {
                 grid.simulate_next_gen();
             }
-            return grid.calc_result()
+            return grid.calc_result();
         }
 
         grid.simulate_next_gen();
@@ -48,7 +46,7 @@ pub fn part2(input: &Grid) -> usize {
 
 #[derive(Clone, Hash)]
 pub struct Grid {
-    grid: Vec<Vec<Acre>>
+    grid: Vec<Vec<Acre>>,
 }
 
 impl Grid {
@@ -68,20 +66,26 @@ impl Grid {
     fn get_next(&self, x: usize, y: usize) -> Acre {
         let neig = self.get_neighbours_count(x, y);
         match self.grid[x][y] {
-            Acre::Open => if neig.0 >= 3 {
-                Acre::Tree
-            } else {
-                Acre::Open
+            Acre::Open => {
+                if neig.0 >= 3 {
+                    Acre::Tree
+                } else {
+                    Acre::Open
+                }
             }
-            Acre::Tree => if neig.1 >= 3 {
-                Acre::Lumberyard
-            } else {
-                Acre::Tree
+            Acre::Tree => {
+                if neig.1 >= 3 {
+                    Acre::Lumberyard
+                } else {
+                    Acre::Tree
+                }
             }
-            Acre::Lumberyard => if neig.0 >= 1 && neig.1 >= 1 {
-                Acre::Lumberyard
-            } else {
-                Acre::Open
+            Acre::Lumberyard => {
+                if neig.0 >= 1 && neig.1 >= 1 {
+                    Acre::Lumberyard
+                } else {
+                    Acre::Open
+                }
             }
         }
     }
@@ -94,8 +98,9 @@ impl Grid {
                 if i == 0 && j == 0 {
                     continue;
                 }
-                if !(0..self.grid.len() as i32).contains(&(x as i32 + i)) ||
-                    !(0..self.grid.len() as i32).contains(&(y as i32 + j)) {
+                if !(0..self.grid.len() as i32).contains(&(x as i32 + i))
+                    || !(0..self.grid.len() as i32).contains(&(y as i32 + j))
+                {
                     continue;
                 }
 
@@ -114,11 +119,15 @@ impl Grid {
     }
 
     fn calc_result(&self) -> usize {
-        let trees_count = self.grid.iter()
+        let trees_count = self
+            .grid
+            .iter()
             .flatten()
             .filter(|x| x == &&Acre::Tree)
             .count();
-        let lumb_count = self.grid.iter()
+        let lumb_count = self
+            .grid
+            .iter()
             .flatten()
             .filter(|x| x == &&Acre::Lumberyard)
             .count();
@@ -128,13 +137,12 @@ impl Grid {
 
 impl From<&str> for Grid {
     fn from(s: &str) -> Self {
-        let grid: Vec<Vec<Acre>> = s.lines()
+        let grid: Vec<Vec<Acre>> = s
+            .lines()
             .map(|l| l.chars().map(|c| c.into()).collect())
             .collect();
 
-        Self {
-            grid
-        }
+        Self { grid }
     }
 }
 
@@ -142,7 +150,7 @@ impl From<&str> for Grid {
 pub enum Acre {
     Open = 0,
     Tree = 1,
-    Lumberyard = 2
+    Lumberyard = 2,
 }
 
 impl From<char> for Acre {
@@ -151,7 +159,7 @@ impl From<char> for Acre {
             '.' => Self::Open,
             '|' => Self::Tree,
             '#' => Self::Lumberyard,
-            _ => unreachable!()
+            _ => unreachable!(),
         }
     }
 }

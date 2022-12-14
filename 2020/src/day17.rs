@@ -70,21 +70,24 @@ fn step(n: usize, s: &HashSet<Coordinates>) -> HashSet<Coordinates> {
         .collect()
 }
 
-
 #[test]
 fn sample1_test1() {
-    let s = generator(".#.
+    let s = generator(
+        ".#.
 ..#
-###");
+###",
+    );
 
     assert_eq!(part1(&s), 112);
 }
 
 #[test]
 fn sample1_test2() {
-    let s = generator(".#.
+    let s = generator(
+        ".#.
 ..#
-###");
+###",
+    );
 
     assert_eq!(part2(&s), 848);
 }

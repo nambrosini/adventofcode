@@ -51,7 +51,6 @@ pub fn part2(input: &[Vec<char>]) -> usize {
         .fold(1, |res, x| res * x.clone().count_trees(input))
 }
 
-
 #[test]
 fn test1() {
     let s = "..##.......
@@ -85,4 +84,3 @@ fn test2() {
 
     assert_eq!(part2(&generator(s)), 336);
 }
-

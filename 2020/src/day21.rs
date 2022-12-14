@@ -100,20 +100,24 @@ fn unsafe_ingredients(allergen: &str, foods: &HashMap<Vec<String>, Vec<String>>)
 
 #[test]
 fn sample1() {
-    let s = generator("mxmxvkd kfcds sqjhc nhms (contains dairy, fish)
+    let s = generator(
+        "mxmxvkd kfcds sqjhc nhms (contains dairy, fish)
 trh fvjkl sbzzf mxmxvkd (contains dairy)
 sqjhc fvjkl (contains soy)
-sqjhc mxmxvkd sbzzf (contains fish)");
+sqjhc mxmxvkd sbzzf (contains fish)",
+    );
 
     assert_eq!(part1(&s), 5);
 }
 
 #[test]
 fn sample1_test2() {
-    let s = generator("mxmxvkd kfcds sqjhc nhms (contains dairy, fish)
+    let s = generator(
+        "mxmxvkd kfcds sqjhc nhms (contains dairy, fish)
 trh fvjkl sbzzf mxmxvkd (contains dairy)
 sqjhc fvjkl (contains soy)
-sqjhc mxmxvkd sbzzf (contains fish)");
+sqjhc mxmxvkd sbzzf (contains fish)",
+    );
 
     assert_eq!(part2(&s), "mxmxvkd,sqjhc,fvjkl");
 }

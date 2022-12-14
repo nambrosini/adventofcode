@@ -18,7 +18,7 @@ pub fn part1(input: &(usize, usize)) -> i128 {
 }
 
 fn get_next_diagonal(index: (usize, usize)) -> (usize, usize) {
-    if index.0 == 1 { 
+    if index.0 == 1 {
         (index.1 + 1, 1)
     } else {
         (index.0 - 1, index.1 + 1)

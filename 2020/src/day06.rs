@@ -43,10 +43,10 @@ pub fn part2(input: &[String]) -> usize {
     sum
 }
 
-
 #[test]
 fn sample1_part1() {
-    let s = generator("abc
+    let s = generator(
+        "abc
 
 a
 b
@@ -60,14 +60,16 @@ a
 a
 a
 
-b");
+b",
+    );
 
     assert_eq!(part1(&s), 11);
 }
 
 #[test]
 fn sample1_part2() {
-    let s = generator("abc
+    let s = generator(
+        "abc
 
 a
 b
@@ -81,7 +83,8 @@ a
 a
 a
 
-b");
+b",
+    );
 
     assert_eq!(part2(&s), 6);
 }

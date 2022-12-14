@@ -237,25 +237,28 @@ pub fn part2(input: &[Action]) -> i32 {
     Ship::new().run_part2(input)
 }
 
-
 #[test]
 fn test1() {
-    let data = generator("F10
+    let data = generator(
+        "F10
 N3
 F7
 R90
-F11");
+F11",
+    );
 
     assert_eq!(part1(&data), 25);
 }
 
 #[test]
 fn test2() {
-    let data = generator("F10
+    let data = generator(
+        "F10
 N3
 F7
 R90
-F11");
+F11",
+    );
 
     assert_eq!(part2(&data), 286);
 }
