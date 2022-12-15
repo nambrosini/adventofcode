@@ -1,6 +1,6 @@
-use std::collections::HashSet;
 use itertools::Itertools;
 use regex::Regex;
+use std::collections::HashSet;
 
 type Position = (i64, i64);
 
@@ -8,20 +8,24 @@ type Position = (i64, i64);
 pub fn generator(input: &str) -> Vec<Sensor> {
     let re = Regex::new(r"Sensor at x=(?P<x1>-?\d+), y=(?P<y1>-?\d+): closest beacon is at x=(?P<x2>-?\d+), y=(?P<y2>-?\d+)").unwrap();
 
-    input.lines()
+    input
+        .lines()
         .map(|l| {
             let caps = re.captures(l).unwrap();
             let p1 = (caps["x1"].parse().unwrap(), caps["y1"].parse().unwrap());
             let p2 = (caps["x2"].parse().unwrap(), caps["y2"].parse().unwrap());
 
-            Sensor { sensor: p1, beacon: p2 }
+            Sensor {
+                sensor: p1,
+                beacon: p2,
+            }
         })
         .collect()
 }
 
 #[aoc(day15, part1)]
 pub fn part1(map: &[Sensor]) -> usize {
-    cannot_exist( map, 2000000)
+    cannot_exist(map, 2000000)
 }
 
 #[aoc(day15, part2)]
@@ -34,18 +38,22 @@ fn is_in_area(sensor: &Sensor, upper: i64, target: i64) -> (bool, i64, i64) {
     let x_min = (sensor.sensor.0 - mh).max(0);
     let x_max = (sensor.sensor.0 + mh).min(upper);
     if x_min > upper || x_max < 0 {
-        return (false, 0, 0)
+        return (false, 0, 0);
     }
     let dist = mh - sensor.distance(&(sensor.sensor.0, target));
     if dist < 0 {
         return (false, 0, 0);
     }
-    (true, (sensor.sensor.0 - dist).max(0), (sensor.sensor.0 + dist).min(upper))
+    (
+        true,
+        (sensor.sensor.0 - dist).max(0),
+        (sensor.sensor.0 + dist).min(upper),
+    )
 }
 
 pub struct Sensor {
     sensor: Position,
-    beacon: Position
+    beacon: Position,
 }
 
 impl Sensor {
@@ -55,10 +63,13 @@ impl Sensor {
 }
 
 fn cannot_exist(sensors: &[Sensor], row: i64) -> usize {
-    let x_min = sensors.iter()
+    let x_min = sensors
+        .iter()
         .map(|s| s.sensor.0 - s.distance(&s.beacon))
-        .min().unwrap();
-    let x_max = sensors.iter()
+        .min()
+        .unwrap();
+    let x_max = sensors
+        .iter()
         .map(|s| s.sensor.0 + s.distance(&s.beacon))
         .max()
         .unwrap();
@@ -66,7 +77,10 @@ fn cannot_exist(sensors: &[Sensor], row: i64) -> usize {
     let mut set = HashSet::new();
 
     for x in x_min..=x_max {
-        if sensors.iter().any(|s| s.distance(&(x, row)) <= s.distance(&s.beacon)) {
+        if sensors
+            .iter()
+            .any(|s| s.distance(&(x, row)) <= s.distance(&s.beacon))
+        {
             set.insert(x);
         }
     }
@@ -96,7 +110,7 @@ fn find_beacon(sensors: &[Sensor], max: i64) -> i64 {
                     x = *x_max;
                 }
                 if x >= max {
-                    break
+                    break;
                 }
             }
             if x != max {
@@ -145,5 +159,5 @@ Sensor at x=16, y=7: closest beacon is at x=15, y=3
 Sensor at x=14, y=3: closest beacon is at x=15, y=3
 Sensor at x=20, y=1: closest beacon is at x=15, y=3";
 
-    assert_eq!(56000011, find_beacon( &generator(s), 20))
+    assert_eq!(56000011, find_beacon(&generator(s), 20))
 }
