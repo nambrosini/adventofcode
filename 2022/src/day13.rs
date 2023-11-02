@@ -76,31 +76,31 @@ impl PartialEq<Self> for Packet {
 
 impl PartialOrd for Packet {
     fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
-        match (self, other) {
-            (Packet::Int(l), Packet::Int(r)) => l.partial_cmp(r),
-            (Packet::List(_), Packet::Int(_)) => {
-                self.partial_cmp(&Packet::List(vec![other.clone()]))
-            }
-            (Packet::Int(_), Packet::List(_)) => {
-                Packet::List(vec![self.clone()]).partial_cmp(other)
-            }
-            (Packet::List(l), Packet::List(r)) => {
-                for (e1, e2) in l.iter().zip(r) {
-                    if let Some(res) = e1.partial_cmp(e2) {
-                        if res != Ordering::Equal {
-                            return Some(res);
-                        }
-                    }
-                }
-                l.len().partial_cmp(&r.len())
-            }
-        }
+        Some(self.cmp(other))
     }
 }
 
 impl Ord for Packet {
     fn cmp(&self, other: &Self) -> Ordering {
-        self.partial_cmp(other).unwrap()
+        match (self, other) {
+            (Packet::Int(l), Packet::Int(r)) => l.cmp(r),
+            (Packet::List(_), Packet::Int(_)) => {
+                self.cmp(&Packet::List(vec![other.clone()]))
+            }
+            (Packet::Int(_), Packet::List(_)) => {
+                Packet::List(vec![self.clone()]).cmp(other)
+            }
+            (Packet::List(l), Packet::List(r)) => {
+                for (e1, e2) in l.iter().zip(r) {
+                    if let Some(res) = e1.partial_cmp(e2) {
+                        if res != Ordering::Equal {
+                            return res;
+                        }
+                    }
+                }
+                l.len().cmp(&r.len())
+            }
+        }
     }
 }
 

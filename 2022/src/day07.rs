@@ -13,7 +13,7 @@ pub fn generator(input: &str) -> HashMap<String, usize> {
         if line[0] == "$" {
             if line[1] == "cd" {
                 let folder_absolute_path = build_absolute_path(&current_folder, None);
-                let entry = map.entry(folder_absolute_path).or_insert_with(Vec::new);
+                let entry = map.entry(folder_absolute_path).or_default();
                 entry.append(&mut files);
                 if line[2] == ".." {
                     current_folder.pop();
@@ -31,14 +31,13 @@ pub fn generator(input: &str) -> HashMap<String, usize> {
     }
 
     let folder_absolute_path = build_absolute_path(&current_folder, None);
-    let entry = map.entry(folder_absolute_path).or_insert_with(Vec::new);
+    let entry = map.entry(folder_absolute_path).or_default();
     entry.append(&mut files);
 
     let mut queue: Vec<String> = vec!["/".to_string()];
     let mut folder_sizes: HashMap<String, usize> = HashMap::new();
 
-    while !queue.is_empty() {
-        let current = queue.pop().unwrap();
+    while let Some(current) = queue.pop() {
         let content = &map[&current];
 
         let mut folders: Vec<String> = content

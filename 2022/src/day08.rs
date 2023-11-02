@@ -17,7 +17,6 @@ pub fn part1(input: &[Vec<usize>]) -> usize {
         for y in 1..input[x].len() - 1 {
             if is_seen(input, x, y) {
                 count += 1;
-            } else {
             }
         }
     }

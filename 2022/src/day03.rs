@@ -49,7 +49,7 @@ trait Priority {
 
 impl Priority for char {
     fn calc(&self) -> usize {
-        if (b'A'..=b'Z').contains(&(*self as u8)) {
+        if (*self as u8).is_ascii_uppercase() {
             (*self as u8 - b'A' + 27) as usize
         } else {
             (*self as u8 - b'a' + 1) as usize
