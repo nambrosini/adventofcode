@@ -84,12 +84,8 @@ impl Ord for Packet {
     fn cmp(&self, other: &Self) -> Ordering {
         match (self, other) {
             (Packet::Int(l), Packet::Int(r)) => l.cmp(r),
-            (Packet::List(_), Packet::Int(_)) => {
-                self.cmp(&Packet::List(vec![other.clone()]))
-            }
-            (Packet::Int(_), Packet::List(_)) => {
-                Packet::List(vec![self.clone()]).cmp(other)
-            }
+            (Packet::List(_), Packet::Int(_)) => self.cmp(&Packet::List(vec![other.clone()])),
+            (Packet::Int(_), Packet::List(_)) => Packet::List(vec![self.clone()]).cmp(other),
             (Packet::List(l), Packet::List(r)) => {
                 for (e1, e2) in l.iter().zip(r) {
                     if let Some(res) = e1.partial_cmp(e2) {
