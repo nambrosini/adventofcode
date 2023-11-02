@@ -9,7 +9,7 @@ pub fn generator(input: &str) -> HashMap<usize, HashSet<usize>> {
     let mut map: HashMap<usize, HashSet<usize>> = HashMap::new();
 
     for p in input {
-        let entry = map.entry(p.name).or_insert_with(HashSet::new);
+        let entry = map.entry(p.name).or_default();
         entry.extend(p.connections.clone());
     }
 

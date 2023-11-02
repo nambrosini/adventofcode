@@ -92,7 +92,7 @@ pub fn part2(input: &[Line]) -> usize {
                 })
                 .rev()
                 .enumerate()
-                .map(|(e, digit)| ((digit as usize) * 10_usize.pow(e.try_into().unwrap())))
+                .map(|(e, digit)| (digit * 10_usize.pow(e.try_into().unwrap())))
                 .sum::<usize>()
         })
         .sum()

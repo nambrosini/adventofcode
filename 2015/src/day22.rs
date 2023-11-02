@@ -23,8 +23,7 @@ fn part1(input: &[i16]) -> i16 {
 
     let mut least_mana_used = 10000;
 
-    while !queue.is_empty() {
-        let queue_entry = queue.pop().unwrap();
+    while let Some(queue_entry) = queue.pop() {
         let mut player = queue_entry.0;
         let mut boss = queue_entry.1;
         let mana_used = queue_entry.2;
@@ -156,8 +155,7 @@ fn part2(input: &[i16]) -> i16 {
 
     let mut least_mana_used = 10000;
 
-    while !queue.is_empty() {
-        let queue_entry = queue.pop().unwrap();
+    while let Some(queue_entry) = queue.pop() {
         let mut player = queue_entry.0;
         let mut boss = queue_entry.1;
         let mana_used = queue_entry.2;

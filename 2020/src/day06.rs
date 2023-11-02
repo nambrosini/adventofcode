@@ -9,7 +9,7 @@ pub fn generator(input: &str) -> Vec<String> {
 pub fn part1(input: &[String]) -> usize {
     input
         .iter()
-        .map(|s| s.replace("\n", "").chars().collect::<HashSet<char>>().len())
+        .map(|s| s.replace('\n', "").chars().collect::<HashSet<char>>().len())
         .sum()
 }
 

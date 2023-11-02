@@ -214,7 +214,7 @@ fn check_nodes(start: &Point, end: &Point, map: &[Vec<char>]) -> usize {
 }
 
 fn get_neighbours(current: &Point, map: &[Vec<char>]) -> Vec<Point> {
-    let neighbours = vec![(-1, 0), (0, -1), (0, 1), (1, 0)];
+    let neighbours = [(-1, 0), (0, -1), (0, 1), (1, 0)];
 
     neighbours
         .iter()

@@ -5,8 +5,7 @@ pub fn generator(input: &str) -> Vec<Vec<String>> {
     input
         .lines()
         .map(|l| {
-            l.replace('[', " ")
-                .replace(']', " ")
+            l.replace(['[', ']'], " ")
                 .split(' ')
                 .map(|x| x.to_string())
                 .collect_vec()

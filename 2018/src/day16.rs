@@ -47,7 +47,7 @@ pub fn part2(input: &(Vec<Check>, Vec<Vec<usize>>)) -> usize {
     let mut map: HashMap<usize, HashSet<OpCode>> = HashMap::new();
     for (instruction, before, after) in input.0.iter() {
         let ops = get_matching(instruction, before, after);
-        let entry = map.entry(instruction[0]).or_insert_with(HashSet::new);
+        let entry = map.entry(instruction[0]).or_default();
         if entry.is_empty() {
             *entry = ops;
         } else {

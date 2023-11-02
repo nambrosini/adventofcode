@@ -57,7 +57,7 @@ jobs:
         working-directory: "2015"
       - name: Upload analysis results to GitHub 2015
         if: steps.filter.outputs.aoc_2015 == 'true'
-        uses: github/codeql-action/upload-sarif@v1
+        uses: github/codeql-action/upload-sarif@v2
         with:
           sarif_file: 2015/rust-clippy-results.sarif
           wait-for-processing: true

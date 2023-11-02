@@ -101,7 +101,7 @@ impl Passport {
             return false;
         }
 
-        let colors = vec!["amb", "blu", "brn", "gry", "grn", "hzl", "oth"];
+        let colors = ["amb", "blu", "brn", "gry", "grn", "hzl", "oth"];
 
         if !colors.contains(&&self.ecl.clone().unwrap()[..]) {
             return false;

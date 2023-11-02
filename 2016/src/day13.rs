@@ -151,7 +151,7 @@ impl PartialEq for Node {
 }
 
 fn get_point_neighbours(current: &Point, favorite: &i32) -> Vec<Point> {
-    let neighbours = vec![(-1, 0), (0, -1), (0, 1), (1, 0)];
+    let neighbours = [(-1, 0), (0, -1), (0, 1), (1, 0)];
 
     neighbours
         .iter()
@@ -161,7 +161,7 @@ fn get_point_neighbours(current: &Point, favorite: &i32) -> Vec<Point> {
 }
 
 fn get_neighbours(current: &Node, favorite: &i32) -> Vec<Node> {
-    let neighbours = vec![(-1, 0), (0, -1), (0, 1), (1, 0)];
+    let neighbours = [(-1, 0), (0, -1), (0, 1), (1, 0)];
 
     neighbours
         .iter()

@@ -1,3 +1,5 @@
+use std::fmt::Write;
+
 #[aoc_generator(day14)]
 pub fn generator(input: &str) -> Vec<Vec<u8>> {
     let mut hasher = KnotHasher::new();
@@ -36,8 +38,10 @@ pub fn part2(input: &[Vec<u8>]) -> usize {
 pub fn hash_to_binary(input: String) -> String {
     input
         .chars()
-        .map(|a| format!("{:04b}", a.to_digit(16).unwrap()))
-        .collect()
+        .fold(String::new(), |mut output, a| {
+            let _ = write!(output, "{:04b}", a.to_digit(16).unwrap());
+            output
+        })
 }
 
 pub struct KnotHasher {

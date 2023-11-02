@@ -16,8 +16,8 @@ pub fn part1(input: &[usize]) -> usize {
     for (skip, value) in input.iter().enumerate() {
         for i in 0..value / 2 {
             line.swap(
-                (start + i as usize) % len,
-                (start + value - 1 - i as usize) % len,
+                (start + i) % len,
+                (start + value - 1 - i) % len,
             )
         }
         start += (skip + value) % len;
@@ -44,8 +44,8 @@ pub fn part2(input: &[usize]) -> String {
             //println!("{:?}", &line);
             for i in 0..value / 2 {
                 line.swap(
-                    (start + i as usize) % length,
-                    (start + value - 1 - i as usize) % length,
+                    (start + i) % length,
+                    (start + value - 1 - i) % length,
                 )
             }
             start += (skip + value) % length;

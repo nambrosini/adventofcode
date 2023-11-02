@@ -55,7 +55,7 @@ pub fn part2(input: &[String]) -> usize {
     for s in input {
         let s = s.to_owned().replace("bags", "");
         let s = s.replace("bag", "");
-        let s = s.replace(".", "");
+        let s = s.replace('.', "");
         let s: Vec<String> = s.trim().split("contain ").map(|s| s.to_owned()).collect();
 
         let bag_color = s[0].trim();

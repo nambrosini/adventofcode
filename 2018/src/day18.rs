@@ -27,7 +27,7 @@ pub fn part2(input: &Grid) -> usize {
         grid.hash(&mut hasher);
         let hash = hasher.finish();
 
-        let entry = history.entry(hash).or_insert_with(Vec::new);
+        let entry = history.entry(hash).or_default();
         entry.push(minute);
 
         if entry.len() == 5 {

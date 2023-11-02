@@ -6,7 +6,7 @@ pub fn generator(input: &str) -> Vec<String> {
 #[aoc(day5, part1)]
 pub fn part1(input: &[String]) -> usize {
     let check_rule_1 = |s: &str| -> bool {
-        let vowels = vec!['a', 'e', 'i', 'o', 'u'];
+        let vowels = ['a', 'e', 'i', 'o', 'u'];
         s.chars().filter(|x| vowels.contains(x)).count() >= 3
     };
 
@@ -23,7 +23,7 @@ pub fn part1(input: &[String]) -> usize {
     };
 
     let check_rule_3 = |s: &str| -> bool {
-        let not = vec!["ab", "cd", "pq", "xy"];
+        let not = ["ab", "cd", "pq", "xy"];
 
         not.iter().filter(|x| s.contains(x.to_owned())).count() == 0
     };

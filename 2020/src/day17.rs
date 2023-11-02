@@ -6,7 +6,6 @@ type Coordinates = (i8, i8, i8, i8);
 pub fn generator(input: &str) -> HashSet<Coordinates> {
     input
         .lines()
-        .into_iter()
         .enumerate()
         .flat_map(|(x, line)| {
             line.chars().enumerate().filter_map(move |(y, c)| {
