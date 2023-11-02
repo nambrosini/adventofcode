@@ -72,7 +72,7 @@ jobs:
         working-directory: "2016"
       - name: Upload analysis results to GitHub 2016
         if: steps.filter.outputs.aoc_2016 == 'true'
-        uses: github/codeql-action/upload-sarif@v1
+        uses: github/codeql-action/upload-sarif@v2
         with:
           sarif_file: 2016/rust-clippy-results.sarif
           wait-for-processing: true
@@ -87,7 +87,7 @@ jobs:
         working-directory: "2017"
       - name: Upload analysis results to GitHub 2017
         if: steps.filter.outputs.aoc_2017 == 'true'
-        uses: github/codeql-action/upload-sarif@v1
+        uses: github/codeql-action/upload-sarif@v2
         with:
           sarif_file: 2017/rust-clippy-results.sarif
           wait-for-processing: true
@@ -102,7 +102,7 @@ jobs:
         working-directory: "2018"
       - name: Upload analysis results to GitHub 2018
         if: steps.filter.outputs.aoc_2018 == 'true'
-        uses: github/codeql-action/upload-sarif@v1
+        uses: github/codeql-action/upload-sarif@v2
         with:
           sarif_file: 2018/rust-clippy-results.sarif
           wait-for-processing: true
@@ -117,7 +117,7 @@ jobs:
         working-directory: "2019"
       - name: Upload analysis results to GitHub 2019
         if: steps.filter.outputs.aoc_2019 == 'true'
-        uses: github/codeql-action/upload-sarif@v1
+        uses: github/codeql-action/upload-sarif@v2
         with:
           sarif_file: rust-clippy-results.sarif
           wait-for-processing: true
@@ -132,7 +132,7 @@ jobs:
         working-directory: "2020"
       - name: Upload analysis results to GitHub 2020
         if: steps.filter.outputs.aoc_2020 == 'true'
-        uses: github/codeql-action/upload-sarif@v1
+        uses: github/codeql-action/upload-sarif@v2
         with:
           sarif_file: 2020/rust-clippy-results.sarif
           wait-for-processing: true
@@ -147,7 +147,7 @@ jobs:
         working-directory: "2021"
       - name: Upload analysis results to GitHub 2021
         if: steps.filter.outputs.aoc_2021 == 'true'
-        uses: github/codeql-action/upload-sarif@v1
+        uses: github/codeql-action/upload-sarif@v2
         with:
           sarif_file: 2021/rust-clippy-results.sarif
           wait-for-processing: true
@@ -162,7 +162,7 @@ jobs:
         working-directory: "2022"
       - name: Upload analysis results to GitHub 2022
         if: steps.filter.outputs.aoc_2022 == 'true'
-        uses: github/codeql-action/upload-sarif@v1
+        uses: github/codeql-action/upload-sarif@v2
         with:
           sarif_file: 2022/rust-clippy-results.sarif
           wait-for-processing: true
