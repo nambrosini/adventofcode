@@ -99,7 +99,6 @@ impl Map {
                 };
             }
             cart.pos = pos;
-
         }
     }
 
