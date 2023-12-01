@@ -1,4 +1,3 @@
-use std::fmt::format;
 use itertools::Itertools;
 
 #[aoc(day01, part1)]
@@ -29,42 +28,30 @@ fn calculate(l: String) -> u32 {
 }
 
 fn numbers_to_digits(numbers: [&str; 9], l: &str) -> String {
-    let mut l = l.to_owned();
     let mut string = String::new();
-    if l.len() < 3 {
-        return l;
-    }
     let mut i = 0;
-    for (i, e) in l.chars().enumerate() {
-        if e.is_ascii_digit() {
-            string.push(e);
+    while i < l.len() {
+        let c = l.chars().nth(i).unwrap();
+        if c.is_ascii_digit() {
+            string.push(c);
+            i += 1;
+            continue;
         }
-        if i + 3 <= l.len() {
-            let num = &l[i..i + 3];
-            if numbers.contains(&num) {
-                let n = numbers.iter().find_position(|x| x == &&num).unwrap().0 + 1;
-                string.push_str(&format!("{}", n));
-                continue;
+        for x in 3..=5 {
+            if i + x > l.len() {
+                break;
             }
-        }
 
-        if i + 4 <= l.len() {
-            let num = &l[i..i+4];
+            let num = &l[i..i + x];
             if numbers.contains(&num) {
                 let n = numbers.iter().find_position(|x| x == &&num).unwrap().0 + 1;
                 string.push_str(&format!("{}", n));
+                i += x - 2;
+                break;
             }
         }
-
-        if i + 5 <= l.len() {
-            let num = &l[i..i + 5];
-            if numbers.contains(&num) {
-                let n = numbers.iter().find_position(|x| x == &&num).unwrap().0 + 1;
-                string.push_str(&format!("{}", n));
-            }
-        }
+        i += 1;
     }
-    println!("{}", string);
     string
 }
 
