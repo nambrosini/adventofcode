@@ -1,5 +1,4 @@
 use std::collections::HashMap;
-use itertools::Itertools;
 
 // Game 5: 6 red, 1 blue, 3 green; 2 blue, 1 red, 2 green
 
@@ -29,7 +28,8 @@ pub fn generate(input: &str) -> Vec<Game> {
 #[aoc(day02, part1)]
 pub fn part1(games: &[Game]) -> usize {
     let limits = HashMap::from([(Color::Red, 12), (Color::Green, 13), (Color::Blue, 14)]);
-    games.iter()
+    games
+        .iter()
         .enumerate()
         .filter(|(_, g)| g.iter().all(|h| check_hand(&limits, h)))
         .map(|(i, _)| i + 1)
@@ -38,7 +38,8 @@ pub fn part1(games: &[Game]) -> usize {
 
 #[aoc(day02, part2)]
 pub fn part2(games: &[Game]) -> i32 {
-    let games: Vec<Vec<(Color, i32)>> = games.iter()
+    let games: Vec<Vec<(Color, i32)>> = games
+        .iter()
         .map(|g| g.iter().flatten().copied().collect())
         .collect();
 
@@ -46,10 +47,12 @@ pub fn part2(games: &[Game]) -> i32 {
     for game in games {
         let mut r = 1;
         for color in [Color::Red, Color::Green, Color::Blue] {
-            r *= game.iter()
-                .filter(|(col, cou)| col == &color)
+            r *= game
+                .iter()
+                .filter(|(col, _)| col == &color)
                 .max_by_key(|(_, c)| c)
-                .unwrap().1;
+                .unwrap()
+                .1;
         }
         res += r;
     }
@@ -58,7 +61,7 @@ pub fn part2(games: &[Game]) -> i32 {
 
 fn check_hand(limit: &HashMap<Color, i32>, hand: &Hand) -> bool {
     for (color, count) in hand {
-        if count > &limit[&color]  {
+        if count > &limit[&color] {
             return false;
         }
     }
@@ -70,7 +73,9 @@ type Hand = Vec<(Color, i32)>;
 
 #[derive(Debug, Eq, PartialEq, Hash, Copy, Clone)]
 pub enum Color {
-    Blue, Red, Green
+    Blue,
+    Red,
+    Green,
 }
 
 impl Color {
@@ -79,7 +84,7 @@ impl Color {
             "blue" => Self::Blue,
             "red" => Self::Red,
             "green" => Self::Green,
-            _ => unreachable!()
+            _ => unreachable!(),
         }
     }
 }

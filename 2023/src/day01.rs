@@ -2,28 +2,24 @@ use itertools::Itertools;
 
 #[aoc(day01, part1)]
 pub fn part1(input: &str) -> u32 {
-    input
-        .lines()
-        .map(|l| calculate(l.to_string()))
-        .sum()
+    input.lines().map(|l| calculate(l.to_string())).sum()
 }
 
 #[aoc(day01, part2)]
 pub fn part2(input: &str) -> u32 {
-    let numbers = ["one", "two", "three", "four", "five", "six", "seven", "eight", "nine"];
+    let numbers = [
+        "one", "two", "three", "four", "five", "six", "seven", "eight", "nine",
+    ];
 
-    input.lines()
-        .map(|l| {
-            numbers_to_digits(numbers, l)
-        })
+    input
+        .lines()
+        .map(|l| numbers_to_digits(numbers, l))
         .map(calculate)
         .sum()
 }
 
 fn calculate(l: String) -> u32 {
-    let it: Vec<char> = l.chars()
-        .filter(|c| c.is_ascii_digit())
-        .collect();
+    let it: Vec<char> = l.chars().filter(|c| c.is_ascii_digit()).collect();
     it[0].to_digit(10).unwrap() * 10 + it[it.len() - 1].to_digit(10).unwrap()
 }
 
