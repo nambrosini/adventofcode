@@ -44,6 +44,8 @@ jobs:
               - '2021/**'
             aoc_2022:
               - '2022/**'
+            aoc_2023:
+              - '2023/**'
       - name: Install required cargo
         run: cargo install clippy-sarif sarif-fmt
       - name: Run rust-clippy 2015
@@ -165,4 +167,19 @@ jobs:
         uses: github/codeql-action/upload-sarif@v2
         with:
           sarif_file: 2022/rust-clippy-results.sarif
+          wait-for-processing: true
+      - name: Run rust-clippy 2023
+        if: steps.filter.outputs.aoc_2023 == 'true'
+        run:
+          cargo clippy
+          --all-targets
+          --all-features
+          --message-format=json | clippy-sarif | sed -e 's/src\//2022\/src\//g' | tee rust-clippy-results.sarif | sarif-fmtt
+        continue-on-error: true
+        working-directory: "2023"
+      - name: Upload analysis results to GitHub 2023
+        if: steps.filter.outputs.aoc_2023 == 'true'
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: 2023/rust-clippy-results.sarif
           wait-for-processing: true

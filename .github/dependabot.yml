@@ -28,3 +28,7 @@ updates:
     directory: /2022
     schedule:
       interval: daily
+  - package-ecosystem: cargo
+    directory: /2023
+    schedule:
+      interval: daily
