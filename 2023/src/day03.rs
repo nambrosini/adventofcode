@@ -123,12 +123,11 @@ fn get_gears(x: usize, y: usize, map: &[Vec<char>]) -> i32 {
             let e = map[new_x as usize][new_y as usize];
             if e.is_ascii_digit() {
                 gears.insert(get_value(new_y as usize, &map[new_x as usize]));
+                if gears.len() == 2 {
+                    return gears.iter().product();
+                }
             }
         }
-    }
-
-    if gears.len() == 2 {
-        return gears.iter().product();
     }
 
     0
