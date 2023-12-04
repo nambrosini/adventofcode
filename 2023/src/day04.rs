@@ -2,51 +2,51 @@ use itertools::Itertools;
 use std::collections::HashMap;
 
 #[aoc_generator(day04)]
-pub fn generate(input: &str) -> (Vec<usize>, usize) {
+pub fn generate(input: &str) -> Vec<usize> {
     let cards: Vec<usize> = input
         .lines()
         .map(|l| {
             let card: Vec<&str> = l.split(": ").collect();
             let card = card[1];
             let numbers: String = card.replace(" |", "");
-            numbers
+            let numbers: Vec<u32> = numbers
                 .split(' ')
                 .filter(|x| !x.is_empty())
                 .map(|x| x.parse::<u32>().unwrap())
+                .collect();
+            let count = numbers.len();
+            count - numbers
+                .iter()
                 .unique()
                 .count()
         })
         .collect();
 
-    let count = *cards.iter().max().unwrap();
-
-    (cards, count)
+    cards
 }
+
 #[aoc(day04, part1)]
-pub fn part1(input: &(Vec<usize>, usize)) -> i32 {
-    let (cards, count) = input;
+pub fn part1(cards: &[usize]) -> i32 {
     cards
         .iter()
         .map(|x| {
-            if *x == *count {
+            if *x == 0 {
                 0
             } else {
-                2i32.pow((count - x - 1) as u32)
+                2i32.pow((x - 1) as u32)
             }
         })
         .sum()
 }
 
 #[aoc(day04, part2)]
-pub fn part2(input: &(Vec<usize>, usize)) -> u32 {
-    let (cards, count) = input;
+pub fn part2(cards: &[usize]) -> u32 {
     let mut map: HashMap<usize, u32> = HashMap::new();
     for (i, card) in cards.iter().enumerate() {
         let entry = map.entry(i).or_insert(0);
         *entry += 1;
         let c = *entry;
-        let winning = count - card;
-        for k in i + 1..i + 1 + winning {
+        for k in i + 1..i + 1 + card {
             let entry = map.entry(k).or_insert(0);
             *entry += c;
         }
