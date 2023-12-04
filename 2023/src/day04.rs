@@ -1,10 +1,9 @@
-use std::collections::{HashMap, HashSet};
-
-type Card = HashSet<u32>;
+use itertools::Itertools;
+use std::collections::HashMap;
 
 #[aoc_generator(day04)]
-pub fn generate(input: &str) -> (Vec<Card>, usize) {
-    let cards: Vec<Card> = input
+pub fn generate(input: &str) -> (Vec<usize>, usize) {
+    let cards: Vec<usize> = input
         .lines()
         .map(|l| {
             let card: Vec<&str> = l.split(": ").collect();
@@ -14,38 +13,39 @@ pub fn generate(input: &str) -> (Vec<Card>, usize) {
                 .split(' ')
                 .filter(|x| !x.is_empty())
                 .map(|x| x.parse::<u32>().unwrap())
-                .collect()
+                .unique()
+                .count()
         })
         .collect();
 
-    let count = cards.iter().max_by_key(|c| c.len()).unwrap().len();
+    let count = *cards.iter().max().unwrap();
 
     (cards, count)
 }
 #[aoc(day04, part1)]
-pub fn part1(input: &(Vec<Card>, usize)) -> i32 {
+pub fn part1(input: &(Vec<usize>, usize)) -> i32 {
     let (cards, count) = input;
     cards
         .iter()
         .map(|x| {
-            if x.len() == *count {
+            if *x == *count {
                 0
             } else {
-                2i32.pow((count - x.len() - 1) as u32)
+                2i32.pow((count - x - 1) as u32)
             }
         })
         .sum()
 }
 
 #[aoc(day04, part2)]
-pub fn part2(input: &(Vec<Card>, usize)) -> u32 {
+pub fn part2(input: &(Vec<usize>, usize)) -> u32 {
     let (cards, count) = input;
     let mut map: HashMap<usize, u32> = HashMap::new();
     for (i, card) in cards.iter().enumerate() {
         let entry = map.entry(i).or_insert(0);
         *entry += 1;
         let c = *entry;
-        let winning = count - card.len();
+        let winning = count - card;
         for k in i + 1..i + 1 + winning {
             let entry = map.entry(k).or_insert(0);
             *entry += c;
