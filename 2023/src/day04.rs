@@ -15,10 +15,7 @@ pub fn generate(input: &str) -> Vec<usize> {
                 .map(|x| x.parse::<u32>().unwrap())
                 .collect();
             let count = numbers.len();
-            count - numbers
-                .iter()
-                .unique()
-                .count()
+            count - numbers.iter().unique().count()
         })
         .collect();
 
@@ -29,13 +26,7 @@ pub fn generate(input: &str) -> Vec<usize> {
 pub fn part1(cards: &[usize]) -> i32 {
     cards
         .iter()
-        .map(|x| {
-            if *x == 0 {
-                0
-            } else {
-                2i32.pow((x - 1) as u32)
-            }
-        })
+        .map(|x| if *x == 0 { 0 } else { 2i32.pow((x - 1) as u32) })
         .sum()
 }
 
