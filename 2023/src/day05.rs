@@ -1,3 +1,6 @@
+use crate::util::iter::ChunkOps;
+use crate::util::parse::ParseOps;
+
 pub struct Input {
     seeds: Vec<u64>,
     stages: Vec<Vec<[u64; 3]>>,
@@ -7,27 +10,11 @@ pub struct Input {
 pub fn parse(input: &str) -> Input {
     let chunks: Vec<_> = input.split("\n\n").collect();
     // Getting the seed, skips the 'seeds:'
-    let seeds = chunks[0]
-        .split_ascii_whitespace()
-        .skip(1)
-        .map(|seed| seed.parse::<u64>().unwrap())
-        .collect();
+    let seeds = chunks[0].iter_unsigned().collect();
     // Getting the stages. Each stage is in its own array, and has multiple ranges.
     let stages = chunks[1..]
         .iter()
-        .map(|stage| {
-            stage
-                .split('\n')
-                .skip(1)
-                .map(|x| {
-                    let y: Vec<u64> = x
-                        .split_ascii_whitespace()
-                        .map(|y| y.parse::<u64>().unwrap())
-                        .collect();
-                    [y[0], y[1], y[2]]
-                })
-                .collect()
-        })
+        .map(|chunk| chunk.iter_unsigned().chunk::<3>().collect())
         .collect();
 
     Input { seeds, stages }
